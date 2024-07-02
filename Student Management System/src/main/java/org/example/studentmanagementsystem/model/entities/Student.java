@@ -26,6 +26,6 @@ public class Student {
 
     @ManyToOne
     @JoinColumn(name = "class_id")
-    private Classes classes;
+    private Class classes;
 
 }
