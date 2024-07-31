@@ -1,4 +1,5 @@
 body {
+    font-family: 'Roboto', sans-serif;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -6,48 +7,22 @@ body {
 }
 
 .title {
-    margin-top: 50px;
-    text-align: center;
     font-size: 2.5rem;
     font-weight: 700;
-    color: #343a40;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    padding: 20px;
-}
-
-.btn {
-    color: #212529;
-    padding: 1rem 2rem;
-    font-size: 1.5rem;
-    border-radius: .25rem;
 }
 
 .btn-login {
-    text-decoration: none;
-    border: 2px solid #0056b3;
-    align-items: center;
-    justify-content: center;
-    margin-top: 50px;
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
-.btn-login:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-    border-color: #004085;
-}
-
-footer {
-    margin-top: auto;
+.footer {
     text-align: center;
     padding: 15px;
     background-color: #f8f9fa;
     font-size: 0.9rem;
     border-top: 1px solid #dee2e6;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
 }

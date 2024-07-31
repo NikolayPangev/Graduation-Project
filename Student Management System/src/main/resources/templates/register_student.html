@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Student</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Register Student</h2>
+
+    <form th:action="@{/students/register}"
+          th:object="${student}"
+          th:method="POST">
+        <!-- Username Field -->
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text"
+                   id="username"
+                   name="username"
+                   class="form-control"
+                   th:value="${student.username}"
+                   placeholder="Enter username" />
+            <div class="text-danger"
+                 th:if="${#fields.hasErrors('username')}"
+                 th:errors="*{username}"></div>
+        </div>
+
+        <!-- First Name Field -->
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text"
+                   id="firstName"
+                   name="firstName"
+                   class="form-control"
+                   th:value="${student.firstName}"
+                   placeholder="Enter first name" />
+            <div class="text-danger"
+                 th:if="${#fields.hasErrors('firstName')}"
+                 th:errors="*{firstName}"></div>
+        </div>
+
+        <!-- Middle Name Field -->
+        <div class="form-group">
+            <label for="middleName">Middle Name</label>
+            <input type="text"
+                   id="middleName"
+                   name="middleName"
+                   class="form-control"
+                   th:value="${student.middleName}"
+                   placeholder="Enter middle name (optional)" />
+            <div class="text-danger"
+                 th:if="${#fields.hasErrors('middleName')}"
+                 th:errors="*{middleName}"></div>
+        </div>
+
+        <!-- Last Name Field -->
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text"
+                   id="lastName"
+                   name="lastName"
+                   class="form-control"
+                   th:value="${student.lastName}"
+                   placeholder="Enter last name" />
+            <div class="text-danger"
+                 th:if="${#fields.hasErrors('lastName')}"
+                 th:errors="*{lastName}"></div>
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email"
+                   id="email"
+                   name="email"
+                   class="form-control"
+                   th:value="${student.email}"
+                   placeholder="Enter email" />
+            <div class="text-danger"
+                 th:if="${#fields.hasErrors('email')}"
+                 th:errors="*{email}"></div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password"
+                   id="password"
+                   name="password"
+                   class="form-control"
+                   placeholder="Enter password" />
+            <div class="text-danger"
+                 th:if="${#fields.hasErrors('password')}"
+                 th:errors="*{password}"></div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
