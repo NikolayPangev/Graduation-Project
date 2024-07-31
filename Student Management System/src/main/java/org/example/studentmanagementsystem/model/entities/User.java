@@ -17,6 +17,9 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
+
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
