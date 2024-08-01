@@ -1,0 +1,32 @@
+/* src/main/resources/static/css/style.css */
+
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.card-body {
+    background-color: #ffffff;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
