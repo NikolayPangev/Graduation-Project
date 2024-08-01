@@ -3,21 +3,20 @@ package org.example.studentmanagementsystem.service;
 import org.example.studentmanagementsystem.model.entities.User;
 import org.example.studentmanagementsystem.model.enums.UserRole;
 import org.example.studentmanagementsystem.repository.UserRepository;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
 @Service
 public class UserService implements UserDetailsService {
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
-    }
 
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -25,22 +24,28 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public boolean usernameExists(String username) {
-        return userRepository.findByUsername(username) != null;
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " not found!"));
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .authorities(Collections.singletonList(mapRole(user.getRole())))
+                .build();
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    private UserDetails mapToUserDetails(User user) {
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .authorities(Collections.singletonList(mapRole(user.getRole())))
+                .build();
     }
 
-    public boolean isPasswordCorrect(String username, String password) {
-
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            return false;
-        }
-
-        return user.getPassword().equals(password);
+    private GrantedAuthority mapRole(UserRole role) {
+        return new SimpleGrantedAuthority("ROLE_" + role.name());
     }
 
     public boolean adminExists() {
