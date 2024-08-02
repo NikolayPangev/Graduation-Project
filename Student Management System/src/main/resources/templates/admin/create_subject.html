@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Subject</title>
+    <link rel="stylesheet" href="/css/admin-dashboard-style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Admin Dashboard</a>
+    <!-- Navbar Links -->
+</nav>
+
+<div class="container mt-4">
+    <h2>Create Subject</h2>
+    <form th:action="@{/admin/createSubject}" th:method="post">
+        <div class="form-group">
+            <label for="subjectName">Subject Name</label>
+            <input type="text" id="subjectName" name="subjectName" class="form-control" placeholder="Enter subject name" required>
+            <div class="text-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+            <div class="text-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Subject</button>
+    </form>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.10/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,16 +1,37 @@
 package org.example.studentmanagementsystem.web;
 
-import org.example.studentmanagementsystem.model.entities.User;
+import jakarta.validation.Valid;
+import org.example.studentmanagementsystem.model.entities.Class;
+import org.example.studentmanagementsystem.repository.ClassRepository;
+import org.example.studentmanagementsystem.service.ClassService;
+import org.example.studentmanagementsystem.service.ParentService;
+import org.example.studentmanagementsystem.service.StudentService;
+import org.example.studentmanagementsystem.service.SubjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
+    private final ParentService parentService;
+
+    private final StudentService studentService;
+
+    private final ClassService classService;
+    private final ClassRepository classRepository;
+
+    private final SubjectService subjectService;
+
+    public AdminController(ParentService parentService, StudentService studentService, ClassService classService, ClassRepository classRepository, SubjectService subjectService) {
+        this.parentService = parentService;
+        this.studentService = studentService;
+        this.classService = classService;
+        this.classRepository = classRepository;
+        this.subjectService = subjectService;
+    }
 
     @GetMapping("/dashboard")
     public String getDashboard() {
@@ -35,22 +56,74 @@ public class AdminController {
         return "view_parents"; // The Thymeleaf template for viewing parents
     }
 
-    @GetMapping("/createUser")
-    public String createUserForm(Model model) {
-        // Add logic to prepare the form
-        return "create_user"; // The Thymeleaf template for creating users
+//    @GetMapping("/createStudent")
+//    public String createStudentForm(Model model) {
+//        model.addAttribute("studentForm", new StudentForm());
+//        model.addAttribute("parents", parentService.getAllParents());
+//        model.addAttribute("classes", classService.getAllClasses());
+//        return "create_student";
+//    }
+//
+//    @PostMapping("/createStudent")
+//    public String createStudent(@ModelAttribute @Valid StudentForm studentForm, BindingResult result, Model model) {
+//        if (result.hasErrors()) {
+//            model.addAttribute("parents", parentService.getAllParents());
+//            model.addAttribute("classes", classService.getAllClasses());
+//            return "create_student";
+//        }
+//        studentService.createStudent(studentForm);
+//        return "redirect:/admin/dashboard";
+//    }
+
+    @GetMapping("/createClass")
+    public String createClassForm(Model model) {
+        model.addAttribute("class", new Class());
+        return "admin/create_class";
     }
 
-    @PostMapping("/createUser")
-    public String createUser(@ModelAttribute User user, Model model) {
-        // Add logic to save user and handle redirection
-        return "redirect:/admin/dashboard"; // Redirect to the dashboard after creating a user
+    @PostMapping("/createClass")
+    public String createClass(@ModelAttribute @Valid Class newClass, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "admin/create_class";
+        }
+        try {
+            classService.createClass(newClass);
+        } catch (IllegalArgumentException e) {
+            result.rejectValue("grade", "error.class", e.getMessage());
+            model.addAttribute("class", newClass);
+            return "admin/create_class";
+        }
+        return "redirect:/admin/dashboard";
     }
 
-    @GetMapping("/manageSubjects")
-    public String manageSubjects(Model model) {
-        // Add logic to prepare the subject management form
-        return "manage_subjects"; // The Thymeleaf template for managing subjects
+    @GetMapping("/createSubject")
+    public String showCreateSubjectForm(Model model) {
+        model.addAttribute("errorMessage", null);
+        return "admin/create_subject";
+    }
+
+    @PostMapping("/createSubject")
+    public String createSubject(@RequestParam String subjectName, Model model) {
+        if (subjectService.existsByName(subjectName)) {
+            model.addAttribute("errorMessage", "This subject already exists");
+            return "admin/create_subject";
+        }
+
+        subjectService.createSubject(subjectName);
+        model.addAttribute("successMessage", "Successfully created a new subject");
+        return "admin/create_subject";
+    }
+
+    @GetMapping("/deleteSubject")
+    public String showDeleteSubjectPage(Model model) {
+        model.addAttribute("subjects", subjectService.findAllSubjects());
+        return "admin/delete_subject";
+    }
+
+    @PostMapping("/deleteSubject")
+    public String deleteSubject(@RequestParam Long subjectId) {
+        subjectService.deleteSubject(subjectId);
+        return "redirect:/admin/deleteSubject";
     }
 
     @GetMapping("/createSchedules")
@@ -65,4 +138,3 @@ public class AdminController {
         return "assign_parents"; // The Thymeleaf template for assigning parents
     }
 }
-
