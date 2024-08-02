@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Class</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Create Class</h2>
+
+    <form th:action="@{/admin/createClass}" th:object="${class}" th:method="POST">
+        <div class="form-group">
+            <label for="grade">Grade</label>
+            <select id="grade" name="grade" class="form-control" required>
+                <option value="" disabled selected>Select Grade</option>
+                <option th:value="1" th:text="'1'" th:selected="${class.grade == 1}">1</option>
+                <option th:value="2" th:text="'2'" th:selected="${class.grade == 2}">2</option>
+                <option th:value="3" th:text="'3'" th:selected="${class.grade == 3}">3</option>
+                <option th:value="4" th:text="'4'" th:selected="${class.grade == 4}">4</option>
+                <option th:value="5" th:text="'5'" th:selected="${class.grade == 5}">5</option>
+                <option th:value="6" th:text="'6'" th:selected="${class.grade == 6}">6</option>
+                <option th:value="7" th:text="'7'" th:selected="${class.grade == 7}">7</option>
+                <option th:value="8" th:text="'8'" th:selected="${class.grade == 8}">8</option>
+                <option th:value="9" th:text="'9'" th:selected="${class.grade == 9}">9</option>
+                <option th:value="10" th:text="'10'" th:selected="${class.grade == 10}">10</option>
+                <option th:value="11" th:text="'11'" th:selected="${class.grade == 11}">11</option>
+                <option th:value="12" th:text="'12'" th:selected="${class.grade == 12}">12</option>
+            </select>
+            <div class="text-danger" th:if="${#fields.hasErrors('grade')}" th:errors="*{grade}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="section">Section</label>
+            <select id="section" name="section" class="form-control" required>
+                <option value="" disabled selected>Select Section</option>
+                <option th:value="'A'" th:text="'A'" th:selected="${class.section == 'A'}">A</option>
+                <option th:value="'B'" th:text="'B'" th:selected="${class.section == 'B'}">B</option>
+                <option th:value="'C'" th:text="'C'" th:selected="${class.section == 'C'}">C</option>
+                <option th:value="'D'" th:text="'D'" th:selected="${class.section == 'D'}">D</option>
+            </select>
+            <div class="text-danger" th:if="${#fields.hasErrors('section')}" th:errors="*{section}"></div>
+        </div>
+
+        <!-- Display a general error message for the whole form -->
+        <div class="text-danger" th:if="${#fields.hasGlobalErrors()}" th:errors="*{error}"></div>
+
+        <button type="submit" class="btn btn-primary">Create Class</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.10/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

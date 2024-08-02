@@ -11,14 +11,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Class {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "class_id")
     private Long classId;
 
-    @Column(name = "class_name", nullable = false)
-    private String className;
+    @Column(name = "grade", nullable = false)
+    private int grade;
 
+    @Column(name = "section", nullable = false)
+    private char section;
 }
-
