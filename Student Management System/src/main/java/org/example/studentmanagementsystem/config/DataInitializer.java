@@ -5,17 +5,14 @@ import org.example.studentmanagementsystem.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class DataInitializer {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(UserService userService, PasswordEncoder passwordEncoder) {
+    public DataInitializer(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
@@ -27,7 +24,7 @@ public class DataInitializer {
                 admin.setFirstName("Admin");
                 admin.setLastName("Admin");
                 admin.setEmail("admin@admin.com");
-                admin.setPassword(passwordEncoder.encode("Admin123"));
+                admin.setPassword("Admin123");
                 userService.createAdmin(admin);
             }
         };

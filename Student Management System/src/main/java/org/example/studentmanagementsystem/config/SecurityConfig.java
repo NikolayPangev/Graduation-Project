@@ -2,6 +2,7 @@ package org.example.studentmanagementsystem.config;
 
 import org.example.studentmanagementsystem.service.UserService;
 import org.example.studentmanagementsystem.repository.UserRepository;
+import org.example.studentmanagementsystem.web.CustomSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,14 +30,14 @@ public class SecurityConfig {
                                 .loginPage("/login")
                                 .usernameParameter("username")
                                 .passwordParameter("password")
-                                .defaultSuccessUrl("/", true)
+                                .successHandler(new CustomSuccessHandler())
                                 .failureUrl("/login?error=true")
                                 .permitAll()
                 )
                 .logout(logout ->
                         logout
                                 .logoutUrl("/logout")
-                                .logoutSuccessUrl("/login?logout=true")
+                                .logoutSuccessUrl("/")
                                 .invalidateHttpSession(true)
                                 .permitAll()
                 )
