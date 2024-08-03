@@ -1,0 +1,57 @@
+<!-- admin_navbar.html -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
+    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggle-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="#" th:href="@{/admin/dashboard}">Dashboard</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="viewUserDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    View User
+                </a>
+                <div class="dropdown-menu" aria-labelledby="viewUserDropdown">
+                    <a class="dropdown-item" href="#" th:href="@{/admin/viewStudents}">View Students</a>
+                    <a class="dropdown-item" href="#" th:href="@{/admin/viewTeachers}">View Teachers</a>
+                    <a class="dropdown-item" href="#" th:href="@{/admin/viewParents}">View Parents</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="createUserDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Create User
+                </a>
+                <div class="dropdown-menu" aria-labelledby="createUserDropdown">
+                    <a class="dropdown-item" href="#" th:href="@{/admin/createStudent}">Create Student</a>
+                    <a class="dropdown-item" href="#" th:href="@{/admin/createTeacher}">Create Teacher</a>
+                    <a class="dropdown-item" href="#" th:href="@{/admin/createParent}">Create Parent</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="manageSubjectsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Manage Subjects
+                </a>
+                <div class="dropdown-menu" aria-labelledby="manageSubjectsDropdown">
+                    <a class="dropdown-item" href="#" th:href="@{/admin/createSubject}">Create Subject</a>
+                    <a class="dropdown-item" href="#" th:href="@{/admin/viewSubjects}">View Subjects</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="manageClassesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Manage Classes
+                </a>
+                <div class="dropdown-menu" aria-labelledby="manageSubjectsDropdown">
+                    <a class="dropdown-item" href="#" th:href="@{/admin/createClass}">Create Class</a>
+                    <a class="dropdown-item" href="#" th:href="@{/admin/viewClasses}">View Classes</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" th:href="@{/admin/createSchedules}">Create Schedules</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" th:href="@{/logout}">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>

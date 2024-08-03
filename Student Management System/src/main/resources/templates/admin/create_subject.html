@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Admin Dashboard</a>
-    <!-- Navbar Links -->
-</nav>
+<!-- Include the navbar fragment -->
+<div th:replace="fragments/admin_navbar :: navbar"></div>
 
 <div class="container mt-4">
     <h2>Create Subject</h2>
