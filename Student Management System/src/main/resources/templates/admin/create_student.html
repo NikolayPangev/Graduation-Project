@@ -10,8 +10,8 @@
 <div class="container mt-5">
     <h2>Register Student</h2>
 
-    <form th:action="@{/students/register}"
-          th:object="${student}"
+    <form th:action="@{/admin/createStudent}"
+          th:object="${studentForm}"
           th:method="POST">
         <!-- Username Field -->
         <div class="form-group">
@@ -20,7 +20,7 @@
                    id="username"
                    name="username"
                    class="form-control"
-                   th:value="${student.username}"
+                   th:value="*{username}"
                    placeholder="Enter username" />
             <div class="text-danger"
                  th:if="${#fields.hasErrors('username')}"
@@ -34,7 +34,7 @@
                    id="firstName"
                    name="firstName"
                    class="form-control"
-                   th:value="${student.firstName}"
+                   th:value="*{firstName}"
                    placeholder="Enter first name" />
             <div class="text-danger"
                  th:if="${#fields.hasErrors('firstName')}"
@@ -48,7 +48,7 @@
                    id="middleName"
                    name="middleName"
                    class="form-control"
-                   th:value="${student.middleName}"
+                   th:value="*{middleName}"
                    placeholder="Enter middle name (optional)" />
             <div class="text-danger"
                  th:if="${#fields.hasErrors('middleName')}"
@@ -62,7 +62,7 @@
                    id="lastName"
                    name="lastName"
                    class="form-control"
-                   th:value="${student.lastName}"
+                   th:value="*{lastName}"
                    placeholder="Enter last name" />
             <div class="text-danger"
                  th:if="${#fields.hasErrors('lastName')}"
@@ -76,7 +76,7 @@
                    id="email"
                    name="email"
                    class="form-control"
-                   th:value="${student.email}"
+                   th:value="*{email}"
                    placeholder="Enter email" />
             <div class="text-danger"
                  th:if="${#fields.hasErrors('email')}"
@@ -94,6 +94,34 @@
             <div class="text-danger"
                  th:if="${#fields.hasErrors('password')}"
                  th:errors="*{password}"></div>
+        </div>
+
+        <!-- Parent Selection Field -->
+        <div class="form-group">
+            <label for="parentId">Parent</label>
+            <select id="parentId" name="parentId" class="form-control" th:value="*{parentId}">
+                <option value="" disabled selected>Select parent</option>
+                <option th:each="parent : ${parents}"
+                        th:value="${parent.userId}"
+                        th:text="${parent.firstName + ' ' + parent.lastName}"></option>
+            </select>
+            <div class="text-danger"
+                 th:if="${#fields.hasErrors('parentId')}"
+                 th:errors="*{parentId}"></div>
+        </div>
+
+        <!-- Class Selection Field -->
+        <div class="form-group">
+            <label for="classId">Class</label>
+            <select id="classId" name="classId" class="form-control" th:value="*{classId}">
+                <option value="" disabled selected>Select class</option>
+                <option th:each="class : ${classes}"
+                        th:value="${class.classId}"
+                        th:text="${class.name}"></option>
+            </select>
+            <div class="text-danger"
+                 th:if="${#fields.hasErrors('classId')}"
+                 th:errors="*{classId}"></div>
         </div>
 
         <!-- Submit Button -->
