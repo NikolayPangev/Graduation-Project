@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Student</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div th:replace="~{fragments/admin_navbar :: navbar}"></div>
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Register Student</h3>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/admin/createStudent}" th:method="POST" th:object="${studentForm}">
+                        <!-- Username -->
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" class="form-control"
+                                   th:field="*{username}" placeholder="Enter username"
+                                   th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('username')}">
+                                <p th:each="error : ${#fields.errors('username')}" th:text="${error}"></p>
+                            </div>
+                        </div>
+
+                        <!-- First Name -->
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" class="form-control"
+                                   th:field="*{firstName}" placeholder="Enter first name"
+                                   th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('firstName')}">
+                                <p th:each="error : ${#fields.errors('firstName')}" th:text="${error}"></p>
+                            </div>
+                        </div>
+
+                        <!-- Middle Name -->
+                        <div class="form-group">
+                            <label for="middleName">Middle Name (optional)</label>
+                            <input type="text" id="middleName" name="middleName" class="form-control"
+                                   th:field="*{middleName}" placeholder="Enter middle name (optional)">
+                        </div>
+
+                        <!-- Last Name -->
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" class="form-control"
+                                   th:field="*{lastName}" placeholder="Enter last name"
+                                   th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('lastName')}">
+                                <p th:each="error : ${#fields.errors('lastName')}" th:text="${error}"></p>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" class="form-control"
+                                   th:field="*{email}" placeholder="Enter email"
+                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}">
+                                <p th:each="error : ${#fields.errors('email')}" th:text="${error}"></p>
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" class="form-control"
+                                   th:field="*{password}" placeholder="Enter password"
+                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}">
+                                <p th:each="error : ${#fields.errors('password')}" th:text="${error}"></p>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
+                                   th:field="*{confirmPassword}" placeholder="Confirm password"
+                                   th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}">
+                                <p th:each="error : ${#fields.errors('confirmPassword')}" th:text="${error}"></p>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block">Register</button>
+                        </div>
+
+                        <!-- Display general errors -->
+                        <div class="form-group">
+                            <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+                                <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.10/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

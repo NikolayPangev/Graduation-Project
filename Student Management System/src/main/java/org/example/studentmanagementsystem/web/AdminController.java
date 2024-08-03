@@ -1,33 +1,37 @@
 package org.example.studentmanagementsystem.web;
-
+import org.example.studentmanagementsystem.model.dtos.StudentForm;
 import jakarta.validation.Valid;
 import org.example.studentmanagementsystem.model.entities.Class;
 import org.example.studentmanagementsystem.repository.ClassRepository;
-import org.example.studentmanagementsystem.service.ClassService;
-import org.example.studentmanagementsystem.service.ParentService;
-import org.example.studentmanagementsystem.service.StudentService;
-import org.example.studentmanagementsystem.service.SubjectService;
+import org.example.studentmanagementsystem.service.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
+    private final UserService userService;
     private final ParentService parentService;
     private final StudentService studentService;
     private final ClassService classService;
     private final ClassRepository classRepository;
     private final SubjectService subjectService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AdminController(ParentService parentService, StudentService studentService, ClassService classService, ClassRepository classRepository, SubjectService subjectService) {
+    public AdminController(UserService userService, ParentService parentService, StudentService studentService, ClassService classService, ClassRepository classRepository, SubjectService subjectService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
         this.parentService = parentService;
         this.studentService = studentService;
         this.classService = classService;
         this.classRepository = classRepository;
         this.subjectService = subjectService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/dashboard")
@@ -53,24 +57,39 @@ public class AdminController {
         return "view_parents"; // The Thymeleaf template for viewing parents
     }
 
-    //    @GetMapping("/createStudent")
-    //    public String createStudentForm(Model model) {
-    //        model.addAttribute("studentForm", new StudentForm());
-    //        model.addAttribute("parents", parentService.getAllParents());
-    //        model.addAttribute("classes", classService.getAllClasses());
-    //        return "create_student";
-    //    }
-    //
-    //    @PostMapping("/createStudent")
-    //    public String createStudent(@ModelAttribute @Valid StudentForm studentForm, BindingResult result, Model model) {
-    //        if (result.hasErrors()) {
-    //            model.addAttribute("parents", parentService.getAllParents());
-    //            model.addAttribute("classes", classService.getAllClasses());
-    //            return "create_student";
-    //        }
-    //        studentService.createStudent(studentForm);
-    //        return "redirect:/admin/dashboard";
-    //    }
+    @GetMapping("/createStudent")
+    public String createStudentForm(Model model) {
+        model.addAttribute("studentForm", new StudentForm());
+        return "admin/register_student";
+    }
+
+    @PostMapping("/createStudent")
+    public String createStudent(@ModelAttribute @Valid StudentForm studentForm,
+                                BindingResult result,
+                                Model model) {
+        if (userService.usernameExists(studentForm.getUsername())) {
+            result.rejectValue("username", "error.username", "Username is already taken");
+        }
+
+        if (userService.emailExists(studentForm.getEmail())) {
+            result.rejectValue("email", "error.email", "Email is already taken");
+        }
+
+        if (!studentForm.getPassword().equals(studentForm.getConfirmPassword())) {
+            result.rejectValue("confirmPassword", "error.confirmPassword", "Passwords do not match");
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("studentForm", studentForm);
+            return "admin/register_student";
+        }
+
+        String encodedPassword = passwordEncoder.encode(studentForm.getPassword());
+        userService.createStudent(studentForm, encodedPassword);
+
+        return "admin/register_student";
+    }
+
 
     @GetMapping("/createClass")
     public String createClassForm(Model model) {

@@ -1,5 +1,6 @@
 package org.example.studentmanagementsystem.service;
 
+import org.example.studentmanagementsystem.model.dtos.StudentForm;
 import org.example.studentmanagementsystem.model.entities.User;
 import org.example.studentmanagementsystem.model.enums.UserRole;
 import org.example.studentmanagementsystem.repository.UserRepository;
@@ -12,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -20,7 +20,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -52,5 +52,26 @@ public class UserService implements UserDetailsService {
         admin.setRole(UserRole.ADMIN);
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         userRepository.save(admin);
+    }
+
+    public boolean usernameExists(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
+
+    public boolean emailExists(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    public void createStudent(StudentForm studentForm, String encodedPassword) {
+        User user = new User();
+        user.setUsername(studentForm.getUsername());
+        user.setFirstName(studentForm.getFirstName());
+        user.setMiddleName(studentForm.getMiddleName());
+        user.setLastName(studentForm.getLastName());
+        user.setEmail(studentForm.getEmail());
+        user.setPassword(encodedPassword);
+        user.setRole(UserRole.STUDENT);
+
+        userRepository.save(user);
     }
 }
