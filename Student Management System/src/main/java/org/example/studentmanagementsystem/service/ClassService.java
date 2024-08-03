@@ -16,22 +16,24 @@ public class ClassService {
     }
 
     public void createClass(Class newClass) {
-        // Validate grade and section
         if (newClass.getGrade() < 1 || newClass.getGrade() > 12) {
             throw new IllegalArgumentException("Grade must be between 1 and 12");
         }
         if ("ABCD".indexOf(newClass.getSection()) == -1) {
             throw new IllegalArgumentException("Section must be A, B, C, or D");
         }
-        // Check if class already exists
         if (classRepository.findByGradeAndSection(newClass.getGrade(), newClass.getSection()).isPresent()) {
             throw new IllegalArgumentException("This class already exists");
         }
         classRepository.save(newClass);
     }
 
-    public List<Class> getAllClasses() {
-        return classRepository.findAll();
+    public List<Class> getAllClassesOrderedByGradeAndSection() {
+        return classRepository.findAllByOrderByGradeAscSectionAsc();
+    }
+
+    public void deleteClass(Long classId) {
+        classRepository.deleteById(classId);
     }
 }
 
