@@ -1,5 +1,6 @@
 package org.example.studentmanagementsystem.config;
 
+import org.example.studentmanagementsystem.repository.StudentRepository;
 import org.example.studentmanagementsystem.service.UserService;
 import org.example.studentmanagementsystem.repository.UserRepository;
 import org.example.studentmanagementsystem.web.CustomSuccessHandler;
@@ -45,8 +46,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserService userService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        return new UserService(userRepository, passwordEncoder);
+    public UserService userService(UserRepository userRepository, StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
+        return new UserService(userRepository, studentRepository, passwordEncoder);
     }
 
     @Bean
