@@ -1,8 +1,10 @@
 package org.example.studentmanagementsystem.service;
 
 import org.example.studentmanagementsystem.model.dtos.StudentForm;
+import org.example.studentmanagementsystem.model.entities.Student;
 import org.example.studentmanagementsystem.model.entities.User;
 import org.example.studentmanagementsystem.model.enums.UserRole;
+import org.example.studentmanagementsystem.repository.StudentRepository;
 import org.example.studentmanagementsystem.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,10 +20,12 @@ import java.util.Collections;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public UserService(UserRepository userRepository, StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -62,16 +66,34 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    public void createStudent(StudentForm studentForm, String encodedPassword) {
-        User user = new User();
-        user.setUsername(studentForm.getUsername());
-        user.setFirstName(studentForm.getFirstName());
-        user.setMiddleName(studentForm.getMiddleName());
-        user.setLastName(studentForm.getLastName());
-        user.setEmail(studentForm.getEmail());
-        user.setPassword(encodedPassword);
-        user.setRole(UserRole.STUDENT);
+    public void createStudent(StudentForm studentForm) {
+        if (usernameExists(studentForm.getUsername())) {
+            throw new IllegalStateException("Username already exists.");
+        }
+        if (emailExists(studentForm.getEmail())) {
+            throw new IllegalStateException("Email already exists.");
+        }
+        if (!studentForm.getPassword().equals(studentForm.getConfirmPassword())) {
+            throw new IllegalStateException("Passwords do not match.");
+        }
 
-        userRepository.save(user);
+        Student student = new Student();
+        student.setUsername(studentForm.getUsername());
+        student.setFirstName(studentForm.getFirstName());
+        student.setMiddleName(studentForm.getMiddleName());
+        student.setLastName(studentForm.getLastName());
+        student.setEmail(studentForm.getEmail());
+        student.setPassword(passwordEncoder.encode(studentForm.getPassword()));
+        student.setRole(UserRole.STUDENT);
+
+        studentRepository.save(student);
+    }
+
+    public Iterable<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 }

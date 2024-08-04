@@ -30,5 +30,4 @@ public class StudentForm {
 
     @Size(min = 6, message = "Password should be at least 6 characters")
     private String confirmPassword;
-
 }

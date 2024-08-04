@@ -2,6 +2,7 @@ package org.example.studentmanagementsystem.web;
 import org.example.studentmanagementsystem.model.dtos.StudentForm;
 import jakarta.validation.Valid;
 import org.example.studentmanagementsystem.model.entities.Class;
+import org.example.studentmanagementsystem.model.entities.Student;
 import org.example.studentmanagementsystem.repository.ClassRepository;
 import org.example.studentmanagementsystem.service.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +12,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -41,20 +44,11 @@ public class AdminController {
 
     @GetMapping("/viewStudents")
     public String viewStudents(Model model) {
-        // Add logic to fetch students and add to model
-        return "view_students"; // The Thymeleaf template for viewing students
-    }
-
-    @GetMapping("/viewTeachers")
-    public String viewTeachers(Model model) {
-        // Add logic to fetch teachers and add to model
-        return "view_teachers"; // The Thymeleaf template for viewing teachers
-    }
-
-    @GetMapping("/viewParents")
-    public String viewParents(Model model) {
-        // Add logic to fetch parents and add to model
-        return "view_parents"; // The Thymeleaf template for viewing parents
+        List<Student> students = studentService.findAllStudents();
+        List<Class> classes = classService.getAllClassesOrderedByGradeAndSection();
+        model.addAttribute("students", students);
+        model.addAttribute("classes", classes);
+        return "admin/view_students";
     }
 
     @GetMapping("/createStudent")
@@ -64,9 +58,9 @@ public class AdminController {
     }
 
     @PostMapping("/createStudent")
-    public String createStudent(@ModelAttribute @Valid StudentForm studentForm,
+    public String createStudent(@ModelAttribute @Validated StudentForm studentForm,
                                 BindingResult result,
-                                Model model) {
+                                RedirectAttributes redirectAttributes) {
         if (userService.usernameExists(studentForm.getUsername())) {
             result.rejectValue("username", "error.username", "Username is already taken");
         }
@@ -80,16 +74,51 @@ public class AdminController {
         }
 
         if (result.hasErrors()) {
-            model.addAttribute("studentForm", studentForm);
             return "admin/register_student";
         }
 
-        String encodedPassword = passwordEncoder.encode(studentForm.getPassword());
-        userService.createStudent(studentForm, encodedPassword);
+        userService.createStudent(studentForm);
 
-        return "admin/register_student";
+        redirectAttributes.addFlashAttribute("successMessage", "Student successfully registered!");
+
+        return "redirect:/admin/createStudent";
     }
 
+    @PutMapping("/assignClassToStudent")
+    public String assignClassToStudent(@RequestParam Long studentId, @RequestParam Long classId) {
+        Student student = studentService.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+        Class classes = classRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Class not found"));
+
+        student.setClasses(classes);
+        studentService.save(student);
+
+        return "redirect:/admin/viewStudents";
+    }
+
+    @PostMapping("/deleteStudent")
+    public String deleteStudent(@RequestParam Long studentId, RedirectAttributes redirectAttributes) {
+        try {
+            studentService.deleteStudent(studentId);
+            redirectAttributes.addFlashAttribute("successMessage", "Student successfully deleted");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting student: " + e.getMessage());
+        }
+        return "redirect:/admin/viewStudents";
+    }
+
+    @GetMapping("/viewTeachers")
+    public String viewTeachers(Model model) {
+        // Add logic to fetch teachers and add to model
+        return "view_teachers"; // The Thymeleaf template for viewing teachers
+    }
+
+    @GetMapping("/viewParents")
+    public String viewParents(Model model) {
+        // Add logic to fetch parents and add to model
+        return "view_parents"; // The Thymeleaf template for viewing parents
+    }
 
     @GetMapping("/createClass")
     public String createClassForm(Model model) {
@@ -169,14 +198,8 @@ public class AdminController {
         return "create_schedules"; // The Thymeleaf template for creating schedules
     }
 
-    @GetMapping("/assignParents")
-    public String assignParents(Model model) {
-        // Add logic to prepare the parent assignment form
-        return "assign_parents"; // The Thymeleaf template for assigning parents
-    }
-
     @GetMapping("/logoutConfirmation")
     public String logoutConfirmation() {
-        return "admin/logout_confirmation"; // Returns the logout confirmation page
+        return "admin/logout_confirmation";
     }
 }
