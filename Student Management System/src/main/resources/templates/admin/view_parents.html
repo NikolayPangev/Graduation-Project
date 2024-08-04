@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Parents</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div th:replace="~{fragments/admin_navbar :: navbar}"></div>
+
+<div class="container mt-5">
+  <h1>All Parents</h1>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Username</th>
+      <th>First Name</th>
+      <th>Middle Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th>Children</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="parent : ${parents}">
+      <td th:text="${parent.username}"></td>
+      <td th:text="${parent.firstName}"></td>
+      <td th:text="${parent.middleName}"></td>
+      <td th:text="${parent.lastName}"></td>
+      <td th:text="${parent.email}"></td>
+      <td>
+        <ul>
+          <li th:each="child : ${parent.children}" th:text="${child.firstName + ' ' + child.lastName}"></li>
+        </ul>
+      </td>
+      <td>
+        <!-- Assign Students Button -->
+        <form th:action="@{/admin/assignStudentsToParent}" method="post">
+          <input type="hidden" name="parentId" th:value="${parent.userId}" />
+          <div class="form-group">
+            <label for="students">Select Students</label>
+            <select multiple class="form-control" name="studentIds" id="students" required>
+              <option th:each="student : ${students}" th:value="${student.userId}" th:text="${student.firstName + ' ' + student.lastName}"></option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Assign Students</button>
+        </form>
+
+        <!-- Delete Button -->
+        <form th:action="@{/admin/deleteParent}" th:method="post" class="d-inline">
+          <input type="hidden" name="parentId" th:value="${parent.userId}"/>
+          <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this parent?');">Delete</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.10/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -2,8 +2,11 @@ package org.example.studentmanagementsystem.service;
 
 import org.example.studentmanagementsystem.model.entities.Parent;
 import org.example.studentmanagementsystem.repository.ParentRepository;
+import org.example.studentmanagementsystem.repository.StudentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,7 +18,22 @@ public class ParentService {
         this.parentRepository = parentRepository;
     }
 
-    public Optional<Parent> findById(Long id) {
-        return parentRepository.findById(id);
+    public List<Parent> findAllParents() {
+        return parentRepository.findAll();
+    }
+
+    public Optional<Parent> findById(Long parentId) {
+        return parentRepository.findById(parentId);
+    }
+
+    @Transactional
+    public void save(Parent parent) {
+        parentRepository.save(parent);
+    }
+
+    @Transactional
+    public void deleteParent(Long parentId) {
+        parentRepository.deleteById(parentId);
     }
 }
+

@@ -1,5 +1,6 @@
 package org.example.studentmanagementsystem.service;
 
+import jakarta.transaction.Transactional;
 import org.example.studentmanagementsystem.model.entities.Student;
 import org.example.studentmanagementsystem.repository.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -16,19 +17,25 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
-    public Optional<Student> findById(Long id) {
-        return studentRepository.findById(id);
-    }
-
     public List<Student> findAllStudents() {
         return studentRepository.findAll();
     }
 
+    public Optional<Student> findById(Long studentId) {
+        return studentRepository.findById(studentId);
+    }
+
+    @Transactional
     public void save(Student student) {
         studentRepository.save(student);
     }
 
+    @Transactional
     public void deleteStudent(Long studentId) {
         studentRepository.deleteById(studentId);
+    }
+
+    public List<Student> findByIds(List<Long> studentIds) {
+        return studentRepository.findAllById(studentIds);
     }
 }

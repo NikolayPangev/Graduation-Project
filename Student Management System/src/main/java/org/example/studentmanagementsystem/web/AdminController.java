@@ -3,6 +3,7 @@ import org.example.studentmanagementsystem.model.dtos.ParentForm;
 import org.example.studentmanagementsystem.model.dtos.StudentForm;
 import jakarta.validation.Valid;
 import org.example.studentmanagementsystem.model.entities.Class;
+import org.example.studentmanagementsystem.model.entities.Parent;
 import org.example.studentmanagementsystem.model.entities.Student;
 import org.example.studentmanagementsystem.repository.ClassRepository;
 import org.example.studentmanagementsystem.service.*;
@@ -14,7 +15,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -146,6 +149,55 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("successMessage", "Parent successfully registered!");
 
         return "redirect:/admin/createParent";
+    }
+
+    @GetMapping("/viewParents")
+    public String viewParents(Model model) {
+        List<Parent> parents = parentService.findAllParents();
+        model.addAttribute("parents", parents);
+        model.addAttribute("students", studentService.findAllStudents());
+        return "admin/view_parents";
+    }
+
+    @PostMapping("/assignStudentsToParent")
+    public String assignStudentsToParent(
+            @RequestParam Long parentId,
+            @RequestParam List<Long> studentIds,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Parent parent = parentService.findById(parentId)
+                    .orElseThrow(() -> new RuntimeException("Parent not found"));
+
+            List<Student> studentList = studentService.findByIds(studentIds);
+
+            parent.getChildren().clear();
+
+            parent.getChildren().addAll(studentList);
+
+            for (Student student : studentList) {
+                student.setParent(parent);
+                studentService.save(student);
+            }
+
+            parentService.save(parent);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Students successfully assigned to parent");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error assigning students to parent: " + e.getMessage());
+        }
+        return "redirect:/admin/viewParents";
+    }
+
+
+    @PostMapping("/deleteParent")
+    public String deleteParent(@RequestParam Long parentId, RedirectAttributes redirectAttributes) {
+        try {
+            parentService.deleteParent(parentId);
+            redirectAttributes.addFlashAttribute("successMessage", "Parent successfully deleted");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting parent: " + e.getMessage());
+        }
+        return "redirect:/admin/viewParents";
     }
 
     @GetMapping("/createClass")
