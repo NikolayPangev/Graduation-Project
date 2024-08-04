@@ -4,9 +4,8 @@ import jakarta.validation.Valid;
 import org.example.studentmanagementsystem.model.dtos.ParentForm;
 import org.example.studentmanagementsystem.model.dtos.StudentForm;
 import org.example.studentmanagementsystem.model.dtos.TeacherForm;
+import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.model.entities.Class;
-import org.example.studentmanagementsystem.model.entities.Parent;
-import org.example.studentmanagementsystem.model.entities.Student;
 import org.example.studentmanagementsystem.repository.ClassRepository;
 import org.example.studentmanagementsystem.service.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,17 +23,19 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
-    private final ParentService parentService;
     private final StudentService studentService;
+    private final ParentService parentService;
+    private final TeacherService teacherService;
     private final ClassService classService;
     private final ClassRepository classRepository;
     private final SubjectService subjectService;
     private final PasswordEncoder passwordEncoder;
 
-    public AdminController(UserService userService, ParentService parentService, StudentService studentService, ClassService classService, ClassRepository classRepository, SubjectService subjectService, PasswordEncoder passwordEncoder) {
+    public AdminController(UserService userService, ParentService parentService, StudentService studentService, TeacherService teacherService, ClassService classService, ClassRepository classRepository, SubjectService subjectService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.parentService = parentService;
         this.studentService = studentService;
+        this.teacherService = teacherService;
         this.classService = classService;
         this.classRepository = classRepository;
         this.subjectService = subjectService;
@@ -113,12 +114,6 @@ public class AdminController {
         return "redirect:/admin/viewStudents";
     }
 
-    @GetMapping("/viewTeachers")
-    public String viewTeachers(Model model) {
-        // Add logic to fetch teachers and add to model
-        return "view_teachers"; // The Thymeleaf template for viewing teachers
-    }
-
     @GetMapping("/createTeacher")
     public String createTeacherForm(Model model) {
         model.addAttribute("teacherForm", new TeacherForm());
@@ -151,6 +146,85 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("successMessage", successMessage);
 
         return "redirect:/admin/createTeacher";
+    }
+
+    @GetMapping("/viewTeachers")
+    public String viewTeachers(Model model) {
+        List<Teacher> teachers = teacherService.findAllTeachers();
+        List<Subject> subjects = subjectService.findAllSubjects();
+        List<Class> classes = classService.findAllClasses();
+        model.addAttribute("teachers", teachers);
+        model.addAttribute("subjects", subjects);
+        model.addAttribute("classes", classes);
+        return "admin/view_teachers";
+    }
+
+    @PostMapping("/assignSubjectToTeacher")
+    public String assignSubjectToTeacher(
+            @RequestParam Long teacherId,
+            @RequestParam Long subjectId,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Teacher teacher = teacherService.findById(teacherId)
+                    .orElseThrow(() -> new RuntimeException("Teacher not found"));
+            Subject subject = subjectService.findById(subjectId)
+                    .orElseThrow(() -> new RuntimeException("Subject not found"));
+
+            subject.setTeacher(teacher);
+            subjectService.save(subject);
+
+            String successMessage = "Successfully assigned subject " + subject.getSubjectName() + " to teacher " + teacher.getFirstName() + " " + teacher.getLastName();
+            redirectAttributes.addFlashAttribute("successMessage", successMessage);
+        } catch (Exception e) {
+            String errorMessage = "Couldn't assign subject to teacher: " + e.getMessage();
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+        }
+        return "redirect:/admin/viewTeachers";
+    }
+
+    @PostMapping("/assignClassToTeacher")
+    public String assignClassToTeacher(
+            @RequestParam Long teacherId,
+            @RequestParam List<Long> classIds,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Teacher teacher = teacherService.findById(teacherId)
+                    .orElseThrow(() -> new RuntimeException("Teacher not found"));
+
+            List<Class> classList = classService.findByIds(classIds);
+            for (Class clazz : classList) {
+                clazz.setTeacher(teacher);
+                classService.save(clazz);
+            }
+
+            StringBuilder successMessage = new StringBuilder("Successfully assigned classes ");
+            for (Class clazz : classList) {
+                successMessage.append(clazz.getGrade()).append("-").append(clazz.getSection()).append(", ");
+            }
+            successMessage = new StringBuilder(successMessage.substring(0, successMessage.length() - 2) +
+                    " to teacher " + teacher.getFirstName() + " " + teacher.getLastName());
+            redirectAttributes.addFlashAttribute("successMessage", successMessage.toString());
+        } catch (Exception e) {
+            String errorMessage = "Couldn't assign classes to teacher: " + e.getMessage();
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+        }
+        return "redirect:/admin/viewTeachers";
+    }
+
+    @PostMapping("/deleteTeacher")
+    public String deleteTeacher(@RequestParam Long teacherId, RedirectAttributes redirectAttributes) {
+        try {
+            Teacher teacher = teacherService.findById(teacherId)
+                    .orElseThrow(() -> new RuntimeException("Teacher not found"));
+            teacherService.deleteTeacher(teacherId);
+
+            String successMessage = "Teacher " + teacher.getFirstName() + " " + teacher.getLastName() + " successfully deleted";
+            redirectAttributes.addFlashAttribute("successMessage", successMessage);
+        } catch (Exception e) {
+            String errorMessage = "Error deleting teacher: " + e.getMessage();
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+        }
+        return "redirect:/admin/viewTeachers";
     }
 
     @GetMapping("/createParent")

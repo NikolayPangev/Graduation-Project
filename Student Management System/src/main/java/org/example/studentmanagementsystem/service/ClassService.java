@@ -35,5 +35,17 @@ public class ClassService {
     public void deleteClass(Long classId) {
         classRepository.deleteById(classId);
     }
+    public List<Class> findAllClasses() {
+        return classRepository.findAll();
+    }
+
+    public List<Class> findByIds(List<Long> ids) {
+        return classRepository.findAllById(ids);
+    }
+
+    public void save(Class clazz) {
+        classRepository.save(clazz);
+    }
+
 }
 
