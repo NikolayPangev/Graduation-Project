@@ -9,7 +9,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "grades")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 public class Grade {
     @Id
@@ -33,5 +34,4 @@ public class Grade {
 
     @Column(name = "date_given")
     private LocalDate dateGiven;
-
 }

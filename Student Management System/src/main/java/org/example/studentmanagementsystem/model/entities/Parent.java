@@ -5,20 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
-@Table(name = "parents")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Parent {
+public class Parent extends User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "parent_id")
-    private Long parentId;
-
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
-    private User user;
+    @OneToMany(mappedBy = "parent")
+    private Set<Student> children;
 
 }

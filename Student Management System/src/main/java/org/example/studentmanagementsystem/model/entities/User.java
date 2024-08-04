@@ -8,6 +8,7 @@ import org.example.studentmanagementsystem.model.enums.UserRole;
 
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,12 +32,11 @@ public class User {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    
+
     @Column(name = "password", nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private UserRole role;
-
 }

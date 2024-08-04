@@ -5,20 +5,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
-@Table(name = "teachers")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Teacher {
+public class Teacher extends User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "teacher_id")
-    private Long teacherId;
+    @OneToMany(mappedBy = "teacher")
+    private Set<Subject> subjects;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
-    private User user;
+    @OneToMany(mappedBy = "teacher")
+    private Set<Class> classes;
 
 }

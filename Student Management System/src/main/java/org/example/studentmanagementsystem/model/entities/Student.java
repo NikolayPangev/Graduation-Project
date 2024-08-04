@@ -5,27 +5,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
-@Table(name = "students")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Student {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "student_id")
-    private Long studentId;
+public class Student extends User {
 
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
-    private User user;
+    @ManyToOne
+    @JoinColumn(name = "class_id")
+    private Class classes;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Parent parent;
 
-    @ManyToOne
-    @JoinColumn(name = "class_id")
-    private Class classes;
+    @OneToMany(mappedBy = "student")
+    private Set<Grade> grades;
+
+    @OneToMany(mappedBy = "student")
+    private Set<Absence> absences;
 
 }

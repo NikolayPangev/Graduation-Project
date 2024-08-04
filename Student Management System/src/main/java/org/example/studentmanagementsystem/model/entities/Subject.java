@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "subjects")
 @Getter
@@ -19,4 +21,10 @@ public class Subject {
     @Column(name = "subject_name", nullable = false)
     private String subjectName;
 
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
+
+    @OneToMany(mappedBy = "subject")
+    private Set<Grade> grades;
 }
