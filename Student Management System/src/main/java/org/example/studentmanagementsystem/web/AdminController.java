@@ -1,4 +1,5 @@
 package org.example.studentmanagementsystem.web;
+import org.example.studentmanagementsystem.model.dtos.ParentForm;
 import org.example.studentmanagementsystem.model.dtos.StudentForm;
 import jakarta.validation.Valid;
 import org.example.studentmanagementsystem.model.entities.Class;
@@ -114,10 +115,37 @@ public class AdminController {
         return "view_teachers"; // The Thymeleaf template for viewing teachers
     }
 
-    @GetMapping("/viewParents")
-    public String viewParents(Model model) {
-        // Add logic to fetch parents and add to model
-        return "view_parents"; // The Thymeleaf template for viewing parents
+    @GetMapping("/createParent")
+    public String createParentForm(Model model) {
+        model.addAttribute("parentForm", new ParentForm());
+        return "admin/register_parent";
+    }
+
+    @PostMapping("/createParent")
+    public String createParent(@ModelAttribute @Validated ParentForm parentForm,
+                               BindingResult result,
+                               RedirectAttributes redirectAttributes) {
+        if (userService.usernameExists(parentForm.getUsername())) {
+            result.rejectValue("username", "error.username", "Username is already taken");
+        }
+
+        if (userService.emailExists(parentForm.getEmail())) {
+            result.rejectValue("email", "error.email", "Email is already taken");
+        }
+
+        if (!parentForm.getPassword().equals(parentForm.getConfirmPassword())) {
+            result.rejectValue("confirmPassword", "error.confirmPassword", "Passwords do not match");
+        }
+
+        if (result.hasErrors()) {
+            return "admin/register_parent";
+        }
+
+        userService.createParent(parentForm);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Parent successfully registered!");
+
+        return "redirect:/admin/createParent";
     }
 
     @GetMapping("/createClass")

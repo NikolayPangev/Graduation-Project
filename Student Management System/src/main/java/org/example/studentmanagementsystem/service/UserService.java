@@ -1,6 +1,8 @@
 package org.example.studentmanagementsystem.service;
 
+import org.example.studentmanagementsystem.model.dtos.ParentForm;
 import org.example.studentmanagementsystem.model.dtos.StudentForm;
+import org.example.studentmanagementsystem.model.entities.Parent;
 import org.example.studentmanagementsystem.model.entities.Student;
 import org.example.studentmanagementsystem.model.entities.User;
 import org.example.studentmanagementsystem.model.enums.UserRole;
@@ -89,11 +91,27 @@ public class UserService implements UserDetailsService {
         studentRepository.save(student);
     }
 
-    public Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+    public void createParent(ParentForm parentForm) {
+        if (usernameExists(parentForm.getUsername())) {
+            throw new IllegalStateException("Username already exists.");
+        }
+        if (emailExists(parentForm.getEmail())) {
+            throw new IllegalStateException("Email already exists.");
+        }
+        if (!parentForm.getPassword().equals(parentForm.getConfirmPassword())) {
+            throw new IllegalStateException("Passwords do not match.");
+        }
+
+        Parent parent = new Parent();
+        parent.setUsername(parentForm.getUsername());
+        parent.setFirstName(parentForm.getFirstName());
+        parent.setMiddleName(parentForm.getMiddleName());
+        parent.setLastName(parentForm.getLastName());
+        parent.setEmail(parentForm.getEmail());
+        parent.setPassword(passwordEncoder.encode(parentForm.getPassword()));
+        parent.setRole(UserRole.PARENT);
+
+        userRepository.save(parent);
     }
 
-    public void deleteUser(Long userId) {
-        userRepository.deleteById(userId);
-    }
 }
