@@ -1,7 +1,8 @@
 package org.example.studentmanagementsystem.web;
+
+import jakarta.validation.Valid;
 import org.example.studentmanagementsystem.model.dtos.ParentForm;
 import org.example.studentmanagementsystem.model.dtos.StudentForm;
-import jakarta.validation.Valid;
 import org.example.studentmanagementsystem.model.entities.Class;
 import org.example.studentmanagementsystem.model.entities.Parent;
 import org.example.studentmanagementsystem.model.entities.Student;
@@ -15,9 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -83,7 +82,8 @@ public class AdminController {
 
         userService.createStudent(studentForm);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Student successfully registered!");
+        String successMessage = "Student " + studentForm.getFirstName() + " " + studentForm.getLastName() + " was successfully registered!";
+        redirectAttributes.addFlashAttribute("successMessage", successMessage);
 
         return "redirect:/admin/createStudent";
     }
@@ -146,7 +146,8 @@ public class AdminController {
 
         userService.createParent(parentForm);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Parent successfully registered!");
+        String successMessage = "Parent " + parentForm.getFirstName() + " " + parentForm.getLastName() + " was successfully registered!";
+        redirectAttributes.addFlashAttribute("successMessage", successMessage);
 
         return "redirect:/admin/createParent";
     }
@@ -169,9 +170,7 @@ public class AdminController {
                     .orElseThrow(() -> new RuntimeException("Parent not found"));
 
             List<Student> studentList = studentService.findByIds(studentIds);
-
             parent.getChildren().clear();
-
             parent.getChildren().addAll(studentList);
 
             for (Student student : studentList) {
@@ -181,21 +180,32 @@ public class AdminController {
 
             parentService.save(parent);
 
-            redirectAttributes.addFlashAttribute("successMessage", "Students successfully assigned to parent");
+            String successMessage = "Successfully assigned ";
+            for (Student student : studentList) {
+                successMessage += student.getFirstName() + " " + student.getLastName() + ", ";
+            }
+            successMessage = successMessage.substring(0, successMessage.length() - 2) +
+                    " to parent " + parent.getFirstName() + " " + parent.getLastName();
+            redirectAttributes.addFlashAttribute("successMessage", successMessage);
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error assigning students to parent: " + e.getMessage());
+            String errorMessage = "Couldn't assign students to parent: " + e.getMessage();
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
         return "redirect:/admin/viewParents";
     }
 
-
     @PostMapping("/deleteParent")
     public String deleteParent(@RequestParam Long parentId, RedirectAttributes redirectAttributes) {
         try {
+            Parent parent = parentService.findById(parentId)
+                    .orElseThrow(() -> new RuntimeException("Parent not found"));
             parentService.deleteParent(parentId);
-            redirectAttributes.addFlashAttribute("successMessage", "Parent successfully deleted");
+
+            String successMessage = "Parent " + parent.getFirstName() + " " + parent.getLastName() + " successfully deleted";
+            redirectAttributes.addFlashAttribute("successMessage", successMessage);
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting parent: " + e.getMessage());
+            String errorMessage = "Error deleting parent: " + e.getMessage();
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
         return "redirect:/admin/viewParents";
     }

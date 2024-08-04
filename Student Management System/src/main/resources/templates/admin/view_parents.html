@@ -12,6 +12,11 @@
 
 <div class="container mt-5">
   <h1>All Parents</h1>
+
+  <!-- Display Success and Error Messages -->
+  <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
+  <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+
   <table class="table table-bordered">
     <thead>
     <tr>
