@@ -3,6 +3,7 @@ package org.example.studentmanagementsystem.web;
 import jakarta.validation.Valid;
 import org.example.studentmanagementsystem.model.dtos.ParentForm;
 import org.example.studentmanagementsystem.model.dtos.StudentForm;
+import org.example.studentmanagementsystem.model.dtos.TeacherForm;
 import org.example.studentmanagementsystem.model.entities.Class;
 import org.example.studentmanagementsystem.model.entities.Parent;
 import org.example.studentmanagementsystem.model.entities.Student;
@@ -118,6 +119,40 @@ public class AdminController {
         return "view_teachers"; // The Thymeleaf template for viewing teachers
     }
 
+    @GetMapping("/createTeacher")
+    public String createTeacherForm(Model model) {
+        model.addAttribute("teacherForm", new TeacherForm());
+        return "admin/register_teacher";
+    }
+
+    @PostMapping("/createTeacher")
+    public String createTeacher(@ModelAttribute @Validated TeacherForm teacherForm,
+                                BindingResult result,
+                                RedirectAttributes redirectAttributes) {
+        if (userService.usernameExists(teacherForm.getUsername())) {
+            result.rejectValue("username", "error.username", "Username is already taken");
+        }
+
+        if (userService.emailExists(teacherForm.getEmail())) {
+            result.rejectValue("email", "error.email", "Email is already taken");
+        }
+
+        if (!teacherForm.getPassword().equals(teacherForm.getConfirmPassword())) {
+            result.rejectValue("confirmPassword", "error.confirmPassword", "Passwords do not match");
+        }
+
+        if (result.hasErrors()) {
+            return "admin/register_teacher";
+        }
+
+        userService.createTeacher(teacherForm);
+
+        String successMessage = "Teacher " + teacherForm.getFirstName() + " " + teacherForm.getLastName() + " was successfully registered!";
+        redirectAttributes.addFlashAttribute("successMessage", successMessage);
+
+        return "redirect:/admin/createTeacher";
+    }
+
     @GetMapping("/createParent")
     public String createParentForm(Model model) {
         model.addAttribute("parentForm", new ParentForm());
@@ -180,13 +215,13 @@ public class AdminController {
 
             parentService.save(parent);
 
-            String successMessage = "Successfully assigned ";
+            StringBuilder successMessage = new StringBuilder("Successfully assigned ");
             for (Student student : studentList) {
-                successMessage += student.getFirstName() + " " + student.getLastName() + ", ";
+                successMessage.append(student.getFirstName()).append(" ").append(student.getLastName()).append(", ");
             }
-            successMessage = successMessage.substring(0, successMessage.length() - 2) +
-                    " to parent " + parent.getFirstName() + " " + parent.getLastName();
-            redirectAttributes.addFlashAttribute("successMessage", successMessage);
+            successMessage = new StringBuilder(successMessage.substring(0, successMessage.length() - 2) +
+                    " to parent " + parent.getFirstName() + " " + parent.getLastName());
+            redirectAttributes.addFlashAttribute("successMessage", successMessage.toString());
         } catch (Exception e) {
             String errorMessage = "Couldn't assign students to parent: " + e.getMessage();
             redirectAttributes.addFlashAttribute("errorMessage", errorMessage);

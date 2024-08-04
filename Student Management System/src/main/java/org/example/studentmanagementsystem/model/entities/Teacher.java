@@ -1,11 +1,12 @@
 package org.example.studentmanagementsystem.model.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,9 +15,9 @@ import java.util.Set;
 public class Teacher extends User {
 
     @OneToMany(mappedBy = "teacher")
-    private Set<Subject> subjects;
+    private List<Subject> subjects;
 
     @OneToMany(mappedBy = "teacher")
-    private Set<Class> classes;
+    private List<Class> classes;
 
 }
