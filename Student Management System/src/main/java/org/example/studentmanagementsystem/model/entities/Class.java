@@ -29,7 +29,7 @@ public class Class {
     private Set<Student> students;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Teacher> teacher;
+    private List<Teacher> teachers;
 
     @ManyToOne
     @JoinColumn(name = "subject_id")

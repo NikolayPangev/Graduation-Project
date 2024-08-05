@@ -2,6 +2,7 @@ package org.example.studentmanagementsystem.service;
 
 import jakarta.transaction.Transactional;
 import org.example.studentmanagementsystem.model.entities.Student;
+import org.example.studentmanagementsystem.model.entities.Teacher;
 import org.example.studentmanagementsystem.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +46,9 @@ public class StudentService {
 
     public List<Student> findAllByClassId(Long classId) {
         return studentRepository.findByClasses_ClassIdOrderByFirstNameAscLastNameAscMiddleNameAsc(classId);
+    }
+
+    public List<Student> findAllStudentsByTeacher(Teacher teacher) {
+        return studentRepository.findByTeachersContaining(teacher);
     }
 }

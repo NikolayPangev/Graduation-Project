@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,4 +27,7 @@ public class Student extends User {
 
     @OneToMany(mappedBy = "student")
     private Set<Absence> absences;
+
+    @ManyToMany(mappedBy = "students")
+    private List<Teacher> teachers;
 }

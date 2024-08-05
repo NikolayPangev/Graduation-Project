@@ -1,11 +1,11 @@
 package org.example.studentmanagementsystem.service;
 
 import org.example.studentmanagementsystem.model.entities.Class;
+import org.example.studentmanagementsystem.model.entities.Teacher;
 import org.example.studentmanagementsystem.repository.ClassRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ClassService {
@@ -49,7 +49,7 @@ public class ClassService {
         classRepository.save(clazz);
     }
 
-    public Optional<Class> findById(Long id) {
-        return classRepository.findById(id);
+    public List<Class> findClassesByTeacher(Teacher teacher) {
+        return classRepository.findByTeachersContaining(teacher);
     }
 }
