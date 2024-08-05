@@ -38,4 +38,12 @@ public class StudentService {
     public List<Student> findByIds(List<Long> studentIds) {
         return studentRepository.findAllById(studentIds);
     }
+
+    public Optional<Student> findByUsername(String username) {
+        return studentRepository.findByUsername(username);
+    }
+
+    public List<Student> findAllByClassId(Long classId) {
+        return studentRepository.findByClasses_ClassIdOrderByFirstNameAscLastNameAscMiddleNameAsc(classId);
+    }
 }

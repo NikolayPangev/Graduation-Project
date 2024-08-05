@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View My Class</title>
+    <title>View My Teachers</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
@@ -11,21 +12,19 @@
 <div th:replace="~{fragments/student_navbar :: navbar}"></div>
 
 <div class="container mt-4">
-    <h1>Students in My Class</h1>
+    <h1>Teachers for My Class</h1>
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>First Name</th>
-            <th>Middle Name</th>
-            <th>Last Name</th>
+            <th>Subject</th>
+            <th>Teacher</th>
         </tr>
         </thead>
         <tbody>
-        <!-- Iterate over students and display in rows -->
-        <tr th:each="student : ${students}">
-            <td th:text="${student.firstName}"></td>
-            <td th:text="${student.middleName}"></td>
-            <td th:text="${student.lastName}"></td>
+        <!-- Iterate over teacherSubjects and display in rows -->
+        <tr th:each="teacher : ${teacherSubjects}">
+            <td th:each="subject : ${teacher.subjects}" th:text="${subject.subjectName}"></td>
+            <td th:text="${teacher.firstName + ' ' + teacher.lastName}"></td>
         </tr>
         </tbody>
     </table>

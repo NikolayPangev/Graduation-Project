@@ -66,7 +66,7 @@ public class StudentController {
         Student student = studentService.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        List<Teacher> teachers = teacherService.findByClassId(student.getClassId());
+        List<Teacher> teachers = teacherService.findByClassId(student.getClasses().getClassId());
 
         model.addAttribute("teacherSubjects", teachers);
         return "student/view_teachers";

@@ -31,5 +31,9 @@ public class TeacherService {
     public void deleteTeacher(Long id) {
         teacherRepository.deleteById(id);
     }
-}
 
+    @Transactional(readOnly = true)
+    public List<Teacher> findByClassId(Long classId) {
+        return teacherRepository.findByClasses_ClassId(classId);
+    }
+}
