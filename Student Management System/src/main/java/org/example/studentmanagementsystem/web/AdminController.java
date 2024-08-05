@@ -221,19 +221,19 @@ public class AdminController {
             // Retrieve the classes by their IDs
             List<Class> classList = classService.findByIds(classIds);
             for (Class clazz : classList) {
-                Teacher currentTeacher = clazz.getTeacher().stream()
+                Teacher currentTeacher = clazz.getTeachers().stream()
                         .filter(t -> t.getSubjects().contains(subject))
                         .findFirst().orElse(null);
 
                 if (currentTeacher != null && !currentTeacher.equals(teacher)) {
                     currentTeacher.getClasses().remove(clazz);
-                    clazz.getTeacher().remove(currentTeacher);
+                    clazz.getTeachers().remove(currentTeacher);
                     teacherService.save(currentTeacher);
                     classService.save(clazz);
                 }
 
                 teacher.getClasses().add(clazz);
-                clazz.getTeacher().add(teacher);
+                clazz.getTeachers().add(teacher);
                 clazz.setSubject(subject);
                 teacherService.save(teacher);
                 classService.save(clazz);
