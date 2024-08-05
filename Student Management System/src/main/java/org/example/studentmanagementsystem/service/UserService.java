@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -70,6 +71,10 @@ public class UserService implements UserDetailsService {
         admin.setRole(UserRole.ADMIN);
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         userRepository.save(admin);
+    }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     public boolean usernameExists(String username) {
