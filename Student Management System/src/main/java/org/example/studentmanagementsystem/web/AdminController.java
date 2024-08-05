@@ -1,6 +1,7 @@
 package org.example.studentmanagementsystem.web;
 
 import jakarta.validation.Valid;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.example.studentmanagementsystem.model.dtos.ParentForm;
 import org.example.studentmanagementsystem.model.dtos.StudentForm;
 import org.example.studentmanagementsystem.model.dtos.TeacherForm;
@@ -8,6 +9,7 @@ import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.model.entities.Class;
 import org.example.studentmanagementsystem.repository.ClassRepository;
 import org.example.studentmanagementsystem.service.*;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -45,6 +48,17 @@ public class AdminController {
     @GetMapping("/dashboard")
     public String getDashboard() {
         return "admin/admin_dashboard";
+    }
+
+    @GetMapping("/profile")
+    public String viewProfile(Model model, Principal principal) {
+        String username = principal.getName();
+
+        User user = userService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        model.addAttribute("user", user);
+        return "admin/view_profile";
     }
 
     @GetMapping("/viewStudents")
