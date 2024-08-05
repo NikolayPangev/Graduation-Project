@@ -36,4 +36,14 @@ public class TeacherService {
     public List<Teacher> findByClassId(Long classId) {
         return teacherRepository.findByClasses_ClassId(classId);
     }
+
+    @Transactional(readOnly = true)
+    public Optional<Teacher> findByClassAndSubject(Long classId, Long subjectId) {
+        return teacherRepository.findByClasses_ClassIdAndSubjects_SubjectId(classId, subjectId);
+    }
+
+    public void save(Teacher currentTeacher) {
+        teacherRepository.save(currentTeacher);
+    }
+
 }

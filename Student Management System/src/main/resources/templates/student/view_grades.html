@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>View My Grades</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<!-- Include the navbar -->
+<div th:replace="~{fragments/student_navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <h1>My Grades</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Grades</th>
+            <th>Average Grade</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate over grades and display in rows -->
+        <tr th:each="grade : ${grades}">
+            <td th:text="${grade.subject}"></td>
+            <td th:text="${grade.grades}"></td>
+            <td th:text="${grade.averageGrade}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.10/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+</title>
+</head>
+<body>
+
+</body>
+</html>

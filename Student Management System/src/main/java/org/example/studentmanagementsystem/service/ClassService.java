@@ -5,6 +5,7 @@ import org.example.studentmanagementsystem.repository.ClassRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClassService {
@@ -35,6 +36,7 @@ public class ClassService {
     public void deleteClass(Long classId) {
         classRepository.deleteById(classId);
     }
+
     public List<Class> findAllClasses() {
         return classRepository.findAll();
     }
@@ -47,5 +49,7 @@ public class ClassService {
         classRepository.save(clazz);
     }
 
+    public Optional<Class> findById(Long id) {
+        return classRepository.findById(id);
+    }
 }
-

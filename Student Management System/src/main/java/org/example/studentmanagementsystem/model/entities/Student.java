@@ -26,5 +26,4 @@ public class Student extends User {
 
     @OneToMany(mappedBy = "student")
     private Set<Absence> absences;
-
 }

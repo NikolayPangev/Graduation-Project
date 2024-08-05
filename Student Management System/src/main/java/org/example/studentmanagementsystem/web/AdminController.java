@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -184,6 +185,13 @@ public class AdminController {
             Subject subject = subjectService.findById(subjectId)
                     .orElseThrow(() -> new RuntimeException("Subject not found"));
 
+            teacher.getSubjects().forEach(s -> {
+                s.setTeacher(null);
+                subjectService.save(s);
+            });
+
+            teacher.getSubjects().clear();
+            teacher.getSubjects().add(subject);
             subject.setTeacher(teacher);
             subjectService.save(subject);
 
@@ -205,9 +213,29 @@ public class AdminController {
             Teacher teacher = teacherService.findById(teacherId)
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
 
+            if (teacher.getSubjects().isEmpty()) {
+                throw new RuntimeException("Teacher is not assigned to any subject");
+            }
+            Subject subject = teacher.getSubjects().get(0);
+
+            // Retrieve the classes by their IDs
             List<Class> classList = classService.findByIds(classIds);
             for (Class clazz : classList) {
-                clazz.setTeacher(teacher);
+                Teacher currentTeacher = clazz.getTeacher().stream()
+                        .filter(t -> t.getSubjects().contains(subject))
+                        .findFirst().orElse(null);
+
+                if (currentTeacher != null && !currentTeacher.equals(teacher)) {
+                    currentTeacher.getClasses().remove(clazz);
+                    clazz.getTeacher().remove(currentTeacher);
+                    teacherService.save(currentTeacher);
+                    classService.save(clazz);
+                }
+
+                teacher.getClasses().add(clazz);
+                clazz.getTeacher().add(teacher);
+                clazz.setSubject(subject);
+                teacherService.save(teacher);
                 classService.save(clazz);
             }
 
@@ -224,6 +252,7 @@ public class AdminController {
         }
         return "redirect:/admin/viewTeachers";
     }
+
 
     @PostMapping("/deleteTeacher")
     public String deleteTeacher(@RequestParam Long teacherId, RedirectAttributes redirectAttributes) {

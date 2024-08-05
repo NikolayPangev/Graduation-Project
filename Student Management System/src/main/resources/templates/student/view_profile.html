@@ -10,7 +10,7 @@
 <div th:replace="~{fragments/student_navbar :: navbar}"></div>
 
 <div class="container mt-5">
-    <h1 th:text="'Profile of ' + ${user.username}">Profile of User</h1>
+    <h1 th:text="${user.firstName} + ' ' + ${user.lastName}">Profile of User</h1>
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">User Information</h5>
@@ -19,14 +19,13 @@
             <p>Email: <span th:text="${user.email}">Email</span></p>
 
             <div th:if="${user.classes != null}">
-                <p>Class Grade: <span th:text="${user.classes.grade}">Grade</span></p>
-                <p>Class Section: <span th:text="${user.classes.section}">Section</span></p>
+                <p>Class: <span th:text="${user.classes.grade} + ${user.classes.section}">Class</span></p>
             </div>
             <div th:unless="${user.classes != null}">
                 <p>No class information available.</p>
             </div>
 
-            <a href="#" class="btn btn-primary" th:href="@{/student/view-class}">Back to Classes</a>
+            <a href="#" class="btn btn-primary" th:href="@{/student/dashboard}">Back to Dashboard</a>
         </div>
     </div>
 </div>

@@ -2,6 +2,7 @@ package org.example.studentmanagementsystem.model.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class Teacher extends User {
     @OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
     private List<Subject> subjects;
 
-    @OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
     private List<Class> classes;
 
 }
