@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div th:replace="~{fragments/student_navbar :: navbar}"></div>
+
+<div class="container mt-5">
+    <h1 th:text="'Profile of ' + ${user.username}">Profile of User</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">User Information</h5>
+            <p>First Name: <span th:text="${user.firstName}">First Name</span></p>
+            <p>Last Name: <span th:text="${user.lastName}">Last Name</span></p>
+            <p>Email: <span th:text="${user.email}">Email</span></p>
+
+            <div th:if="${user.classes != null}">
+                <p>Class Grade: <span th:text="${user.classes.grade}">Grade</span></p>
+                <p>Class Section: <span th:text="${user.classes.section}">Section</span></p>
+            </div>
+            <div th:unless="${user.classes != null}">
+                <p>No class information available.</p>
+            </div>
+
+            <a href="#" class="btn btn-primary" th:href="@{/student/view-class}">Back to Classes</a>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.10/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
