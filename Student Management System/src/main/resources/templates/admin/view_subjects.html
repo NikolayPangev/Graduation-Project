@@ -13,6 +13,8 @@
 
 <div class="container mt-4">
     <h2>View Subjects</h2>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
     <table class="table">
         <thead>
         <tr>
