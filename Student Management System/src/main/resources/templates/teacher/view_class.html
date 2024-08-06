@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +29,11 @@
             <td th:text="${student.firstName}"></td>
             <td th:text="${student.middleName}"></td>
             <td th:text="${student.lastName}"></td>
-            <td th:text="${student.grades}"></td>
+            <td>
+                <ul>
+                    <li th:each="grade : ${student.grades}" th:text="${grade.grade}"></li>
+                </ul>
+            </td>
             <td th:text="${student.averageGrade}"></td>
             <td><a th:href="@{/teacher/add-grade/{id}(id=${student.userId})}" class="btn btn-primary">Add Grade</a></td>
         </tr>

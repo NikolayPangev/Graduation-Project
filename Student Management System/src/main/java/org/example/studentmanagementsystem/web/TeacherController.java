@@ -1,14 +1,18 @@
 package org.example.studentmanagementsystem.web;
 
+import org.example.studentmanagementsystem.model.dtos.GradeForm;
 import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.model.entities.Class;
 import org.example.studentmanagementsystem.service.*;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,7 +52,6 @@ public class TeacherController {
     @GetMapping("/view-classes")
     public String viewClasses(Model model) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-
         Optional<User> currentUserOptional = userService.findByUsername(currentUsername);
 
         if (currentUserOptional.isPresent()) {
@@ -61,18 +64,29 @@ public class TeacherController {
         return "teacher/view_classes";
     }
 
-    //
-//    @GetMapping("/view-class/{id}")
-//    public String viewClass(@PathVariable("id") Long classId, Model model) {
-//        Optional<Class> classesOptional = classService.findById(classId);
-//        if (classesOptional.isPresent()) {
-//            Class classes = classesOptional.get();
-//            List<Student> students = classes.getStudents();
-//            model.addAttribute("students", students);
-//        }
-//        return "view_class";
-//    }
-//
+
+    @GetMapping("/view-class/{id}")
+    public String viewClass(@PathVariable("id") Long classId, Model model) {
+        Optional<Class> classOptional = classService.findById(classId);
+        if (classOptional.isPresent()) {
+            Class classes = classOptional.get();
+            Set<Student> studentSet = classes.getStudents();
+            List<Student> students = new ArrayList<>(studentSet);
+            // Sorting students alphabetically by first, middle, and last name
+            students.sort(Comparator.comparing(Student::getFirstName)
+                    .thenComparing(Student::getMiddleName)
+                    .thenComparing(Student::getLastName));
+            model.addAttribute("students", students);
+            model.addAttribute("class", classes);
+        } else {
+            model.addAttribute("errorMessage", "Class not found");
+            return "error";
+        }
+        return "teacher/view_class"; // Ensure the correct view name is returned
+    }
+
+
+
     @GetMapping("/view-students")
     public String viewStudents(Model model) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -148,40 +162,88 @@ public class TeacherController {
         return "teacher/view_profile";
     }
 
+    @GetMapping("/add-grade/{studentId}")
+    public String showAddGradeForm(@PathVariable Long studentId, Model model) {
+        // Fetch the student
+        Optional<Student> optionalStudent = studentService.findById(studentId);
+        if (optionalStudent.isEmpty()) {
+            model.addAttribute("errorMessage", "Student not found");
+            return "error";
+        }
+        Student student = optionalStudent.get();
 
-//
-//    @GetMapping("/add-grade/{id}")
-//    public String addGrade(@PathVariable("id") Long studentId, Model model) {
-//        Optional<Student> studentOptional = studentService.findById(studentId);
-//        if (studentOptional.isPresent()) {
-//            Student student = studentOptional.get();
-//            model.addAttribute("student", student);
-//            model.addAttribute("subject", new Subject()); // Adjust as necessary to get the actual subject
-//        }
-//        return "add_grade";
-//    }
-//
-//    @PostMapping("/add-grade")
-//    public String saveGrade(@RequestParam("grade") Double grade,
-//                            @RequestParam("description") String description,
-//                            @RequestParam("studentId") Long studentId,
-//                            @RequestParam("subjectId") Long subjectId) {
-//        Grade newGrade = new Grade();
-//        newGrade.setGrade(grade);
-//        newGrade.setDescription(description);
-//        Optional<Student> studentOptional = studentService.findById(studentId);
-//        if (studentOptional.isPresent()) {
-//            newGrade.setStudent(studentOptional.get());
-//        }
-//        Optional<Subject> subjectOptional = subjectService.findById(subjectId);
-//        if (subjectOptional.isPresent()) {
-//            newGrade.setSubject(subjectOptional.get());
-//        }
-//        gradeService.saveGrade(newGrade); // Ensure saveGrade method exists in GradeService
-//        return "redirect:/teacher/view-students";
-//    }
-//
+        // Prepare the GradeForm
+        GradeForm gradeForm = new GradeForm();
+        gradeForm.setStudentId(studentId);
 
+        // Fetch the teacher and subject
+        Long currentTeacherId = getCurrentTeacherId();
+        Subject subject = subjectService.findByTeacherId(currentTeacherId);
+        if (subject != null) {
+            model.addAttribute("subject", subject);
+        } else {
+            model.addAttribute("errorMessage", "Subject not found for the teacher");
+            return "error";
+        }
+
+        model.addAttribute("gradeForm", gradeForm);
+        return "teacher/add_grade"; // The HTML form view name
+    }
+
+    @PostMapping("/add-grade")
+    public String addGrade(@ModelAttribute GradeForm gradeForm, Model model) {
+
+        // Fetch the teacher and subject
+        Long currentTeacherId = getCurrentTeacherId();
+        Subject subject = subjectService.findByTeacherId(currentTeacherId);
+
+        if (subject == null) {
+            model.addAttribute("errorMessage", "Subject not found for the teacher");
+            return "error";
+        }
+
+        // Fetch the student
+        Optional<Student> optionalStudent = studentService.findById(gradeForm.getStudentId());
+        if (optionalStudent.isEmpty()) {
+            model.addAttribute("errorMessage", "Student not found");
+            return "error";
+        }
+        Student student = optionalStudent.get();
+
+        // Add the grade
+        Grade grade = new Grade();
+        grade.setStudent(student);
+        grade.setSubject(subject);
+        grade.setGrade(gradeForm.getGrade());
+        grade.setDescription(gradeForm.getDescription());
+        grade.setDateGiven(LocalDate.now()); // Set the current date
+
+        gradeService.save(grade);
+
+        // Redirect to the view class page with the classId parameter
+        Long classId = student.getClasses().getClassId();
+        return "redirect:/teacher/view-class/" + classId;
+    }
+
+
+    private Long getCurrentTeacherId() {
+        // Get the username of the current authenticated user
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        // Fetch the Teacher object based on the username
+        Teacher teacher = teacherService.findByUsername(username);
+        if (teacher != null) {
+            return teacher.getUserId();
+        } else {
+            throw new RuntimeException("Teacher not found");
+        }
+    }
 
     @GetMapping("/logout-confirmation")
     public String logoutConfirmation() {

@@ -1,7 +1,6 @@
 package org.example.studentmanagementsystem.service;
 
 import org.example.studentmanagementsystem.model.entities.Subject;
-import org.example.studentmanagementsystem.model.entities.Teacher;
 import org.example.studentmanagementsystem.repository.SubjectRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,10 +49,8 @@ public class SubjectService {
         subjectRepository.save(subject);
     }
 
-    @Transactional
-    public void removeTeacherFromSubject(Subject subject, Teacher teacher) {
-        subject.getTeacher().remove(teacher);
-        teacher.setSubject(null);
-        subjectRepository.save(subject);
+    public Subject findByTeacherId(Long teacherId) {
+        return subjectRepository.findByTeacher_UserId(teacherId);
     }
+
 }

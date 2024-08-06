@@ -27,7 +27,7 @@ public class Grade {
     private Subject subject;
 
     @Column(name = "grade")
-    private Double grade;
+    private Integer grade;
 
     @Column(name = "description")
     private String description;

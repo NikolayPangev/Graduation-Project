@@ -48,4 +48,8 @@ public class TeacherService {
         teacher.setSubject(subject);
         teacherRepository.save(teacher);
     }
+
+    public Teacher findByUsername(String username) {
+        return teacherRepository.findByUsername(username);
+    }
 }

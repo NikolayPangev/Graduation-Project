@@ -6,6 +6,7 @@ import org.example.studentmanagementsystem.repository.ClassRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClassService {
@@ -51,5 +52,13 @@ public class ClassService {
 
     public List<Class> findClassesByTeacher(Teacher teacher) {
         return classRepository.findByTeachersContaining(teacher);
+    }
+
+    public Optional<Class> findById(Long classId) {
+        return classRepository.findById(classId);
+    }
+
+    public Optional<Class> findClassByStudentId(Long studentId) {
+        return classRepository.findClassByStudentId(studentId);
     }
 }

@@ -1,40 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Grade</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<div th:replace="~{fragments/teacher_navbar :: navbar}"></div>
+<h1>Add Grade for Student</h1>
 
-<div class="container mt-5">
-    <h1>Add Grade for Student</h1>
-    <form th:action="@{/teacher/add-grade}" method="post">
-        <div class="form-group">
-            <label for="grade">Grade</label>
-            <select id="grade" name="grade" class="form-control">
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <input type="text" id="description" name="description" class="form-control">
-        </div>
-        <input type="hidden" name="studentId" th:value="${student.userId}">
-        <input type="hidden" name="subjectId" th:value="${subject.subjectId}">
-        <button type="submit" class="btn btn-primary">Add Grade</button>
-    </form>
+<!-- Display error message if it exists -->
+<div th:if="${errorMessage}" style="color: red;">
+    <p th:text="${errorMessage}"></p>
 </div>
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.10/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<form th:action="@{/teacher/add-grade}" th:method="post" th:object="${gradeForm}">
+    <!-- Hidden input for student ID -->
+    <input type="hidden" th:field="*{studentId}" />
+
+    <!-- Display the teacher's subject -->
+    <p><strong>Subject:</strong> <span th:text="${subject.subjectName}"></span></p>
+
+    <!-- Grade input field -->
+    <label for="grade">
+        Grade:
+        <input type="number" id="grade" th:field="*{grade}" step="0.1" placeholder="Enter grade" required />
+    </label>
+
+    <!-- Description input field -->
+    <label for="description">
+        Description:
+        <textarea id="description" th:field="*{description}" placeholder="Enter description"></textarea>
+    </label>
+
+    <button type="submit">Add Grade</button>
+</form>
 </body>
 </html>

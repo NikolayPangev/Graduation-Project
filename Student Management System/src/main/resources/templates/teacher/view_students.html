@@ -28,7 +28,7 @@
             <td th:text="${student.firstName}"></td>
             <td th:text="${student.middleName}"></td>
             <td th:text="${student.lastName}"></td>
-            <td th:text="${student.classes.grade + student.classes.section}"></td>
+            <td th:text="${student.classes.grade + '' + student.classes.section}"></td>
             <td>
                 <ul>
                     <li th:each="grade : ${student.grades}" th:text="${grade.getGrade()}"></li>

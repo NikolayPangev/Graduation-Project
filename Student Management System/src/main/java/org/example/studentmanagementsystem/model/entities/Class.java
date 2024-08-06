@@ -25,7 +25,7 @@ public class Class {
     @Column(name = "section", nullable = false)
     private char section;
 
-    @OneToMany(mappedBy = "classes")
+    @OneToMany(mappedBy = "classes", fetch = FetchType.EAGER)
     private Set<Student> students;
 
     @ManyToMany(fetch = FetchType.EAGER)

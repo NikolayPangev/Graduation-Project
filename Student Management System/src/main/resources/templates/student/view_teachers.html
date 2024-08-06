@@ -21,9 +21,9 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Iterate over teacherSubjects and display in rows -->
-        <tr th:each="teacher : ${teacherSubjects}">
-            <td th:each="subject : ${teacher.subjects}" th:text="${subject.subjectName}"></td>
+
+        <tr th:each="teacher : ${teachers}">
+            <td th:text="${teacher.subject.subjectName}"></td>
             <td th:text="${teacher.firstName + ' ' + teacher.lastName}"></td>
         </tr>
         </tbody>
