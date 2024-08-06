@@ -5,7 +5,6 @@ import org.example.studentmanagementsystem.repository.StudentRepository;
 import org.example.studentmanagementsystem.repository.TeacherRepository;
 import org.example.studentmanagementsystem.service.UserService;
 import org.example.studentmanagementsystem.repository.UserRepository;
-import org.example.studentmanagementsystem.web.CustomSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

@@ -1,5 +1,4 @@
-package org.example.studentmanagementsystem.web;
-import jakarta.servlet.FilterChain;
+package org.example.studentmanagementsystem.config;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
