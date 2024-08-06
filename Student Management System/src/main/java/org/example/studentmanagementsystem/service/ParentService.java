@@ -40,5 +40,9 @@ public class ParentService {
     public List<Parent> findParentsByStudent(Student student) {
         return parentRepository.findParentsByStudent(student);
     }
+
+    public Optional<Parent> findByUsername(String username) {
+        return parentRepository.findByUsername(username);
+    }
 }
 

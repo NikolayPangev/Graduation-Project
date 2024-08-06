@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Child's Grades</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<!-- Include the navbar -->
+<div th:replace="~{fragments/student_navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <h1>Your Child's Grades</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Teacher</th>
+            <th>Grades</th>
+            <th>Average Grade</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="subjectWithGrades : ${subjectWithGradesList}">
+            <td th:text="${subjectWithGrades.subject.subjectName}"></td>
+            <td th:text="${subjectWithGrades.teacher != null ? subjectWithGrades.teacher.firstName + ' ' + subjectWithGrades.teacher.lastName : 'N/A'}"></td>
+            <td>
+                <ul class="list-unstyled">
+                    <li th:each="grade : ${subjectWithGrades.grades}" th:text="${grade.grade}"></li>
+                </ul>
+            </td>
+            <td th:text="${#numbers.formatDecimal(subjectWithGrades.averageGrade, 1, 2)}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.10/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -14,19 +14,4 @@ public class LoginController {
         return "login";
     }
 
-//    @PostMapping("/login")
-//    public String login(
-//            @ModelAttribute("loginForm") @Valid LoginForm loginForm,
-//            BindingResult bindingResult,
-//            RedirectAttributes redirectAttributes
-//    ) {
-//        if (bindingResult.hasErrors()) {
-//            redirectAttributes.addFlashAttribute("loginForm", loginForm);
-//            redirectAttributes.addFlashAttribute(
-//                    "org.springframework.validation.BindingResult.loginForm", bindingResult);
-//            return "redirect:/login";
-//        }
-//
-//        return "redirect:/home";
-//    }
 }

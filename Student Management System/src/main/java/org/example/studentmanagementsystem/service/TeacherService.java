@@ -1,5 +1,6 @@
 package org.example.studentmanagementsystem.service;
 
+import org.example.studentmanagementsystem.model.entities.Class;
 import org.example.studentmanagementsystem.model.entities.Subject;
 import org.example.studentmanagementsystem.model.entities.Teacher;
 import org.example.studentmanagementsystem.repository.TeacherRepository;
@@ -51,5 +52,9 @@ public class TeacherService {
 
     public Teacher findByUsername(String username) {
         return teacherRepository.findByUsername(username);
+    }
+
+    public List<Teacher> findTeachersByClass(Class studentClass) {
+        return teacherRepository.findByClassesContaining(studentClass);
     }
 }

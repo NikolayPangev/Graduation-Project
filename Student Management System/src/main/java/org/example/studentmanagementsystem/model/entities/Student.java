@@ -28,7 +28,7 @@ public class Student extends User {
     @OneToMany(mappedBy = "student")
     private Set<Absence> absences;
 
-    @ManyToMany(mappedBy = "students")
+    @ManyToMany(mappedBy = "students", fetch = FetchType.EAGER)
     private List<Teacher> teachers;
 
     public Double getAverageGrade() {
@@ -41,4 +41,5 @@ public class Student extends User {
         }
         return sum / grades.size();
     }
+
 }
