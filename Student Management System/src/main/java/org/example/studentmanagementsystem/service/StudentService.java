@@ -1,11 +1,13 @@
 package org.example.studentmanagementsystem.service;
 
 import jakarta.transaction.Transactional;
+import org.example.studentmanagementsystem.model.entities.Class;
 import org.example.studentmanagementsystem.model.entities.Student;
 import org.example.studentmanagementsystem.model.entities.Teacher;
 import org.example.studentmanagementsystem.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,5 +56,9 @@ public class StudentService {
 
     public List<Student> findStudentsByTeacherOrdered(Teacher teacher) {
         return studentRepository.findStudentsByTeacherOrdered(teacher);
+    }
+
+    public List<Student> findStudentsByClass(Class cls) {
+        return studentRepository.findByClasses(cls);
     }
 }

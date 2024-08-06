@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +29,7 @@
             <td th:text="${parent.email}"></td>
             <td>
                 <ul>
-                    <li th:each="child : ${parent.children}" th:text="${child.firstName} + ' ' + ${child.lastName} + ' (' + ${child.classes.grade} + ${child.classes.section} + ')'"></li>
+                    <li th:each="child : ${parent.children}" th:text="${child.firstName + ' ' + child.middleName + ' ' + child.lastName + ' (' + child.classes.grade + ' ' + child.classes.section + ')'}"></li>
                 </ul>
             </td>
         </tr>

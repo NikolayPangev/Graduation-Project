@@ -1,9 +1,7 @@
 package org.example.studentmanagementsystem.web;
 
+import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.model.entities.Class;
-import org.example.studentmanagementsystem.model.entities.Student;
-import org.example.studentmanagementsystem.model.entities.Teacher;
-import org.example.studentmanagementsystem.model.entities.User;
 import org.example.studentmanagementsystem.service.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -11,8 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/teacher")
@@ -91,30 +89,66 @@ public class TeacherController {
 
         return "teacher/view_students";
     }
-//
-//    @GetMapping("/view-parents")
-//    public String viewParents(Model model) {
-//        List<Parent> parents = parentService.findAllParents();
-//        model.addAttribute("parents", parents);
-//        return "view_parents";
-//    }
-//
+
+    @GetMapping("/view-parents")
+    public String viewParents(Model model) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> currentUserOptional = userService.findByUsername(currentUsername);
+
+        if (currentUserOptional.isPresent()) {
+            User currentUser = currentUserOptional.get();
+
+            if (currentUser instanceof Teacher teacher) {
+
+                List<Class> classes = classService.findClassesByTeacher(teacher);
+
+                List<Student> students = classes.stream()
+                        .flatMap(cls -> studentService.findStudentsByClass(cls).stream())
+                        .toList();
+
+                Map<String, Parent> uniqueParentsMap = students.stream()
+                        .flatMap(student -> parentService.findParentsByStudent(student).stream())
+                        .collect(Collectors.toMap(
+                                Parent::getUsername,
+                                parent -> parent,
+                                (existing, replacement) -> existing
+                        ));
+
+                List<Parent> uniqueParentsList = new ArrayList<>(uniqueParentsMap.values());
+                uniqueParentsList.sort(Comparator.comparing(Parent::getLastName)
+                        .thenComparing(Parent::getFirstName)
+                        .thenComparing(Parent::getMiddleName));
+
+                model.addAttribute("parents", uniqueParentsList);
+            }
+        }
+        return "teacher/view_parents";
+    }
+
+
     @GetMapping("/view-teachers")
     public String viewTeachers(Model model) {
         List<Teacher> teachers = teacherService.findAllTeachers();
         model.addAttribute("teachers", teachers);
         return "teacher/view_teachers";
     }
-//
-//    @GetMapping("/profile")
-//    public String viewProfile(Model model) {
-//        User currentUser = userService.loadUserByUsername("currentUsername"); // Replace with actual logged-in user retrieval
-//        if (currentUser instanceof Teacher) {
-//            Teacher teacher = (Teacher) currentUser;
-//            model.addAttribute("user", teacher);
-//        }
-//        return "view_profile";
-//    }
+
+    @GetMapping("/profile")
+    public String viewProfile(Model model) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> currentUserOptional = userService.findByUsername(currentUsername);
+
+        if (currentUserOptional.isPresent()) {
+            User currentUser = currentUserOptional.get();
+            model.addAttribute("user", currentUser);
+        } else {
+            model.addAttribute("errorMessage", "User not found.");
+        }
+
+        return "teacher/view_profile";
+    }
+
+
 //
 //    @GetMapping("/add-grade/{id}")
 //    public String addGrade(@PathVariable("id") Long studentId, Model model) {

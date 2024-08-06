@@ -1,6 +1,7 @@
 package org.example.studentmanagementsystem.service;
 
 import org.example.studentmanagementsystem.model.entities.Parent;
+import org.example.studentmanagementsystem.model.entities.Student;
 import org.example.studentmanagementsystem.repository.ParentRepository;
 import org.example.studentmanagementsystem.repository.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,10 @@ public class ParentService {
     @Transactional
     public void deleteParent(Long parentId) {
         parentRepository.deleteById(parentId);
+    }
+
+    public List<Parent> findParentsByStudent(Student student) {
+        return parentRepository.findParentsByStudent(student);
     }
 }
 
