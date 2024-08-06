@@ -19,4 +19,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     Student findByUsernameWithClass(@Param("username") String username);
 
     List<Student> findByTeachersContaining(Teacher teacher);
+
+    @Query("SELECT s FROM Student s JOIN s.classes c JOIN c.teachers t WHERE t = :teacher ORDER BY c.grade, c.section, s.firstName, s.lastName, s.middleName")
+    List<Student> findStudentsByTeacherOrdered(Teacher teacher);
 }

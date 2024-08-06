@@ -51,4 +51,8 @@ public class StudentService {
     public List<Student> findAllStudentsByTeacher(Teacher teacher) {
         return studentRepository.findByTeachersContaining(teacher);
     }
+
+    public List<Student> findStudentsByTeacherOrdered(Teacher teacher) {
+        return studentRepository.findStudentsByTeacherOrdered(teacher);
+    }
 }

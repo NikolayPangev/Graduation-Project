@@ -22,12 +22,23 @@ public class Student extends User {
     @JoinColumn(name = "parent_id")
     private Parent parent;
 
-    @OneToMany(mappedBy = "student")
-    private Set<Grade> grades;
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
+    private List<Grade> grades;
 
     @OneToMany(mappedBy = "student")
     private Set<Absence> absences;
 
     @ManyToMany(mappedBy = "students")
     private List<Teacher> teachers;
+
+    public Double getAverageGrade() {
+        if (grades == null || grades.isEmpty()) {
+            return null;
+        }
+        double sum = 0.0;
+        for (Grade grade : grades) {
+            sum += grade.getGrade();
+        }
+        return sum / grades.size();
+    }
 }

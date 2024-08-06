@@ -1,13 +1,15 @@
 package org.example.studentmanagementsystem.web;
 
-import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.model.entities.Class;
+import org.example.studentmanagementsystem.model.entities.Student;
+import org.example.studentmanagementsystem.model.entities.Teacher;
+import org.example.studentmanagementsystem.model.entities.User;
 import org.example.studentmanagementsystem.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +62,8 @@ public class TeacherController {
         }
         return "teacher/view_classes";
     }
-//
+
+    //
 //    @GetMapping("/view-class/{id}")
 //    public String viewClass(@PathVariable("id") Long classId, Model model) {
 //        Optional<Class> classesOptional = classService.findById(classId);
@@ -76,12 +79,12 @@ public class TeacherController {
     public String viewStudents(Model model) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<User> currentUserOptional = userService.findByUsername(currentUsername); // Replace with actual logged-in user retrieval
+        Optional<User> currentUserOptional = userService.findByUsername(currentUsername);
 
         if (currentUserOptional.isPresent()) {
             User currentUser = currentUserOptional.get();
             if (currentUser instanceof Teacher teacher) {
-                List<Student> students = studentService.findAllStudentsByTeacher(teacher);
+                List<Student> students = studentService.findStudentsByTeacherOrdered(teacher);
                 model.addAttribute("students", students);
             }
         }
