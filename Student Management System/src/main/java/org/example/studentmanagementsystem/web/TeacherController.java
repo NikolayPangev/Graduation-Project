@@ -99,12 +99,12 @@ public class TeacherController {
 //        return "view_parents";
 //    }
 //
-//    @GetMapping("/view-teachers")
-//    public String viewTeachers(Model model) {
-//        List<Teacher> teachers = teacherService.findAllTeachers();
-//        model.addAttribute("teachers", teachers);
-//        return "view_teachers";
-//    }
+    @GetMapping("/view-teachers")
+    public String viewTeachers(Model model) {
+        List<Teacher> teachers = teacherService.findAllTeachers();
+        model.addAttribute("teachers", teachers);
+        return "teacher/view_teachers";
+    }
 //
 //    @GetMapping("/profile")
 //    public String viewProfile(Model model) {

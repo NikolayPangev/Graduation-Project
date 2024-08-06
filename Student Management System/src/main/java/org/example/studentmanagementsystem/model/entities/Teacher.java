@@ -13,8 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Teacher extends User {
 
-    @OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
-    private List<Subject> subjects;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Subject subject;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Class> classes;

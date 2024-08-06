@@ -68,7 +68,7 @@ public class StudentController {
 
         List<Teacher> teachers = teacherService.findByClassId(student.getClasses().getClassId());
 
-        model.addAttribute("teacherSubjects", teachers);
+        model.addAttribute("teachers", teachers);
         return "student/view_teachers";
     }
 //

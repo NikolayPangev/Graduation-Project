@@ -11,15 +11,14 @@
 <!-- Include the navbar fragment -->
 <div th:replace="~{fragments/admin_navbar :: navbar}"></div>
 
-
 <div class="container mt-4">
     <h2>Create Subject</h2>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
     <form th:action="@{/admin/createSubject}" th:method="post">
         <div class="form-group">
             <label for="subjectName">Subject Name</label>
             <input type="text" id="subjectName" name="subjectName" class="form-control" placeholder="Enter subject name" required>
-            <div class="text-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
-            <div class="text-success" th:if="${successMessage}" th:text="${successMessage}"></div>
         </div>
         <button type="submit" class="btn btn-primary">Create Subject</button>
     </form>
@@ -28,6 +27,6 @@
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.10/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://stackpath.amazonaws.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package org.example.studentmanagementsystem.service;
 
+import org.example.studentmanagementsystem.model.entities.Subject;
 import org.example.studentmanagementsystem.model.entities.Teacher;
 import org.example.studentmanagementsystem.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
@@ -37,13 +38,14 @@ public class TeacherService {
         return teacherRepository.findByClasses_ClassId(classId);
     }
 
-    @Transactional(readOnly = true)
-    public Optional<Teacher> findByClassAndSubject(Long classId, Long subjectId) {
-        return teacherRepository.findByClasses_ClassIdAndSubjects_SubjectId(classId, subjectId);
+    @Transactional
+    public void save(Teacher teacher) {
+        teacherRepository.save(teacher);
     }
 
-    public void save(Teacher currentTeacher) {
-        teacherRepository.save(currentTeacher);
+    @Transactional
+    public void assignSubjectToTeacher(Teacher teacher, Subject subject) {
+        teacher.setSubject(subject);
+        teacherRepository.save(teacher);
     }
-
 }

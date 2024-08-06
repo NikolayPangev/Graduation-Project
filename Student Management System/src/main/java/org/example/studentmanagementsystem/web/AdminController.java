@@ -182,20 +182,22 @@ public class AdminController {
         try {
             Teacher teacher = teacherService.findById(teacherId)
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
-            Subject subject = subjectService.findById(subjectId)
+            Subject newSubject = subjectService.findById(subjectId)
                     .orElseThrow(() -> new RuntimeException("Subject not found"));
 
-            teacher.getSubjects().forEach(s -> {
-                s.setTeacher(null);
-                subjectService.save(s);
-            });
+            Subject previousSubject = teacher.getSubject();
+            if (previousSubject != null) {
+                previousSubject.getTeacher().remove(teacher);
+                subjectService.save(previousSubject);
+            }
 
-            teacher.getSubjects().clear();
-            teacher.getSubjects().add(subject);
-            subject.setTeacher(teacher);
-            subjectService.save(subject);
+            teacher.setSubject(newSubject);
+            newSubject.getTeacher().add(teacher);
 
-            String successMessage = "Successfully assigned subject " + subject.getSubjectName() + " to teacher " + teacher.getFirstName() + " " + teacher.getLastName();
+            teacherService.save(teacher);
+            subjectService.save(newSubject);
+
+            String successMessage = "Successfully assigned subject " + newSubject.getSubjectName() + " to teacher " + teacher.getFirstName() + " " + teacher.getLastName();
             redirectAttributes.addFlashAttribute("successMessage", successMessage);
         } catch (Exception e) {
             String errorMessage = "Couldn't assign subject to teacher: " + e.getMessage();
@@ -203,6 +205,7 @@ public class AdminController {
         }
         return "redirect:/admin/viewTeachers";
     }
+
 
     @PostMapping("/assignClassToTeacher")
     public String assignClassToTeacher(
@@ -213,16 +216,15 @@ public class AdminController {
             Teacher teacher = teacherService.findById(teacherId)
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
 
-            if (teacher.getSubjects().isEmpty()) {
+            Subject subject = teacher.getSubject();
+            if (subject == null) {
                 throw new RuntimeException("Teacher is not assigned to any subject");
             }
-            Subject subject = teacher.getSubjects().get(0);
 
-            // Retrieve the classes by their IDs
             List<Class> classList = classService.findByIds(classIds);
             for (Class clazz : classList) {
                 Teacher currentTeacher = clazz.getTeachers().stream()
-                        .filter(t -> t.getSubjects().contains(subject))
+                        .filter(t -> t.getSubject().equals(subject))
                         .findFirst().orElse(null);
 
                 if (currentTeacher != null && !currentTeacher.equals(teacher)) {
@@ -235,6 +237,7 @@ public class AdminController {
                 teacher.getClasses().add(clazz);
                 clazz.getTeachers().add(teacher);
                 clazz.setSubject(subject);
+
                 teacherService.save(teacher);
                 classService.save(clazz);
             }
@@ -252,7 +255,6 @@ public class AdminController {
         }
         return "redirect:/admin/viewTeachers";
     }
-
 
     @PostMapping("/deleteTeacher")
     public String deleteTeacher(@RequestParam Long teacherId, RedirectAttributes redirectAttributes) {
@@ -407,6 +409,7 @@ public class AdminController {
     @GetMapping("/createSubject")
     public String showCreateSubjectForm(Model model) {
         model.addAttribute("errorMessage", null);
+        model.addAttribute("successMessage", null);
         return "admin/create_subject";
     }
 
@@ -425,14 +428,20 @@ public class AdminController {
     @GetMapping("/viewSubjects")
     public String showDeleteSubjectPage(Model model) {
         model.addAttribute("subjects", subjectService.findAllSubjects());
-        return "admin/view_subject";
+        return "admin/view_subjects";
     }
 
     @PostMapping("/deleteSubject")
-    public String deleteSubject(@RequestParam Long subjectId) {
-        subjectService.deleteSubject(subjectId);
+    public String deleteSubject(@RequestParam Long subjectId, RedirectAttributes redirectAttributes) {
+        try {
+            subjectService.deleteSubject(subjectId);
+            redirectAttributes.addFlashAttribute("successMessage", "Subject deleted successfully");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting subject: " + e.getMessage());
+        }
         return "redirect:/admin/viewSubjects";
     }
+
 
     @GetMapping("/createSchedules")
     public String createSchedules(Model model) {
