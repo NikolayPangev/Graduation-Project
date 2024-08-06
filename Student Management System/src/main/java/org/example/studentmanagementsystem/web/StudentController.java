@@ -1,24 +1,26 @@
 package org.example.studentmanagementsystem.web;
 
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.example.studentmanagementsystem.model.dtos.SubjectWithGrades;
 import org.example.studentmanagementsystem.model.entities.Grade;
 import org.example.studentmanagementsystem.model.entities.Student;
+import org.example.studentmanagementsystem.model.entities.Subject;
 import org.example.studentmanagementsystem.model.entities.Teacher;
-import org.example.studentmanagementsystem.model.entities.User;
 import org.example.studentmanagementsystem.service.GradeService;
 import org.example.studentmanagementsystem.service.StudentService;
 import org.example.studentmanagementsystem.service.TeacherService;
 import org.example.studentmanagementsystem.service.UserService;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+;
 
 @Controller
 @RequestMapping("/student")
@@ -71,23 +73,53 @@ public class StudentController {
         model.addAttribute("teachers", teachers);
         return "student/view_teachers";
     }
-//
-//    @GetMapping("/view-grades")
-//    public String viewGrades(Model model, Authentication authentication) {
-//        // Fetch the username from the security context
-//        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-//
-//        // Retrieve the student from the database
-//        Student student = studentService.findByUsername(username)
-//                .orElseThrow(() -> new RuntimeException("Student not found"));
-//
-//        // Retrieve the grades for the student
-//        List<Grade> grades = gradeService.findByStudentId(student.getId());
-//
-//        // Calculate average grades for each subject
-//        model.addAttribute("grades", grades);
-//        return "student/view_grades";
-//    }
+
+    @GetMapping("/view-grades")
+    public String viewGrades(Model model, Principal principal) {
+        String username = principal.getName();
+
+        Student student = studentService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        // Get the list of subjects associated with the student's class
+        List<Subject> subjects = student.getClasses().getTeachers().stream()
+                .map(Teacher::getSubject)
+                .distinct()
+                .collect(Collectors.toList());
+
+        List<SubjectWithGrades> subjectWithGradesList = new ArrayList<>();
+
+        for (Subject subject : subjects) {
+            // Fetch grades for the student and subject
+            List<Grade> grades = gradeService.findByStudentAndSubject(student, subject);
+
+            // Calculate the average grade
+            double averageGrade = grades.stream()
+                    .mapToDouble(Grade::getGrade)
+                    .average()
+                    .orElse(0.0);
+
+            // Fetch the first teacher associated with the subject (assuming there's at least one)
+            Teacher teacher = subject.getTeacher().stream()
+                    .findFirst()
+                    .orElse(null);
+
+            // Create a SubjectWithGrades DTO and add it to the list
+            subjectWithGradesList.add(new SubjectWithGrades(subject, grades, averageGrade, teacher));
+        }
+
+        // Add the list to the model
+        model.addAttribute("subjectWithGradesList", subjectWithGradesList);
+        return "student/view_grades";
+    }
+
+
+    private double calculateAverageGrade(List<Grade> grades) {
+        if (grades == null || grades.isEmpty()) {
+            return 0.0;
+        }
+        return grades.stream().mapToDouble(Grade::getGrade).average().orElse(0.0);
+    }
 
     @GetMapping("/view-profile")
     public String viewProfile(Model model, Principal principal) {

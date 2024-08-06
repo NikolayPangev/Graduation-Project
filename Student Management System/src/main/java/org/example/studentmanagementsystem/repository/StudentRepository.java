@@ -2,6 +2,7 @@ package org.example.studentmanagementsystem.repository;
 
 import org.example.studentmanagementsystem.model.entities.Class;
 import org.example.studentmanagementsystem.model.entities.Student;
+import org.example.studentmanagementsystem.model.entities.Subject;
 import org.example.studentmanagementsystem.model.entities.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +27,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findStudentsByTeacherOrdered(Teacher teacher);
 
     List<Student> findByClasses(Class cls);
+
+    @Query("SELECT s FROM Subject s JOIN s.grades g WHERE g.student.userId = :studentId")
+    List<Subject> findSubjectsByStudent(Long studentId);
 }

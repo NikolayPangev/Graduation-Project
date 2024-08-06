@@ -34,7 +34,7 @@
                     <li th:each="grade : ${student.grades}" th:text="${grade.grade}"></li>
                 </ul>
             </td>
-            <td th:text="${student.averageGrade}"></td>
+            <td th:text="${#numbers.formatDecimal(student.averageGrade, 1, 2)}"></td>
             <td><a th:href="@{/teacher/add-grade/{id}(id=${student.userId})}" class="btn btn-primary">Add Grade</a></td>
         </tr>
         </tbody>

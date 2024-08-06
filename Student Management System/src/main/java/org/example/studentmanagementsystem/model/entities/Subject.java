@@ -26,6 +26,11 @@ public class Subject {
     @JoinColumn(name = "teacher_id")
     private List<Teacher> teacher;
 
-    @OneToMany(mappedBy = "subject")
+    @OneToMany(mappedBy = "subject", fetch = FetchType.EAGER)
     private Set<Grade> grades;
+
+    @Setter
+    @Transient
+    private Double averageGrade;
+
 }

@@ -187,7 +187,7 @@ public class TeacherController {
         }
 
         model.addAttribute("gradeForm", gradeForm);
-        return "teacher/add_grade"; // The HTML form view name
+        return "teacher/add_grade";
     }
 
     @PostMapping("/add-grade")
@@ -222,6 +222,20 @@ public class TeacherController {
 
         // Redirect to the view class page with the classId parameter
         Long classId = student.getClasses().getClassId();
+        return "redirect:/teacher/view-class/" + classId;
+    }
+
+    @PostMapping("/delete-grade/{gradeId}")
+    public String deleteGrade(@PathVariable Long gradeId, Model model, RedirectAttributes redirectAttributes) {
+        Optional<Grade> gradeOptional = gradeService.findById(gradeId);
+        if (gradeOptional.isEmpty()) {
+            model.addAttribute("errorMessage", "Grade not found");
+            return "error";
+        }
+        Grade grade = gradeOptional.get();
+        Long classId = grade.getStudent().getClasses().getClassId();
+        gradeService.delete(grade);
+        redirectAttributes.addFlashAttribute("message", "Grade deleted successfully");
         return "redirect:/teacher/view-class/" + classId;
     }
 

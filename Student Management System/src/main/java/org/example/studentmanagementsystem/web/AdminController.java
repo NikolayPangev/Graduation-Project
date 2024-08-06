@@ -223,23 +223,31 @@ public class AdminController {
 
             List<Class> classList = classService.findByIds(classIds);
             for (Class clazz : classList) {
-                Teacher currentTeacher = clazz.getTeachers().stream()
-                        .filter(t -> t.getSubject().equals(subject))
-                        .findFirst().orElse(null);
+                // Check if current teacher is already assigned to this class
+                boolean isCurrentTeacherAssigned = clazz.getTeachers().stream()
+                        .anyMatch(t -> t.equals(teacher));
 
-                if (currentTeacher != null && !currentTeacher.equals(teacher)) {
-                    currentTeacher.getClasses().remove(clazz);
-                    clazz.getTeachers().remove(currentTeacher);
-                    teacherService.save(currentTeacher);
+                if (!isCurrentTeacherAssigned) {
+                    // Remove previous teacher assignments if they exist and are not the current teacher
+                    Teacher existingTeacher = clazz.getTeachers().stream()
+                            .filter(t -> !t.equals(teacher) && t.getSubject().equals(subject))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (existingTeacher != null) {
+                        existingTeacher.getClasses().remove(clazz);
+                        clazz.getTeachers().remove(existingTeacher);
+                        teacherService.save(existingTeacher);
+                    }
+
+                    // Add new teacher to class
+                    teacher.getClasses().add(clazz);
+                    clazz.getTeachers().add(teacher);
+                    clazz.setSubject(subject);
+
+                    teacherService.save(teacher);
                     classService.save(clazz);
                 }
-
-                teacher.getClasses().add(clazz);
-                clazz.getTeachers().add(teacher);
-                clazz.setSubject(subject);
-
-                teacherService.save(teacher);
-                classService.save(clazz);
             }
 
             StringBuilder successMessage = new StringBuilder("Successfully assigned classes ");
@@ -255,6 +263,7 @@ public class AdminController {
         }
         return "redirect:/admin/viewTeachers";
     }
+
 
     @PostMapping("/deleteTeacher")
     public String deleteTeacher(@RequestParam Long teacherId, RedirectAttributes redirectAttributes) {

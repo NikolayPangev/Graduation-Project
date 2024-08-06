@@ -1,13 +1,11 @@
 package org.example.studentmanagementsystem.service;
 
 import jakarta.transaction.Transactional;
+import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.model.entities.Class;
-import org.example.studentmanagementsystem.model.entities.Student;
-import org.example.studentmanagementsystem.model.entities.Teacher;
 import org.example.studentmanagementsystem.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,10 +48,6 @@ public class StudentService {
         return studentRepository.findByClasses_ClassIdOrderByFirstNameAscLastNameAscMiddleNameAsc(classId);
     }
 
-    public List<Student> findAllStudentsByTeacher(Teacher teacher) {
-        return studentRepository.findByTeachersContaining(teacher);
-    }
-
     public List<Student> findStudentsByTeacherOrdered(Teacher teacher) {
         return studentRepository.findStudentsByTeacherOrdered(teacher);
     }
@@ -63,4 +57,21 @@ public class StudentService {
     }
 
 
+    public List<Subject> findSubjectsByStudent(Student student) {
+        List<Subject> subjects = studentRepository.findSubjectsByStudent(student.getUserId());
+
+        for (Subject subject : subjects) {
+            double sum = 0.0;
+            int count = 0;
+            for (Grade grade : subject.getGrades()) {
+                if (grade.getStudent().getUserId().equals(student.getUserId())) {
+                    sum += grade.getGrade();
+                    count++;
+                }
+            }
+            double average = sum / count;
+            subject.setAverageGrade(average);
+        }
+        return subjects;
+    }
 }
