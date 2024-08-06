@@ -113,13 +113,6 @@ public class StudentController {
     }
 
 
-    private double calculateAverageGrade(List<Grade> grades) {
-        if (grades == null || grades.isEmpty()) {
-            return 0.0;
-        }
-        return grades.stream().mapToDouble(Grade::getGrade).average().orElse(0.0);
-    }
-
     @GetMapping("/view-profile")
     public String viewProfile(Model model, Principal principal) {
         String username = principal.getName();

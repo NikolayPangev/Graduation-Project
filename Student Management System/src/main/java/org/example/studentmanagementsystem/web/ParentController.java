@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -103,8 +104,6 @@ public class ParentController {
         return "parent/view_grades";
     }
 
-
-
     @GetMapping("/child-teachers/{childId}")
     public String childTeachers(@PathVariable Long childId, Model model) {
         Student child = studentService.findById(childId)
@@ -117,5 +116,22 @@ public class ParentController {
         model.addAttribute("child", child);
         return "parent/view_teachers";
     }
+
+    @GetMapping("/view-profile")
+    public String viewParentProfile(Model model, Principal principal) {
+        String username = principal.getName();
+        Optional<Parent> parent = parentService.findByUsername(username);
+        if (parent.isEmpty()) {
+            return "error";
+        }
+        model.addAttribute("user", parent.get());
+        return "parent/view_profile";
+    }
+
+    @GetMapping("/logout-confirmation")
+    public String parentLogoutConfirmation() {
+        return "parent/logout_confirmation";
+    }
+
 
 }

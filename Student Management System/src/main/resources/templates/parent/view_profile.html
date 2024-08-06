@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +7,19 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
+<!-- Include the navbar -->
+<div th:replace="~{fragments/parent_navbar :: navbar}"></div>
+
 <div class="container mt-5">
-    <h2>Profile</h2>
+    <h1 th:text="${user.firstName} + ' ' + ${user.lastName}">Profile of User</h1>
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">User Information</h5>
-            <p><strong>Username:</strong> <span th:text="${user.username}">username</span></p>
-            <p><strong>First Name:</strong> <span th:text="${user.firstName}">first name</span></p>
-            <p><strong>Last Name:</strong> <span th:text="${user.lastName}">last name</span></p>
-            <p><strong>Email:</strong> <span th:text="${user.email}">email</span></p>
-            <a href="#" class="btn btn-primary" th:href="@{/teacher/dashboard}">Back to Dashboard</a>
+            <p>Username: <span th:text="${user.username}">username</span></p>
+            <p>First Name: <span th:text="${user.firstName}">first name</span></p>
+            <p>Last Name: <span th:text="${user.lastName}">last name</span></p>
+            <p>Email: <span th:text="${user.email}">email</span></p>
+            <a href="#" class="btn btn-primary" th:href="@{/parent/dashboard}">Back to Dashboard</a>
         </div>
     </div>
 </div>
@@ -24,6 +27,6 @@
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.10/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrap.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

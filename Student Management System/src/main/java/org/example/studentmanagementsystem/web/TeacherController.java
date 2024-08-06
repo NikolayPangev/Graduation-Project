@@ -147,21 +147,6 @@ public class TeacherController {
         return "teacher/view_teachers";
     }
 
-    @GetMapping("/profile")
-    public String viewProfile(Model model) {
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> currentUserOptional = userService.findByUsername(currentUsername);
-
-        if (currentUserOptional.isPresent()) {
-            User currentUser = currentUserOptional.get();
-            model.addAttribute("user", currentUser);
-        } else {
-            model.addAttribute("errorMessage", "User not found.");
-        }
-
-        return "teacher/view_profile";
-    }
-
     @GetMapping("/add-grade/{studentId}")
     public String showAddGradeForm(@PathVariable Long studentId, Model model) {
         // Fetch the student
@@ -257,6 +242,21 @@ public class TeacherController {
         } else {
             throw new RuntimeException("Teacher not found");
         }
+    }
+
+    @GetMapping("/profile")
+    public String viewProfile(Model model) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> currentUserOptional = userService.findByUsername(currentUsername);
+
+        if (currentUserOptional.isPresent()) {
+            User currentUser = currentUserOptional.get();
+            model.addAttribute("user", currentUser);
+        } else {
+            model.addAttribute("errorMessage", "User not found.");
+        }
+
+        return "teacher/view_profile";
     }
 
     @GetMapping("/logout-confirmation")
