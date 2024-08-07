@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Teachers</title>
+    <title th:text="#{user_all_teachers}">View Teachers</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/teacher_navbar :: navbar}"></div>
 
 <div class="container mt-5">
-    <h1>All Teachers</h1>
+    <h1 th:text="#{user_all_teachers}">All Teachers</h1>
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>First Name</th>
-            <th>Middle Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Subject</th>
-            <th>Classes</th>
+            <th th:text="#{user_firstName}">First Name</th>
+            <th th:text="#{user_middleName}">Middle Name</th>
+            <th th:text="#{user_lastName}">Last Name</th>
+            <th th:text="#{user_email}">Email</th>
+            <th th:text="#{user_subject}">Subject</th>
+            <th th:text="#{user_classes}">Classes</th>
         </tr>
         </thead>
         <tbody>

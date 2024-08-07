@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Classes</title>
+    <title th:text="#{user_classes}">View Classes</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 <div th:replace="~{fragments/teacher_navbar :: navbar}"></div>
 
 <div class="container mt-5">
-    <h1>Classes I Teach</h1>
+    <h1 th:text="#{teacher_view_my_classes}">Classes I Teach</h1>
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Grade</th>
-            <th>Section</th>
-            <th>Action</th>
+            <th th:text="#{create_class_grade}">Grade</th>
+            <th th:text="#{create_class_section}">Section</th>
+            <th th:text="#{teacher_view_class}">Action</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="class : ${classes}">
             <td th:text="${class.grade}"></td>
             <td th:text="${class.section}"></td>
-            <td><a th:href="@{/teacher/view-class/{id}(id=${class.classId})}" class="btn btn-primary">View Class</a></td>
+            <td><a th:href="@{/teacher/view-class/{id}(id=${class.classId})}" class="btn btn-primary"
+            th:text="#{teacher_view_class}">View Class</a></td>
         </tr>
         </tbody>
     </table>

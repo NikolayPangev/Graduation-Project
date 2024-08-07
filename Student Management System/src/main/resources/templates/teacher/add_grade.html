@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Add Grade</title>
+    <title th:text="#{student_add_grade}">Add Grade</title>
 </head>
 <body>
-<h1>Add Grade for Student</h1>
+
+<h1 th:text="#{add_grade_for_student}">Add Grade for Student</h1>
 
 <!-- Display error message if it exists -->
 <div th:if="${errorMessage}" style="color: red;">
@@ -16,21 +17,22 @@
     <input type="hidden" th:field="*{studentId}" />
 
     <!-- Display the teacher's subject -->
-    <p><strong>Subject:</strong> <span th:text="${subject.subjectName}"></span></p>
+    <p><strong th:text="#{user_subject}">Subject:</strong> <span th:text="${subject.subjectName}"></span></p>
 
     <!-- Grade input field -->
     <label for="grade">
-        Grade:
+        <span th:text="#{student_grade}">Grade:</span>
+
         <input type="number" id="grade" th:field="*{grade}" step="0.1" placeholder="Enter grade" required />
     </label>
 
     <!-- Description input field -->
     <label for="description">
-        Description:
+        <span th:text="#{grade_description}"> Description:</span>
         <textarea id="description" th:field="*{description}" placeholder="Enter description"></textarea>
     </label>
 
-    <button type="submit">Add Grade</button>
+    <button type="submit" th:text="#{student_add_grade}">Add Grade</button>
 </form>
 </body>
 </html>

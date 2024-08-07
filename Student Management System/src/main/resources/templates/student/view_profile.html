@@ -23,7 +23,7 @@
                 <p th:text="#{user_class} + ': ' + ${user.classes.grade} + ${user.classes.section}">Class: </p>
             </div>
             <div th:unless="${user.classes != null}">
-                <p>No class information available.</p>
+                <p th:text="#{student_no_class_info}">No class information available.</p>
             </div>
 
             <a href="#" class="btn btn-primary" th:href="@{/student/dashboard}" th:text="#{back_to_dashboard}">Back to Dashboard</a>
