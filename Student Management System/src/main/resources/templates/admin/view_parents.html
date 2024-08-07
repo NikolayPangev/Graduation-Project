@@ -11,7 +11,7 @@
 <div th:replace="~{fragments/admin_navbar :: navbar}"></div>
 
 <div class="container mt-5">
-  <h1>All Parents</h1>
+  <h1 th:text="#{user_all_parents}">All Parents</h1>
 
   <!-- Display Success and Error Messages -->
   <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
@@ -20,13 +20,13 @@
   <table class="table table-bordered">
     <thead>
     <tr>
-      <th>Username</th>
-      <th>First Name</th>
-      <th>Middle Name</th>
-      <th>Last Name</th>
-      <th>Email</th>
-      <th>Children</th>
-      <th>Actions</th>
+      <th th:text="#{user_username}">Username</th>
+      <th th:text="#{user_firstName}">First Name</th>
+      <th th:text="#{user_middleName}">Middle Name</th>
+      <th th:text="#{user_lastName}">Surname</th>
+      <th th:text="#{user_email}">Email</th>
+      <th th:text="#{user_children}">Children</th>
+      <th th:text="#{actions}">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -46,18 +46,21 @@
         <form th:action="@{/admin/assignStudentsToParent}" method="post">
           <input type="hidden" name="parentId" th:value="${parent.userId}" />
           <div class="form-group">
-            <label for="students">Select Students</label>
+            <label for="students"
+                   th:text="#{admin_view_parents_select_students}">Select Students</label>
             <select multiple class="form-control" name="studentIds" id="students" required>
               <option th:each="student : ${students}" th:value="${student.userId}" th:text="${student.firstName + ' ' + student.lastName}"></option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary">Assign Students</button>
+          <button type="submit" class="btn btn-primary"
+                  th:text="#{admin_view_parents_assign_students}">Assign Students</button>
         </form>
 
         <!-- Delete Button -->
         <form th:action="@{/admin/deleteParent}" th:method="post" class="d-inline">
           <input type="hidden" name="parentId" th:value="${parent.userId}"/>
-          <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this parent?');">Delete</button>
+          <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this parent?');"
+                  th:text="#{delete}">Delete</button>
         </form>
       </td>
     </tr>

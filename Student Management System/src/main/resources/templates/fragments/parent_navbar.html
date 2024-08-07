@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<!-- Fragment Definition -->
 <div th:fragment="navbar">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,6 +29,13 @@
                     <a class="nav-link" th:href="@{/parent/logout-confirmation}">Logout</a>
                 </li>
             </ul>
+            <form th:method="get" class="form-inline ml-2">
+                <label class="text-white mr-2" for="lang" th:text="#{nav_bar_language}">Language</label>
+                <select id="lang" name="lang" class="form-control" onchange="this.form.submit()">
+                    <option value="en_US" th:selected="${#locale.toString()} == 'en_US'">English</option>
+                    <option value="bg_BG" th:selected="${#locale.toString()} == 'bg_BG'">Български</option>
+                </select>
+            </form>
         </div>
     </nav>
 </div>

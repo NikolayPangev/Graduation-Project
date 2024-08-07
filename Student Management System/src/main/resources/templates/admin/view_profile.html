@@ -3,20 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title th:text="#{profile}">Profile</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
+
+<div th:replace="~{fragments/admin_navbar :: navbar}"></div>
+
 <div class="container mt-5">
-    <h2>Profile</h2>
+    <h2 th:text="#{profile}">Profile</h2>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">User Information</h5>
-            <p><strong>Username:</strong> <span th:text="${user.username}">username</span></p>
-            <p><strong>First Name:</strong> <span th:text="${user.firstName}">first name</span></p>
-            <p><strong>Last Name:</strong> <span th:text="${user.lastName}">last name</span></p>
-            <p><strong>Email:</strong> <span th:text="${user.email}">email</span></p>
-            <a href="#" class="btn btn-primary" th:href="@{/admin/dashboard}">Back to Dashboard</a>
+            <h5 class="card-title" th:text="#{user_information}">User Information</h5>
+            <p><strong th:text="#{user_username} + ':'">Username:</strong> <span th:text="${user.username}" >username</span></p>
+            <p><strong th:text="#{user_firstName} + ':'">First Name:</strong> <span th:text="${user.firstName}">first name</span></p>
+            <p><strong th:text="#{user_lastName} + ':'">Last Name:</strong> <span th:text="${user.lastName}">last name</span></p>
+            <p><strong th:text="#{user_email} + ':'">Email:</strong> <span th:text="${user.email}">email</span></p>
+            <a href="#" class="btn btn-primary" th:href="@{/admin/dashboard}" th:text="#{back_to_dashboard}">Back to Dashboard</a>
         </div>
     </div>
 </div>

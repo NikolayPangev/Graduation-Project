@@ -12,21 +12,22 @@
 <div th:replace="~{fragments/admin_navbar :: navbar}"></div>
 
 <div class="container mt-4">
-    <h2>View Subjects</h2>
+    <h2 th:text="#{admin_nav_bar_view_subjects}">View Subjects</h2>
     <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
     <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
     <table class="table">
         <thead>
         <tr>
-            <th>Subject Name</th>
-            <th>Actions</th>
+            <th th:text="#{admin_nav_bar_subject_name}">Subject Name</th>
+            <th th:text="#{delete}">Delete</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="subject : ${subjects}">
             <td th:text="${subject.subjectName}"></td>
             <td>
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal" th:data-subject-id="${subject.subjectId}">
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal"
+                        th:data-subject-id="${subject.subjectId}" th:text="#{delete}">
                     Delete
                 </button>
             </td>
@@ -39,19 +40,21 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                    <h5 class="modal-title" id="confirmDeleteModalLabel" th:text="#{confirm}">Confirm Delete</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" th:text="#{delete_subject_question}">
                     Are you sure you want to delete this subject?
                 </div>
                 <div class="modal-footer">
                     <form id="deleteForm" th:action="@{/admin/deleteSubject}" method="post">
                         <input type="hidden" name="subjectId" id="subjectIdToDelete">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button type="submit" class="btn btn-primary">Yes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        th:text="#{no}">No</button>
+                        <button type="submit" class="btn btn-primary"
+                        th:text="#{yes}">Yes</button>
                     </form>
                 </div>
             </div>

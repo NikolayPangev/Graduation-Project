@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Class</title>
+    <title th:text="#{admin_nav_bar_create_classes}">Create Class</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -12,16 +12,16 @@
 
 
 <div class="container mt-5">
-    <h2>Create Class</h2>
+    <h2 th:text="#{admin_nav_bar_create_classes}">Create Class</h2>
 
     <!-- Display success message if exists -->
     <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
 
     <form th:action="@{/admin/createClass}" th:object="${class}" th:method="POST">
         <div class="form-group">
-            <label for="grade">Grade</label>
+            <label for="grade" th:text="#{create_class_grade}">Grade</label>
             <select id="grade" name="grade" class="form-control" required>
-                <option value="" disabled selected>Select Grade</option>
+                <option value="" disabled selected th:text="#{create_class_select_grade}">Select Grade</option>
                 <option th:value="1" th:text="'1'" th:selected="${class.grade == 1}">1</option>
                 <option th:value="2" th:text="'2'" th:selected="${class.grade == 2}">2</option>
                 <option th:value="3" th:text="'3'" th:selected="${class.grade == 3}">3</option>
@@ -39,9 +39,9 @@
         </div>
 
         <div class="form-group">
-            <label for="section">Section</label>
+            <label for="section" th:text="#{create_class_section}">Section</label>
             <select id="section" name="section" class="form-control" required>
-                <option value="" disabled selected>Select Section</option>
+                <option value="" disabled selected th:text="#{create_class_select_section}">Select Section</option>
                 <option th:value="'A'" th:text="'A'" th:selected="${class.section == 'A'}">A</option>
                 <option th:value="'B'" th:text="'B'" th:selected="${class.section == 'B'}">B</option>
                 <option th:value="'C'" th:text="'C'" th:selected="${class.section == 'C'}">C</option>
@@ -53,7 +53,7 @@
         <!-- Display a general error message for the whole form -->
         <div class="text-danger" th:if="${#fields.hasGlobalErrors()}" th:errors="*{error}"></div>
 
-        <button type="submit" class="btn btn-primary">Create Class</button>
+        <button type="submit" class="btn btn-primary" th:text="#{admin_nav_bar_create_classes}">Create Class</button>
     </form>
 </div>
 

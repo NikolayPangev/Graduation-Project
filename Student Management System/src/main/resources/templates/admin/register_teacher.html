@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register Teacher</title>
+  <title th:text="#{register_teacher}">Register Teacher</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
     <div class="col-md-8">
       <div class="card">
         <div class="card-header">
-          <h3 class="text-center">Register Teacher</h3>
+          <h3 class="text-center" th:text="#{register_teacher}">Register Teacher</h3>
         </div>
         <div class="card-body">
           <!-- Display success message -->
@@ -25,9 +25,9 @@
           <form th:action="@{/admin/createTeacher}" th:method="POST" th:object="${teacherForm}">
             <!-- Username -->
             <div class="form-group">
-              <label for="username">Username</label>
+              <label for="username" th:text="#{user_username}">Username</label>
               <input type="text" id="username" name="username" class="form-control"
-                     th:field="*{username}" placeholder="Enter username"
+                     th:field="*{username}" th:placeholder="#{enter_username}"
                      th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''">
               <div class="invalid-feedback" th:if="${#fields.hasErrors('username')}">
                 <p th:each="error : ${#fields.errors('username')}" th:text="${error}"></p>
@@ -36,9 +36,9 @@
 
             <!-- First Name -->
             <div class="form-group">
-              <label for="firstName">First Name</label>
+              <label for="firstName" th:text="#{user_firstName}">First Name</label>
               <input type="text" id="firstName" name="firstName" class="form-control"
-                     th:field="*{firstName}" placeholder="Enter first name"
+                     th:field="*{firstName}" th:placeholder="#{enter_firstName}"
                      th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''">
               <div class="invalid-feedback" th:if="${#fields.hasErrors('firstName')}">
                 <p th:each="error : ${#fields.errors('firstName')}" th:text="${error}"></p>
@@ -47,16 +47,16 @@
 
             <!-- Middle Name -->
             <div class="form-group">
-              <label for="middleName">Middle Name (optional)</label>
+              <label for="middleName" th:text="#{user_middleName}">Middle Name (optional)</label>
               <input type="text" id="middleName" name="middleName" class="form-control"
-                     th:field="*{middleName}" placeholder="Enter middle name (optional)">
+                     th:field="*{middleName}" th:placeholder="#{enter_middleName}">
             </div>
 
             <!-- Last Name -->
             <div class="form-group">
-              <label for="lastName">Last Name</label>
+              <label for="lastName" th:text="#{user_lastName}">Surname</label>
               <input type="text" id="lastName" name="lastName" class="form-control"
-                     th:field="*{lastName}" placeholder="Enter last name"
+                     th:field="*{lastName}" th:placeholder="#{enter_lastName}"
                      th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''">
               <div class="invalid-feedback" th:if="${#fields.hasErrors('lastName')}">
                 <p th:each="error : ${#fields.errors('lastName')}" th:text="${error}"></p>
@@ -65,9 +65,9 @@
 
             <!-- Email -->
             <div class="form-group">
-              <label for="email">Email</label>
+              <label for="email" th:text="#{user_email}">Email</label>
               <input type="email" id="email" name="email" class="form-control"
-                     th:field="*{email}" placeholder="Enter email"
+                     th:field="*{email}" th:placeholder="#{enter_email}"
                      th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''">
               <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}">
                 <p th:each="error : ${#fields.errors('email')}" th:text="${error}"></p>
@@ -76,9 +76,9 @@
 
             <!-- Password -->
             <div class="form-group">
-              <label for="password">Password</label>
+              <label for="password" th:text="#{user_password}">Password</label>
               <input type="password" id="password" name="password" class="form-control"
-                     th:field="*{password}" placeholder="Enter password"
+                     th:field="*{password}" th:placeholder="#{enter_password}"
                      th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''">
               <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}">
                 <p th:each="error : ${#fields.errors('password')}" th:text="${error}"></p>
@@ -87,9 +87,9 @@
 
             <!-- Confirm Password -->
             <div class="form-group">
-              <label for="confirmPassword">Confirm Password</label>
+              <label for="confirmPassword" th:text="#{user_confirm_password}">Confirm Password</label>
               <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
-                     th:field="*{confirmPassword}" placeholder="Confirm password"
+                     th:field="*{confirmPassword}" th:placeholder="#{confirm_password}"
                      th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''">
               <div class="invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}">
                 <p th:each="error : ${#fields.errors('confirmPassword')}" th:text="${error}"></p>
@@ -98,7 +98,7 @@
 
             <!-- Submit Button -->
             <div class="form-group">
-              <button type="submit" class="btn btn-primary btn-block">Register</button>
+              <button type="submit" class="btn btn-primary btn-block" th:text="#{register}">Register</button>
             </div>
 
             <!-- Display general errors -->

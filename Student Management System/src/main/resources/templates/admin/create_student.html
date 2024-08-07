@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,21 +7,24 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
+<div th:replace="~{fragments/admin_navbar :: navbar}"></div>
+
 <div class="container mt-5">
-    <h2>Register Student</h2>
+    <h2 th:text="#{register_student}">Register Student</h2>
 
     <form th:action="@{/admin/createStudent}"
           th:object="${studentForm}"
           th:method="POST">
         <!-- Username Field -->
         <div class="form-group">
-            <label for="username">Username</label>
+            <label for="username" th:text="#{user_username}">Username</label>
             <input type="text"
                    id="username"
                    name="username"
                    class="form-control"
                    th:value="*{username}"
-                   placeholder="Enter username" />
+                   th:placeholder="#{enter} #{user_username}" />
             <div class="text-danger"
                  th:if="${#fields.hasErrors('username')}"
                  th:errors="*{username}"></div>
@@ -29,7 +32,7 @@
 
         <!-- First Name Field -->
         <div class="form-group">
-            <label for="firstName">First Name</label>
+            <label for="firstName" th:text="#{user_firstName}">First Name</label>
             <input type="text"
                    id="firstName"
                    name="firstName"

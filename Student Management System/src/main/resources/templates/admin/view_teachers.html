@@ -11,7 +11,7 @@
 <div th:replace="~{fragments/admin_navbar :: navbar}"></div>
 
 <div class="container mt-5">
-    <h1>All Teachers</h1>
+    <h1 th:text="#{user_all_teachers}">All Teachers</h1>
 
     <!-- Display Success and Error Messages -->
     <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
@@ -20,14 +20,14 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>Username</th>
-            <th>First Name</th>
-            <th>Middle Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Subject</th> <!-- Changed from "Subjects" to "Subject" -->
-            <th>Classes</th>
-            <th>Actions</th>
+            <th th:text="#{user_username}">Username</th>
+            <th th:text="#{user_firstName}">First Name</th>
+            <th th:text="#{user_middleName}">Middle Name</th>
+            <th th:text="#{user_lastName}">Last Name</th>
+            <th th:text="#{user_email}">Email</th>
+            <th th:text="#{user_subject}">Subject</th>
+            <th th:text="#{user_classes}">Classes</th>
+            <th th:text="#{actions}">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -48,30 +48,35 @@
                 <form th:action="@{/admin/assignSubjectToTeacher}" method="post">
                     <input type="hidden" name="teacherId" th:value="${teacher.userId}" />
                     <div class="form-group">
-                        <label for="subjects">Select Subject</label>
+                        <label for="subjects"
+                        th:text="#{admin_view_teachers_select_subject}">Select Subject</label>
                         <select class="form-control" name="subjectId" id="subjects" required>
                             <option th:each="subject : ${subjects}" th:value="${subject.subjectId}" th:text="${subject.subjectName}"></option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Assign Subject</button>
+                    <button type="submit" class="btn btn-primary"
+                    th:text="#{admin_view_teachers_assign_subject}">Assign Subject</button>
                 </form>
 
                 <!-- Assign Class Button -->
                 <form th:action="@{/admin/assignClassToTeacher}" method="post" class="mt-2">
                     <input type="hidden" name="teacherId" th:value="${teacher.userId}" />
                     <div class="form-group">
-                        <label for="classes">Select Classes</label>
+                        <label for="classes"
+                        th:text="#{admin_view_students_select_classes}">Select Classes</label>
                         <select multiple class="form-control" name="classIds" id="classes" required>
                             <option th:each="clazz : ${classes}" th:value="${clazz.classId}" th:text="${clazz.grade + '-' + clazz.section}"></option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Assign Classes</button>
+                    <button type="submit" class="btn btn-primary"
+                    th:text="#{admin_view_students_assign_classes}">Assign Classes</button>
                 </form>
 
                 <!-- Delete Button -->
                 <form th:action="@{/admin/deleteTeacher}" method="post" class="d-inline">
                     <input type="hidden" name="teacherId" th:value="${teacher.userId}"/>
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this teacher?');">Delete</button>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this teacher?');"
+                            th:text="#{delete}">Delete</button>
                 </form>
             </td>
         </tr>

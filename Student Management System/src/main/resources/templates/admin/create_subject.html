@@ -12,15 +12,17 @@
 <div th:replace="~{fragments/admin_navbar :: navbar}"></div>
 
 <div class="container mt-4">
-    <h2>Create Subject</h2>
+    <h2 th:text="#{admin_nav_bar_create_subjects}">Create Subject</h2>
     <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
     <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
     <form th:action="@{/admin/createSubject}" th:method="post">
         <div class="form-group">
-            <label for="subjectName">Subject Name</label>
-            <input type="text" id="subjectName" name="subjectName" class="form-control" placeholder="Enter subject name" required>
+            <label for="subjectName"
+            th:text="#{admin_nav_bar_subject_name}">Subject Name</label>
+            <input type="text" id="subjectName" name="subjectName" class="form-control" th:placeholder="#{enter} + ' ' + #{admin_nav_bar_subject_name}" required>
         </div>
-        <button type="submit" class="btn btn-primary">Create Subject</button>
+        <button type="submit" class="btn btn-primary"
+        th:text="#{admin_nav_bar_create_subjects}">Create Subject</button>
     </form>
 </div>
 
