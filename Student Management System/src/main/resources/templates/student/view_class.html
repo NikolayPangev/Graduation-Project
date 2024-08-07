@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View My Class</title>
+    <title th:text="#{student_view_my_class}">My Class</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
@@ -11,13 +11,13 @@
 <div th:replace="~{fragments/student_navbar :: navbar}"></div>
 
 <div class="container mt-4">
-    <h1>Students in My Class</h1>
+    <h1 th:text="#{students_my_class_students}">Students in My Class</h1>
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>First Name</th>
-            <th>Middle Name</th>
-            <th>Last Name</th>
+            <th th:text="#{user_firstName}">First Name</th>
+            <th th:text="#{user_middleName}">Middle Name</th>
+            <th th:text="#{user_lastName}">Last Name</th>
         </tr>
         </thead>
         <tbody>
