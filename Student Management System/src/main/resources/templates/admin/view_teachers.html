@@ -60,12 +60,12 @@
                 <form th:action="@{/admin/assignClassToTeacher}" method="post" class="mt-2">
                     <input type="hidden" name="teacherId" th:value="${teacher.userId}" />
                     <div class="form-group">
-                        <label for="classes">Select Class</label>
+                        <label for="classes">Select Classes</label>
                         <select multiple class="form-control" name="classIds" id="classes" required>
                             <option th:each="clazz : ${classes}" th:value="${clazz.classId}" th:text="${clazz.grade + '-' + clazz.section}"></option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Assign Class</button>
+                    <button type="submit" class="btn btn-primary">Assign Classes</button>
                 </form>
 
                 <!-- Delete Button -->

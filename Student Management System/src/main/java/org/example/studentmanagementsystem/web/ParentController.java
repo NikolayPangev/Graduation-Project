@@ -1,6 +1,8 @@
 package org.example.studentmanagementsystem.web;
 
+import org.example.studentmanagementsystem.mapper.StudentMapper;
 import org.example.studentmanagementsystem.model.dtos.SubjectWithGrades;
+import org.example.studentmanagementsystem.model.dtos.StudentDTO;
 import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.model.entities.Class;
 import org.example.studentmanagementsystem.service.GradeService;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -24,11 +25,8 @@ import java.util.stream.Collectors;
 public class ParentController {
 
     private final ParentService parentService;
-
     private final StudentService studentService;
-
     private final TeacherService teacherService;
-
     private final GradeService gradeService;
 
     public ParentController(ParentService parentService, StudentService studentService, TeacherService teacherService, GradeService gradeService) {
@@ -54,7 +52,11 @@ public class ParentController {
         Parent parent = parentService.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Parent not found"));
 
-        model.addAttribute("children", parent.getChildren());
+        List<StudentDTO> children = parent.getChildren().stream()
+                .map(StudentMapper.INSTANCE::toStudentDTO)
+                .collect(Collectors.toList());
+
+        model.addAttribute("children", children);
         return "parent/view_children";
     }
 
@@ -63,7 +65,8 @@ public class ParentController {
         Student child = studentService.findById(childId)
                 .orElseThrow(() -> new RuntimeException("Child not found"));
 
-        model.addAttribute("child", child);
+        StudentDTO childDTO = StudentMapper.INSTANCE.toStudentDTO(child);
+        model.addAttribute("child", childDTO);
         return "parent/child_dashboard";
     }
 
@@ -120,11 +123,10 @@ public class ParentController {
     @GetMapping("/view-profile")
     public String viewParentProfile(Model model, Principal principal) {
         String username = principal.getName();
-        Optional<Parent> parent = parentService.findByUsername(username);
-        if (parent.isEmpty()) {
-            return "error";
-        }
-        model.addAttribute("user", parent.get());
+        Parent parent = parentService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Parent not found"));
+
+        model.addAttribute("user", parent);
         return "parent/view_profile";
     }
 
@@ -132,6 +134,4 @@ public class ParentController {
     public String parentLogoutConfirmation() {
         return "parent/logout_confirmation";
     }
-
-
 }

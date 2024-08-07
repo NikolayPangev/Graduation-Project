@@ -35,7 +35,7 @@
             <td th:text="${student.classes != null ? student.classes.grade + '-' + student.classes.section : 'Unassigned'}"></td>
             <td th:text="${student.parent != null ? student.parent.firstName + ' ' + student.parent.lastName : 'Unassigned'}"></td>
             <td>
-                <form th:action="@{/admin/assignClassToStudent}" th:method="put" class="d-inline">
+                <form th:action="@{/admin/assignClassToStudent}" method="post" class="d-inline">
                     <input type="hidden" name="studentId" th:value="${student.userId}"/>
                     <label>
                         <select name="classId" required>
@@ -44,10 +44,6 @@
                         </select>
                     </label>
                     <button type="submit" class="btn btn-primary btn-sm">Assign Class</button>
-                </form>
-                <form th:action="@{/admin/deleteStudent}" th:method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this student?');">
-                    <input type="hidden" name="studentId" th:value="${student.userId}"/>
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                 </form>
             </td>
         </tr>

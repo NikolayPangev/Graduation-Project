@@ -1,26 +1,28 @@
 package org.example.studentmanagementsystem.web;
 
 import jakarta.validation.Valid;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.example.notificationservice.service.NotificationService;
 import org.example.studentmanagementsystem.model.dtos.ParentForm;
 import org.example.studentmanagementsystem.model.dtos.StudentForm;
 import org.example.studentmanagementsystem.model.dtos.TeacherForm;
-import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.model.entities.Class;
+import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.repository.ClassRepository;
 import org.example.studentmanagementsystem.service.*;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.example.notificationservice.model.Notification;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -34,8 +36,11 @@ public class AdminController {
     private final ClassRepository classRepository;
     private final SubjectService subjectService;
     private final PasswordEncoder passwordEncoder;
+    private final RestTemplate restTemplate;
 
-    public AdminController(UserService userService, ParentService parentService, StudentService studentService, TeacherService teacherService, ClassService classService, ClassRepository classRepository, SubjectService subjectService, PasswordEncoder passwordEncoder) {
+    private final String notificationServiceUrl = "http://localhost:8080/notifications";
+
+    public AdminController(UserService userService, ParentService parentService, StudentService studentService, TeacherService teacherService, ClassService classService, ClassRepository classRepository, SubjectService subjectService, PasswordEncoder passwordEncoder, RestTemplate restTemplate) {
         this.userService = userService;
         this.parentService = parentService;
         this.studentService = studentService;
@@ -44,6 +49,7 @@ public class AdminController {
         this.classRepository = classRepository;
         this.subjectService = subjectService;
         this.passwordEncoder = passwordEncoder;
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/dashboard")
@@ -81,29 +87,81 @@ public class AdminController {
     public String createStudent(@ModelAttribute @Validated StudentForm studentForm,
                                 BindingResult result,
                                 RedirectAttributes redirectAttributes) {
+        // Check for existing username
         if (userService.usernameExists(studentForm.getUsername())) {
             result.rejectValue("username", "error.username", "Username is already taken");
         }
 
+        // Check for existing email
         if (userService.emailExists(studentForm.getEmail())) {
             result.rejectValue("email", "error.email", "Email is already taken");
         }
 
+        // Check if passwords match
         if (!studentForm.getPassword().equals(studentForm.getConfirmPassword())) {
             result.rejectValue("confirmPassword", "error.confirmPassword", "Passwords do not match");
         }
 
+        // If there are errors, return to the form page with error messages
         if (result.hasErrors()) {
-            return "admin/register_student";
+            return "createStudent"; // Or whatever view name displays the form
         }
 
-        userService.createStudent(studentForm);
+        // If no errors, create the student
+        try {
+            userService.createStudent(studentForm);
+            // Send a notification after successful creation
+            sendNotification("Student " + studentForm.getFirstName() + " " + studentForm.getLastName() + " registered successfully");
 
-        String successMessage = "Student " + studentForm.getFirstName() + " " + studentForm.getLastName() + " was successfully registered!";
-        redirectAttributes.addFlashAttribute("successMessage", successMessage);
+            // Set success message
+            String successMessage = "Student " + studentForm.getFirstName() + " " + studentForm.getLastName() + " was successfully registered!";
+            redirectAttributes.addFlashAttribute("successMessage", successMessage);
 
-        return "redirect:/admin/createStudent";
+            // Redirect to success page
+            return "redirect:/admin/createStudent";
+        } catch (Exception e) {
+            // Handle exceptions such as duplicate usernames that might occur
+            result.reject("error.global", "An unexpected error occurred while creating the student.");
+            return "createStudent"; // Return to form with error
+        }
     }
+
+
+    private void sendNotification(String message) {
+        Notification notification = new Notification();
+        notification.setRecipient("admin@example.com");
+        notification.setMessage(message);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // Set your SendGrid API key here
+        String apiKey = "1c76a6dc321827982699bc58ac9f0af6";
+        headers.set("Authorization", "Bearer " + apiKey);
+
+        HttpEntity<Notification> request = new HttpEntity<>(notification, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    notificationServiceUrl,
+                    HttpMethod.POST,
+                    request,
+                    String.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                System.out.println("Notification sent successfully.");
+            } else {
+                System.out.println("Failed to send notification. Status code: " + response.getStatusCode());
+            }
+        } catch (HttpClientErrorException e) {
+            System.err.println("HTTP Error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
+        } catch (Exception e) {
+            System.err.println("Error sending notification: " + e.getMessage());
+        }
+    }
+
+
 
     @PutMapping("/assignClassToStudent")
     public String assignClassToStudent(@RequestParam Long studentId, @RequestParam Long classId) {
