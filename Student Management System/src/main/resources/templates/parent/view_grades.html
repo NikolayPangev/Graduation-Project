@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Child's Grades</title>
+    <title th:text="#{student_grades}">View Child's Grades</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
@@ -12,14 +12,14 @@
 <div th:replace="~{fragments/parent_navbar :: navbar}"></div>
 
 <div class="container mt-4">
-    <h1>Your Child's Grades</h1>
+    <h1 th:text="#{student_grades}">Your Child's Grades</h1>
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Subject</th>
-            <th>Teacher</th>
-            <th>Grades</th>
-            <th>Average Grade</th>
+            <th th:text="#{user_subject}">Subject</th>
+            <th th:text="#{user_teacher}">Teacher</th>
+            <th th:text="#{student_grades}">Grades</th>
+            <th th:text="#{student_average_grades}">Average Grade</th>
         </tr>
         </thead>
         <tbody>
