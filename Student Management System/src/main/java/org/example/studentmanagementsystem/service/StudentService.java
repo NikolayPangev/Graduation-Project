@@ -56,22 +56,4 @@ public class StudentService {
         return studentRepository.findByClasses(cls);
     }
 
-
-    public List<Subject> findSubjectsByStudent(Student student) {
-        List<Subject> subjects = studentRepository.findSubjectsByStudent(student.getUserId());
-
-        for (Subject subject : subjects) {
-            double sum = 0.0;
-            int count = 0;
-            for (Grade grade : subject.getGrades()) {
-                if (grade.getStudent().getUserId().equals(student.getUserId())) {
-                    sum += grade.getGrade();
-                    count++;
-                }
-            }
-            double average = sum / count;
-            subject.setAverageGrade(average);
-        }
-        return subjects;
-    }
 }

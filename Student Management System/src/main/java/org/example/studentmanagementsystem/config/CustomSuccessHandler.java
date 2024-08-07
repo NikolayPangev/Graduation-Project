@@ -18,10 +18,8 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
-        //Default redirection
         String redirectUrl = "/";
 
-        // Redirect based on user roles
         if (authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             redirectUrl = "/admin/dashboard"; // Admin dashboard
         } else if (authorities.contains(new SimpleGrantedAuthority("ROLE_TEACHER"))) {
@@ -32,7 +30,6 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
             redirectUrl = "/parent/dashboard"; // Parent dashboard
         }
 
-        // Redirect to the appropriate URL
         response.sendRedirect(redirectUrl);
     }
 }

@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,17 +20,11 @@ import java.util.stream.Collectors;
 public class TeacherController {
 
     private final TeacherService teacherService;
-
     private final ClassService classService;
-
     private final StudentService studentService;
-
     private final ParentService parentService;
-
     private final GradeService gradeService;
-
     private final SubjectService subjectService;
-
     private final UserService userService;
 
     public TeacherController(TeacherService teacherService, ClassService classService, StudentService studentService, ParentService parentService, GradeService gradeService, SubjectService subjectService, UserService userService) {
@@ -54,25 +47,21 @@ public class TeacherController {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> currentUserOptional = userService.findByUsername(currentUsername);
 
-        if (currentUserOptional.isPresent()) {
-            User currentUser = currentUserOptional.get();
+        currentUserOptional.ifPresent(currentUser -> {
             if (currentUser instanceof Teacher teacher) {
                 List<Class> classes = classService.findClassesByTeacher(teacher);
                 model.addAttribute("classes", classes);
             }
-        }
+        });
         return "teacher/view_classes";
     }
-
 
     @GetMapping("/view-class/{id}")
     public String viewClass(@PathVariable("id") Long classId, Model model) {
         Optional<Class> classOptional = classService.findById(classId);
         if (classOptional.isPresent()) {
             Class classes = classOptional.get();
-            Set<Student> studentSet = classes.getStudents();
-            List<Student> students = new ArrayList<>(studentSet);
-            // Sorting students alphabetically by first, middle, and last name
+            List<Student> students = new ArrayList<>(classes.getStudents());
             students.sort(Comparator.comparing(Student::getFirstName)
                     .thenComparing(Student::getMiddleName)
                     .thenComparing(Student::getLastName));
@@ -82,25 +71,20 @@ public class TeacherController {
             model.addAttribute("errorMessage", "Class not found");
             return "error";
         }
-        return "teacher/view_class"; // Ensure the correct view name is returned
+        return "teacher/view_class";
     }
-
-
 
     @GetMapping("/view-students")
     public String viewStudents(Model model) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-
         Optional<User> currentUserOptional = userService.findByUsername(currentUsername);
 
-        if (currentUserOptional.isPresent()) {
-            User currentUser = currentUserOptional.get();
+        currentUserOptional.ifPresent(currentUser -> {
             if (currentUser instanceof Teacher teacher) {
                 List<Student> students = studentService.findStudentsByTeacherOrdered(teacher);
                 model.addAttribute("students", students);
             }
-        }
-
+        });
         return "teacher/view_students";
     }
 
@@ -139,7 +123,6 @@ public class TeacherController {
         return "teacher/view_parents";
     }
 
-
     @GetMapping("/view-teachers")
     public String viewTeachers(Model model) {
         List<Teacher> teachers = teacherService.findAllTeachers();
@@ -149,19 +132,15 @@ public class TeacherController {
 
     @GetMapping("/add-grade/{studentId}")
     public String showAddGradeForm(@PathVariable Long studentId, Model model) {
-        // Fetch the student
         Optional<Student> optionalStudent = studentService.findById(studentId);
         if (optionalStudent.isEmpty()) {
             model.addAttribute("errorMessage", "Student not found");
             return "error";
         }
         Student student = optionalStudent.get();
-
-        // Prepare the GradeForm
         GradeForm gradeForm = new GradeForm();
         gradeForm.setStudentId(studentId);
 
-        // Fetch the teacher and subject
         Long currentTeacherId = getCurrentTeacherId();
         Subject subject = subjectService.findByTeacherId(currentTeacherId);
         if (subject != null) {
@@ -170,15 +149,12 @@ public class TeacherController {
             model.addAttribute("errorMessage", "Subject not found for the teacher");
             return "error";
         }
-
         model.addAttribute("gradeForm", gradeForm);
         return "teacher/add_grade";
     }
 
     @PostMapping("/add-grade")
     public String addGrade(@ModelAttribute GradeForm gradeForm, Model model) {
-
-        // Fetch the teacher and subject
         Long currentTeacherId = getCurrentTeacherId();
         Subject subject = subjectService.findByTeacherId(currentTeacherId);
 
@@ -187,7 +163,6 @@ public class TeacherController {
             return "error";
         }
 
-        // Fetch the student
         Optional<Student> optionalStudent = studentService.findById(gradeForm.getStudentId());
         if (optionalStudent.isEmpty()) {
             model.addAttribute("errorMessage", "Student not found");
@@ -195,17 +170,14 @@ public class TeacherController {
         }
         Student student = optionalStudent.get();
 
-        // Add the grade
         Grade grade = new Grade();
         grade.setStudent(student);
         grade.setSubject(subject);
         grade.setGrade(gradeForm.getGrade());
         grade.setDescription(gradeForm.getDescription());
-        grade.setDateGiven(LocalDate.now()); // Set the current date
-
+        grade.setDateGiven(LocalDate.now());
         gradeService.save(grade);
 
-        // Redirect to the view class page with the classId parameter
         Long classId = student.getClasses().getClassId();
         return "redirect:/teacher/view-class/" + classId;
     }
@@ -224,18 +196,9 @@ public class TeacherController {
         return "redirect:/teacher/view-class/" + classId;
     }
 
-
     private Long getCurrentTeacherId() {
-        // Get the username of the current authenticated user
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-
-        // Fetch the Teacher object based on the username
+        String username = principal instanceof UserDetails ? ((UserDetails) principal).getUsername() : principal.toString();
         Teacher teacher = teacherService.findByUsername(username);
         if (teacher != null) {
             return teacher.getUserId();
@@ -249,13 +212,10 @@ public class TeacherController {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> currentUserOptional = userService.findByUsername(currentUsername);
 
-        if (currentUserOptional.isPresent()) {
-            User currentUser = currentUserOptional.get();
-            model.addAttribute("user", currentUser);
-        } else {
-            model.addAttribute("errorMessage", "User not found.");
-        }
-
+        currentUserOptional.ifPresentOrElse(
+                currentUser -> model.addAttribute("user", currentUser),
+                () -> model.addAttribute("errorMessage", "User not found.")
+        );
         return "teacher/view_profile";
     }
 

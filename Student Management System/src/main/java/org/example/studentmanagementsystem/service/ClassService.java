@@ -30,35 +30,32 @@ public class ClassService {
         classRepository.save(newClass);
     }
 
-    public List<Class> getAllClassesOrderedByGradeAndSection() {
-        return classRepository.findAllByOrderByGradeAscSectionAsc();
-    }
-
-    public void deleteClass(Long classId) {
-        classRepository.deleteById(classId);
-    }
-
-    public List<Class> findAllClasses() {
-        return classRepository.findAll();
-    }
-
     public List<Class> findByIds(List<Long> ids) {
         return classRepository.findAllById(ids);
-    }
-
-    public void save(Class clazz) {
-        classRepository.save(clazz);
-    }
-
-    public List<Class> findClassesByTeacher(Teacher teacher) {
-        return classRepository.findByTeachersContaining(teacher);
     }
 
     public Optional<Class> findById(Long classId) {
         return classRepository.findById(classId);
     }
 
-    public Optional<Class> findClassByStudentId(Long studentId) {
-        return classRepository.findClassByStudentId(studentId);
+    public List<Class> findAllClasses() {
+        return classRepository.findAll();
     }
+
+    public void save(Class clazz) {
+        classRepository.save(clazz);
+    }
+
+    public void deleteClass(Long classId) {
+        classRepository.deleteById(classId);
+    }
+
+    public List<Class> getAllClassesOrderedByGradeAndSection() {
+        return classRepository.findAllByOrderByGradeAscSectionAsc();
+    }
+
+    public List<Class> findClassesByTeacher(Teacher teacher) {
+        return classRepository.findByTeachersContaining(teacher);
+    }
+
 }

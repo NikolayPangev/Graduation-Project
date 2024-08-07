@@ -34,14 +34,13 @@ public class SubjectService {
         return subjectRepository.findAll();
     }
 
-    @Transactional
-    public void deleteSubject(Long subjectId) {
-        subjectRepository.deleteById(subjectId);
-    }
-
     @Transactional(readOnly = true)
     public Optional<Subject> findById(Long id) {
         return subjectRepository.findById(id);
+    }
+
+    public Subject findByTeacherId(Long teacherId) {
+        return subjectRepository.findByTeacher_UserId(teacherId);
     }
 
     @Transactional
@@ -49,8 +48,9 @@ public class SubjectService {
         subjectRepository.save(subject);
     }
 
-    public Subject findByTeacherId(Long teacherId) {
-        return subjectRepository.findByTeacher_UserId(teacherId);
+    @Transactional
+    public void deleteSubject(Long subjectId) {
+        subjectRepository.deleteById(subjectId);
     }
 
 }

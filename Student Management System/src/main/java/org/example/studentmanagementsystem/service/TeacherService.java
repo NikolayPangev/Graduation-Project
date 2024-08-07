@@ -1,7 +1,5 @@
 package org.example.studentmanagementsystem.service;
 
-import org.example.studentmanagementsystem.model.entities.Class;
-import org.example.studentmanagementsystem.model.entities.Subject;
 import org.example.studentmanagementsystem.model.entities.Teacher;
 import org.example.studentmanagementsystem.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
@@ -20,23 +18,22 @@ public class TeacherService {
     }
 
     @Transactional(readOnly = true)
-    public List<Teacher> findAllTeachers() {
-        return teacherRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
     public Optional<Teacher> findById(Long id) {
         return teacherRepository.findById(id);
-    }
-
-    @Transactional
-    public void deleteTeacher(Long id) {
-        teacherRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
     public List<Teacher> findByClassId(Long classId) {
         return teacherRepository.findByClasses_ClassId(classId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Teacher> findAllTeachers() {
+        return teacherRepository.findAll();
+    }
+
+    public Teacher findByUsername(String username) {
+        return teacherRepository.findByUsername(username);
     }
 
     @Transactional
@@ -45,16 +42,8 @@ public class TeacherService {
     }
 
     @Transactional
-    public void assignSubjectToTeacher(Teacher teacher, Subject subject) {
-        teacher.setSubject(subject);
-        teacherRepository.save(teacher);
+    public void deleteTeacher(Long id) {
+        teacherRepository.deleteById(id);
     }
 
-    public Teacher findByUsername(String username) {
-        return teacherRepository.findByUsername(username);
-    }
-
-    public List<Teacher> findTeachersByClass(Class studentClass) {
-        return teacherRepository.findByClassesContaining(studentClass);
-    }
 }

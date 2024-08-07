@@ -1,7 +1,7 @@
 package org.example.studentmanagementsystem.web;
 
 import jakarta.validation.Valid;
-import org.example.notificationservice.service.NotificationService;
+import org.example.notificationservice.model.Notification;
 import org.example.studentmanagementsystem.model.dtos.ParentForm;
 import org.example.studentmanagementsystem.model.dtos.StudentForm;
 import org.example.studentmanagementsystem.model.dtos.TeacherForm;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.example.notificationservice.model.Notification;
 
 import java.security.Principal;
 import java.util.List;
@@ -40,7 +39,15 @@ public class AdminController {
 
     private final String notificationServiceUrl = "http://localhost:8080/notifications";
 
-    public AdminController(UserService userService, ParentService parentService, StudentService studentService, TeacherService teacherService, ClassService classService, ClassRepository classRepository, SubjectService subjectService, PasswordEncoder passwordEncoder, RestTemplate restTemplate) {
+    public AdminController(UserService userService,
+                           ParentService parentService,
+                           StudentService studentService,
+                           TeacherService teacherService,
+                           ClassService classService,
+                           ClassRepository classRepository,
+                           SubjectService subjectService,
+                           PasswordEncoder passwordEncoder,
+                           RestTemplate restTemplate) {
         this.userService = userService;
         this.parentService = parentService;
         this.studentService = studentService;
@@ -60,20 +67,16 @@ public class AdminController {
     @GetMapping("/profile")
     public String viewProfile(Model model, Principal principal) {
         String username = principal.getName();
-
         User user = userService.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
         model.addAttribute("user", user);
         return "admin/view_profile";
     }
 
     @GetMapping("/viewStudents")
     public String viewStudents(Model model) {
-        List<Student> students = studentService.findAllStudents();
-        List<Class> classes = classService.getAllClassesOrderedByGradeAndSection();
-        model.addAttribute("students", students);
-        model.addAttribute("classes", classes);
+        model.addAttribute("students", studentService.findAllStudents());
+        model.addAttribute("classes", classService.getAllClassesOrderedByGradeAndSection());
         return "admin/view_students";
     }
 
@@ -87,45 +90,32 @@ public class AdminController {
     public String createStudent(@ModelAttribute @Validated StudentForm studentForm,
                                 BindingResult result,
                                 RedirectAttributes redirectAttributes) {
-        // Check for existing username
-        if (userService.usernameExists(studentForm.getUsername())) {
-            result.rejectValue("username", "error.username", "Username is already taken");
-        }
-
-        // Check for existing email
-        if (userService.emailExists(studentForm.getEmail())) {
-            result.rejectValue("email", "error.email", "Email is already taken");
-        }
-
-        // Check if passwords match
-        if (!studentForm.getPassword().equals(studentForm.getConfirmPassword())) {
-            result.rejectValue("confirmPassword", "error.confirmPassword", "Passwords do not match");
-        }
-
-        // If there are errors, return to the form page with error messages
+        validateUserForm(studentForm.getUsername(), studentForm.getEmail(), studentForm.getPassword(), studentForm.getConfirmPassword(), result);
         if (result.hasErrors()) {
-            return "createStudent"; // Or whatever view name displays the form
+            return "createStudent";
         }
-
-        // If no errors, create the student
         try {
             userService.createStudent(studentForm);
-            // Send a notification after successful creation
             sendNotification("Student " + studentForm.getFirstName() + " " + studentForm.getLastName() + " registered successfully");
-
-            // Set success message
-            String successMessage = "Student " + studentForm.getFirstName() + " " + studentForm.getLastName() + " was successfully registered!";
-            redirectAttributes.addFlashAttribute("successMessage", successMessage);
-
-            // Redirect to success page
+            redirectAttributes.addFlashAttribute("successMessage", "Student " + studentForm.getFirstName() + " " + studentForm.getLastName() + " was successfully registered!");
             return "redirect:/admin/createStudent";
         } catch (Exception e) {
-            // Handle exceptions such as duplicate usernames that might occur
             result.reject("error.global", "An unexpected error occurred while creating the student.");
-            return "createStudent"; // Return to form with error
+            return "createStudent";
         }
     }
 
+    private void validateUserForm(String username, String email, String password, String confirmPassword, BindingResult result) {
+        if (userService.usernameExists(username)) {
+            result.rejectValue("username", "error.username", "Username is already taken");
+        }
+        if (userService.emailExists(email)) {
+            result.rejectValue("email", "error.email", "Email is already taken");
+        }
+        if (!password.equals(confirmPassword)) {
+            result.rejectValue("confirmPassword", "error.confirmPassword", "Passwords do not match");
+        }
+    }
 
     private void sendNotification(String message) {
         Notification notification = new Notification();
@@ -134,21 +124,12 @@ public class AdminController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
-        // Set your SendGrid API key here
-        String apiKey = "1c76a6dc321827982699bc58ac9f0af6";
-        headers.set("Authorization", "Bearer " + apiKey);
+        headers.set("Authorization", "Bearer 1c76a6dc321827982699bc58ac9f0af6");
 
         HttpEntity<Notification> request = new HttpEntity<>(notification, headers);
 
         try {
-            ResponseEntity<String> response = restTemplate.exchange(
-                    notificationServiceUrl,
-                    HttpMethod.POST,
-                    request,
-                    String.class
-            );
-
+            ResponseEntity<String> response = restTemplate.exchange(notificationServiceUrl, HttpMethod.POST, request, String.class);
             if (response.getStatusCode() == HttpStatus.OK) {
                 System.out.println("Notification sent successfully.");
             } else {
@@ -161,18 +142,14 @@ public class AdminController {
         }
     }
 
-
-
-    @PutMapping("/assignClassToStudent")
+    @PostMapping("/assignClassToStudent")
     public String assignClassToStudent(@RequestParam Long studentId, @RequestParam Long classId) {
         Student student = studentService.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
         Class classes = classRepository.findById(classId)
                 .orElseThrow(() -> new RuntimeException("Class not found"));
-
         student.setClasses(classes);
         studentService.save(student);
-
         return "redirect:/admin/viewStudents";
     }
 
@@ -197,46 +174,27 @@ public class AdminController {
     public String createTeacher(@ModelAttribute @Validated TeacherForm teacherForm,
                                 BindingResult result,
                                 RedirectAttributes redirectAttributes) {
-        if (userService.usernameExists(teacherForm.getUsername())) {
-            result.rejectValue("username", "error.username", "Username is already taken");
-        }
-
-        if (userService.emailExists(teacherForm.getEmail())) {
-            result.rejectValue("email", "error.email", "Email is already taken");
-        }
-
-        if (!teacherForm.getPassword().equals(teacherForm.getConfirmPassword())) {
-            result.rejectValue("confirmPassword", "error.confirmPassword", "Passwords do not match");
-        }
-
+        validateUserForm(teacherForm.getUsername(), teacherForm.getEmail(), teacherForm.getPassword(), teacherForm.getConfirmPassword(), result);
         if (result.hasErrors()) {
             return "admin/register_teacher";
         }
-
         userService.createTeacher(teacherForm);
-
-        String successMessage = "Teacher " + teacherForm.getFirstName() + " " + teacherForm.getLastName() + " was successfully registered!";
-        redirectAttributes.addFlashAttribute("successMessage", successMessage);
-
+        redirectAttributes.addFlashAttribute("successMessage", "Teacher " + teacherForm.getFirstName() + " " + teacherForm.getLastName() + " was successfully registered!");
         return "redirect:/admin/createTeacher";
     }
 
     @GetMapping("/viewTeachers")
     public String viewTeachers(Model model) {
-        List<Teacher> teachers = teacherService.findAllTeachers();
-        List<Subject> subjects = subjectService.findAllSubjects();
-        List<Class> classes = classService.findAllClasses();
-        model.addAttribute("teachers", teachers);
-        model.addAttribute("subjects", subjects);
-        model.addAttribute("classes", classes);
+        model.addAttribute("teachers", teacherService.findAllTeachers());
+        model.addAttribute("subjects", subjectService.findAllSubjects());
+        model.addAttribute("classes", classService.findAllClasses());
         return "admin/view_teachers";
     }
 
     @PostMapping("/assignSubjectToTeacher")
-    public String assignSubjectToTeacher(
-            @RequestParam Long teacherId,
-            @RequestParam Long subjectId,
-            RedirectAttributes redirectAttributes) {
+    public String assignSubjectToTeacher(@RequestParam Long teacherId,
+                                         @RequestParam Long subjectId,
+                                         RedirectAttributes redirectAttributes) {
         try {
             Teacher teacher = teacherService.findById(teacherId)
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
@@ -255,21 +213,17 @@ public class AdminController {
             teacherService.save(teacher);
             subjectService.save(newSubject);
 
-            String successMessage = "Successfully assigned subject " + newSubject.getSubjectName() + " to teacher " + teacher.getFirstName() + " " + teacher.getLastName();
-            redirectAttributes.addFlashAttribute("successMessage", successMessage);
+            redirectAttributes.addFlashAttribute("successMessage", "Successfully assigned subject " + newSubject.getSubjectName() + " to teacher " + teacher.getFirstName() + " " + teacher.getLastName());
         } catch (Exception e) {
-            String errorMessage = "Couldn't assign subject to teacher: " + e.getMessage();
-            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+            redirectAttributes.addFlashAttribute("errorMessage", "Couldn't assign subject to teacher: " + e.getMessage());
         }
         return "redirect:/admin/viewTeachers";
     }
 
-
     @PostMapping("/assignClassToTeacher")
-    public String assignClassToTeacher(
-            @RequestParam Long teacherId,
-            @RequestParam List<Long> classIds,
-            RedirectAttributes redirectAttributes) {
+    public String assignClassToTeacher(@RequestParam Long teacherId,
+                                       @RequestParam List<Long> classIds,
+                                       RedirectAttributes redirectAttributes) {
         try {
             Teacher teacher = teacherService.findById(teacherId)
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
@@ -281,47 +235,26 @@ public class AdminController {
 
             List<Class> classList = classService.findByIds(classIds);
             for (Class clazz : classList) {
-                // Check if current teacher is already assigned to this class
                 boolean isCurrentTeacherAssigned = clazz.getTeachers().stream()
-                        .anyMatch(t -> t.equals(teacher));
-
-                if (!isCurrentTeacherAssigned) {
-                    // Remove previous teacher assignments if they exist and are not the current teacher
-                    Teacher existingTeacher = clazz.getTeachers().stream()
-                            .filter(t -> !t.equals(teacher) && t.getSubject().equals(subject))
-                            .findFirst()
-                            .orElse(null);
-
-                    if (existingTeacher != null) {
-                        existingTeacher.getClasses().remove(clazz);
-                        clazz.getTeachers().remove(existingTeacher);
-                        teacherService.save(existingTeacher);
-                    }
-
-                    // Add new teacher to class
-                    teacher.getClasses().add(clazz);
-                    clazz.getTeachers().add(teacher);
-                    clazz.setSubject(subject);
-
-                    teacherService.save(teacher);
-                    classService.save(clazz);
+                        .anyMatch(t -> t.getSubject().equals(subject));
+                if (isCurrentTeacherAssigned) {
+                    throw new RuntimeException("Another teacher is already assigned to this class for the subject " + subject.getSubjectName());
                 }
             }
 
-            StringBuilder successMessage = new StringBuilder("Successfully assigned classes ");
             for (Class clazz : classList) {
-                successMessage.append(clazz.getGrade()).append("-").append(clazz.getSection()).append(", ");
+                clazz.getTeachers().add(teacher);
+                teacher.getClasses().add(clazz);
+                classService.save(clazz);
             }
-            successMessage = new StringBuilder(successMessage.substring(0, successMessage.length() - 2) +
-                    " to teacher " + teacher.getFirstName() + " " + teacher.getLastName());
-            redirectAttributes.addFlashAttribute("successMessage", successMessage.toString());
+            teacherService.save(teacher);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Successfully assigned classes to teacher " + teacher.getFirstName() + " " + teacher.getLastName());
         } catch (Exception e) {
-            String errorMessage = "Couldn't assign classes to teacher: " + e.getMessage();
-            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+            redirectAttributes.addFlashAttribute("errorMessage", "Couldn't assign classes to teacher: " + e.getMessage());
         }
         return "redirect:/admin/viewTeachers";
     }
-
 
     @PostMapping("/deleteTeacher")
     public String deleteTeacher(@RequestParam Long teacherId, RedirectAttributes redirectAttributes) {
@@ -472,7 +405,6 @@ public class AdminController {
         return "redirect:/admin/viewClasses";
     }
 
-
     @GetMapping("/createSubject")
     public String showCreateSubjectForm(Model model) {
         model.addAttribute("errorMessage", null);
@@ -507,13 +439,6 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("errorMessage", "Error deleting subject: " + e.getMessage());
         }
         return "redirect:/admin/viewSubjects";
-    }
-
-
-    @GetMapping("/createSchedules")
-    public String createSchedules(Model model) {
-        // Add logic to prepare the schedule creation form
-        return "create_schedules"; // The Thymeleaf template for creating schedules
     }
 
     @GetMapping("/logoutConfirmation")

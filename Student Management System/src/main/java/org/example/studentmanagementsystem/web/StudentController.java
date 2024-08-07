@@ -20,17 +20,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 @Controller
 @RequestMapping("/student")
 public class StudentController {
 
     private final StudentService studentService;
-
     private final TeacherService teacherService;
-
     private final GradeService gradeService;
-
     private final UserService userService;
 
     public StudentController(StudentService studentService, TeacherService teacherService, GradeService gradeService, UserService userService) {
@@ -48,12 +44,10 @@ public class StudentController {
     @GetMapping("/view-class")
     public String viewClass(Model model, Principal principal) {
         String username = principal.getName();
-
         Student student = studentService.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
         Long classId = student.getClasses().getClassId();
-
         List<Student> classmates = studentService.findAllByClassId(classId);
 
         model.addAttribute("students", classmates);
@@ -63,7 +57,6 @@ public class StudentController {
     @GetMapping("/view-teachers")
     public String viewTeachers(Model model, Principal principal) {
         String username = principal.getName();
-
         Student student = studentService.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
@@ -76,11 +69,9 @@ public class StudentController {
     @GetMapping("/view-grades")
     public String viewGrades(Model model, Principal principal) {
         String username = principal.getName();
-
         Student student = studentService.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        // Get the list of subjects associated with the student's class
         List<Subject> subjects = student.getClasses().getTeachers().stream()
                 .map(Teacher::getSubject)
                 .distinct()
@@ -89,29 +80,20 @@ public class StudentController {
         List<SubjectWithGrades> subjectWithGradesList = new ArrayList<>();
 
         for (Subject subject : subjects) {
-            // Fetch grades for the student and subject
             List<Grade> grades = gradeService.findByStudentAndSubject(student, subject);
-
-            // Calculate the average grade
             double averageGrade = grades.stream()
                     .mapToDouble(Grade::getGrade)
                     .average()
                     .orElse(0.0);
-
-            // Fetch the first teacher associated with the subject (assuming there's at least one)
             Teacher teacher = subject.getTeacher().stream()
                     .findFirst()
                     .orElse(null);
-
-            // Create a SubjectWithGrades DTO and add it to the list
             subjectWithGradesList.add(new SubjectWithGrades(subject, grades, averageGrade, teacher));
         }
 
-        // Add the list to the model
         model.addAttribute("subjectWithGradesList", subjectWithGradesList);
         return "student/view_grades";
     }
-
 
     @GetMapping("/view-profile")
     public String viewProfile(Model model, Principal principal) {
@@ -124,10 +106,8 @@ public class StudentController {
         return "student/view_profile";
     }
 
-
     @GetMapping("/logout-confirmation")
     public String logoutConfirmation() {
         return "student/logout_confirmation";
     }
-
 }

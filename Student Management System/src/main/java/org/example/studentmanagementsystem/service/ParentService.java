@@ -19,14 +19,6 @@ public class ParentService {
         this.parentRepository = parentRepository;
     }
 
-    public List<Parent> findAllParents() {
-        return parentRepository.findAll();
-    }
-
-    public Optional<Parent> findById(Long parentId) {
-        return parentRepository.findById(parentId);
-    }
-
     @Transactional
     public void save(Parent parent) {
         parentRepository.save(parent);
@@ -35,6 +27,14 @@ public class ParentService {
     @Transactional
     public void deleteParent(Long parentId) {
         parentRepository.deleteById(parentId);
+    }
+
+    public List<Parent> findAllParents() {
+        return parentRepository.findAll();
+    }
+
+    public Optional<Parent> findById(Long parentId) {
+        return parentRepository.findById(parentId);
     }
 
     public List<Parent> findParentsByStudent(Student student) {

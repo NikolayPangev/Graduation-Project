@@ -75,7 +75,6 @@ public class ParentController {
         Student child = studentService.findById(childId)
                 .orElseThrow(() -> new RuntimeException("Child not found"));
 
-        // Get the list of subjects associated with the student's class
         List<Subject> subjects = child.getClasses().getTeachers().stream()
                 .map(Teacher::getSubject)
                 .distinct()
@@ -84,25 +83,20 @@ public class ParentController {
         List<SubjectWithGrades> subjectWithGradesList = new ArrayList<>();
 
         for (Subject subject : subjects) {
-            // Fetch grades for the student and subject
             List<Grade> grades = gradeService.findByStudentAndSubject(child, subject);
 
-            // Calculate the average grade
             double averageGrade = grades.stream()
                     .mapToDouble(Grade::getGrade)
                     .average()
                     .orElse(0.0);
 
-            // Fetch the first teacher associated with the subject (assuming there's at least one)
             Teacher teacher = subject.getTeacher().stream()
                     .findFirst()
                     .orElse(null);
 
-            // Create a SubjectWithGrades DTO and add it to the list
             subjectWithGradesList.add(new SubjectWithGrades(subject, grades, averageGrade, teacher));
         }
 
-        // Add the list to the model
         model.addAttribute("subjectWithGradesList", subjectWithGradesList);
         return "parent/view_grades";
     }

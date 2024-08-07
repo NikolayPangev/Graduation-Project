@@ -69,8 +69,7 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("An admin already exists.");
         }
         admin.setRole(UserRole.ADMIN);
-        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
-        userRepository.save(admin);
+        createUser(admin);
     }
 
     public Optional<User> findByUsername(String username) {
@@ -86,72 +85,56 @@ public class UserService implements UserDetailsService {
     }
 
     public void createStudent(StudentForm studentForm) {
-        if (usernameExists(studentForm.getUsername())) {
-            throw new IllegalStateException("Username already exists.");
-        }
-        if (emailExists(studentForm.getEmail())) {
-            throw new IllegalStateException("Email already exists.");
-        }
-        if (!studentForm.getPassword().equals(studentForm.getConfirmPassword())) {
-            throw new IllegalStateException("Passwords do not match.");
-        }
+        validateForm(studentForm.getUsername(), studentForm.getEmail(), studentForm.getPassword(), studentForm.getConfirmPassword());
 
         Student student = new Student();
-        student.setUsername(studentForm.getUsername());
-        student.setFirstName(studentForm.getFirstName());
-        student.setMiddleName(studentForm.getMiddleName());
-        student.setLastName(studentForm.getLastName());
-        student.setEmail(studentForm.getEmail());
-        student.setPassword(passwordEncoder.encode(studentForm.getPassword()));
-        student.setRole(UserRole.STUDENT);
+        setUserFields(student, studentForm.getUsername(), studentForm.getFirstName(), studentForm.getMiddleName(), studentForm.getLastName(), studentForm.getEmail(), studentForm.getPassword(), UserRole.STUDENT);
 
         studentRepository.save(student);
     }
 
     public void createParent(ParentForm parentForm) {
-        if (usernameExists(parentForm.getUsername())) {
-            throw new IllegalStateException("Username already exists.");
-        }
-        if (emailExists(parentForm.getEmail())) {
-            throw new IllegalStateException("Email already exists.");
-        }
-        if (!parentForm.getPassword().equals(parentForm.getConfirmPassword())) {
-            throw new IllegalStateException("Passwords do not match.");
-        }
+        validateForm(parentForm.getUsername(), parentForm.getEmail(), parentForm.getPassword(), parentForm.getConfirmPassword());
 
         Parent parent = new Parent();
-        parent.setUsername(parentForm.getUsername());
-        parent.setFirstName(parentForm.getFirstName());
-        parent.setMiddleName(parentForm.getMiddleName());
-        parent.setLastName(parentForm.getLastName());
-        parent.setEmail(parentForm.getEmail());
-        parent.setPassword(passwordEncoder.encode(parentForm.getPassword()));
-        parent.setRole(UserRole.PARENT);
+        setUserFields(parent, parentForm.getUsername(), parentForm.getFirstName(), parentForm.getMiddleName(), parentForm.getLastName(), parentForm.getEmail(), parentForm.getPassword(), UserRole.PARENT);
 
         parentRepository.save(parent);
     }
 
     public void createTeacher(TeacherForm teacherForm) {
-        if (usernameExists(teacherForm.getUsername())) {
-            throw new IllegalStateException("Username already exists.");
-        }
-        if (emailExists(teacherForm.getEmail())) {
-            throw new IllegalStateException("Email already exists.");
-        }
-        if (!teacherForm.getPassword().equals(teacherForm.getConfirmPassword())) {
-            throw new IllegalStateException("Passwords do not match.");
-        }
+        validateForm(teacherForm.getUsername(), teacherForm.getEmail(), teacherForm.getPassword(), teacherForm.getConfirmPassword());
 
         Teacher teacher = new Teacher();
-        teacher.setUsername(teacherForm.getUsername());
-        teacher.setFirstName(teacherForm.getFirstName());
-        teacher.setMiddleName(teacherForm.getMiddleName());
-        teacher.setLastName(teacherForm.getLastName());
-        teacher.setEmail(teacherForm.getEmail());
-        teacher.setPassword(passwordEncoder.encode(teacherForm.getPassword()));
-        teacher.setRole(UserRole.TEACHER);
+        setUserFields(teacher, teacherForm.getUsername(), teacherForm.getFirstName(), teacherForm.getMiddleName(), teacherForm.getLastName(), teacherForm.getEmail(), teacherForm.getPassword(), UserRole.TEACHER);
 
         teacherRepository.save(teacher);
     }
 
+    private void validateForm(String username, String email, String password, String confirmPassword) {
+        if (usernameExists(username)) {
+            throw new IllegalStateException("Username already exists.");
+        }
+        if (emailExists(email)) {
+            throw new IllegalStateException("Email already exists.");
+        }
+        if (!password.equals(confirmPassword)) {
+            throw new IllegalStateException("Passwords do not match.");
+        }
+    }
+
+    private void setUserFields(User user, String username, String firstName, String middleName, String lastName, String email, String password, UserRole role) {
+        user.setUsername(username);
+        user.setFirstName(firstName);
+        user.setMiddleName(middleName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole(role);
+    }
+
+    private void createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
 }
