@@ -92,7 +92,7 @@ public class AdminController {
                                 RedirectAttributes redirectAttributes) {
         validateUserForm(studentForm.getUsername(), studentForm.getEmail(), studentForm.getPassword(), studentForm.getConfirmPassword(), result);
         if (result.hasErrors()) {
-            return "createStudent";
+            return "admin/register_student";
         }
         try {
             userService.createStudent(studentForm);
@@ -101,7 +101,7 @@ public class AdminController {
             return "redirect:/admin/createStudent";
         } catch (Exception e) {
             result.reject("error.global", "An unexpected error occurred while creating the student.");
-            return "createStudent";
+            return "admin/register_student";
         }
     }
 

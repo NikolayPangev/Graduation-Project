@@ -1,32 +1,36 @@
-/* src/main/resources/static/css/style.css */
-
 body {
-    background-color: #f8f9fa;
+    background: linear-gradient(to right, #4e73df, #224abe); /* Gradient background */
+    font-family: 'Nunito', sans-serif;
 }
-
-.navbar {
-    margin-bottom: 20px;
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
 }
-
-.card {
-    margin-bottom: 20px;
+.btn {
+    margin: 10px 0; /* Space buttons vertically */
+    max-width: 300px; /* Limit button width */
 }
-
-.card-header {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-}
-
-.card-body {
-    background-color: #ffffff;
-}
-
 .btn-primary {
-    background-color: #007bff;
-    border: none;
+    background-color: #4e73df;
+    border-color: #4e73df;
+    color: #ffffff; /* Ensure text is visible */
 }
-
 .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: #2e59d9;
+    border-color: #2653d4;
+}
+.btn-secondary {
+    background-color: #4e73df; /* Changed to blue background */
+    border-color: #4e73df; /* Match border color */
+    color: #ffffff; /* Ensure text is visible */
+}
+.btn-secondary:hover {
+    background-color: #2e59d9;
+    border-color: #2653d4;
+}
+.row {
+    margin: 0; /* Remove default row margin */
 }

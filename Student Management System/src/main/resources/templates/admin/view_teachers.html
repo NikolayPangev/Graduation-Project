@@ -1,92 +1,149 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Teachers</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title th:text="#{user_all_teachers}">All Teachers</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 </head>
-<body>
 
-<div th:replace="~{fragments/admin_navbar :: navbar}"></div>
+<body id="page-top">
 
-<div class="container mt-5">
-    <h1 th:text="#{user_all_teachers}">All Teachers</h1>
+    <!-- Top Navbar -->
+    <div th:replace="~{fragments/admin_navbar :: navbar}"></div>
+    <!-- End of Top Navbar -->
 
-    <!-- Display Success and Error Messages -->
-    <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
-    <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
 
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th th:text="#{user_username}">Username</th>
-            <th th:text="#{user_firstName}">First Name</th>
-            <th th:text="#{user_middleName}">Middle Name</th>
-            <th th:text="#{user_lastName}">Last Name</th>
-            <th th:text="#{user_email}">Email</th>
-            <th th:text="#{user_subject}">Subject</th>
-            <th th:text="#{user_classes}">Classes</th>
-            <th th:text="#{actions}">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="teacher : ${teachers}">
-            <td th:text="${teacher.username}"></td>
-            <td th:text="${teacher.firstName}"></td>
-            <td th:text="${teacher.middleName}"></td>
-            <td th:text="${teacher.lastName}"></td>
-            <td th:text="${teacher.email}"></td>
-            <td th:text="${teacher.subject != null ? teacher.subject.subjectName : 'No Subject Assigned'}"></td>
-            <td>
-                <ul>
-                    <li th:each="clazz : ${teacher.classes}" th:text="${clazz.grade + '' + clazz.section}"></li>
-                </ul>
-            </td>
-            <td>
-                <!-- Assign Subject Button -->
-                <form th:action="@{/admin/assignSubjectToTeacher}" method="post">
-                    <input type="hidden" name="teacherId" th:value="${teacher.userId}" />
-                    <div class="form-group">
-                        <label for="subjects"
-                        th:text="#{admin_view_teachers_select_subject}">Select Subject</label>
-                        <select class="form-control" name="subjectId" id="subjects" required>
-                            <option th:each="subject : ${subjects}" th:value="${subject.subjectId}" th:text="${subject.subjectName}"></option>
-                        </select>
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-4 text-gray-800" th:text="#{user_all_teachers}">All Teachers</h1>
+
+                <!-- Display Success and Error Messages -->
+                <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
+                <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary" th:text="#{user_all_teachers}">All Teachers</h6>
                     </div>
-                    <button type="submit" class="btn btn-primary"
-                    th:text="#{admin_view_teachers_assign_subject}">Assign Subject</button>
-                </form>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th th:text="#{user_username}">Username</th>
+                                    <th th:text="#{user_firstName}">First Name</th>
+                                    <th th:text="#{user_middleName}">Middle Name</th>
+                                    <th th:text="#{user_lastName}">Last Name</th>
+                                    <th th:text="#{user_email}">Email</th>
+                                    <th th:text="#{user_subject}">Subject</th>
+                                    <th th:text="#{user_classes}">Classes</th>
+                                    <th th:text="#{actions}">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="teacher : ${teachers}">
+                                    <td th:text="${teacher.username}"></td>
+                                    <td th:text="${teacher.firstName}"></td>
+                                    <td th:text="${teacher.middleName}"></td>
+                                    <td th:text="${teacher.lastName}"></td>
+                                    <td th:text="${teacher.email}"></td>
+                                    <td th:text="${teacher.subject != null ? teacher.subject.subjectName : 'No Subject Assigned'}"></td>
+                                    <td>
+                                        <ul>
+                                            <li th:each="clazz : ${teacher.classes}" th:text="${clazz.grade + '' + clazz.section}"></li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <!-- Assign Subject Button -->
+                                        <form th:action="@{/admin/assignSubjectToTeacher}" method="post">
+                                            <input type="hidden" name="teacherId" th:value="${teacher.userId}" />
+                                            <div class="form-group">
+                                                <label for="subjects"
+                                                       th:text="#{admin_view_teachers_select_subject}">Select Subject</label>
+                                                <select class="form-control" name="subjectId" id="subjects" required>
+                                                    <option th:each="subject : ${subjects}" th:value="${subject.subjectId}" th:text="${subject.subjectName}"></option>
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary"
+                                                    th:text="#{admin_view_teachers_assign_subject}">Assign Subject</button>
+                                        </form>
 
-                <!-- Assign Class Button -->
-                <form th:action="@{/admin/assignClassToTeacher}" method="post" class="mt-2">
-                    <input type="hidden" name="teacherId" th:value="${teacher.userId}" />
-                    <div class="form-group">
-                        <label for="classes"
-                        th:text="#{admin_view_students_select_classes}">Select Classes</label>
-                        <select multiple class="form-control" name="classIds" id="classes" required>
-                            <option th:each="clazz : ${classes}" th:value="${clazz.classId}" th:text="${clazz.grade + '-' + clazz.section}"></option>
-                        </select>
+                                        <!-- Assign Class Button -->
+                                        <form th:action="@{/admin/assignClassToTeacher}" method="post" class="mt-2">
+                                            <input type="hidden" name="teacherId" th:value="${teacher.userId}" />
+                                            <div class="form-group">
+                                                <label for="classes"
+                                                       th:text="#{admin_view_students_select_classes}">Select Classes</label>
+                                                <select multiple class="form-control" name="classIds" id="classes" required>
+                                                    <option th:each="clazz : ${classes}" th:value="${clazz.classId}" th:text="${clazz.grade + '-' + clazz.section}"></option>
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary"
+                                                    th:text="#{admin_view_students_assign_classes}">Assign Classes</button>
+                                        </form>
+
+                                        <!-- Delete Button -->
+                                        <form th:action="@{/admin/deleteTeacher}" method="post" class="d-inline">
+                                            <input type="hidden" name="teacherId" th:value="${teacher.userId}"/>
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this teacher?');"
+                                                    th:text="#{delete}">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary"
-                    th:text="#{admin_view_students_assign_classes}">Assign Classes</button>
-                </form>
+                </div>
 
-                <!-- Delete Button -->
-                <form th:action="@{/admin/deleteTeacher}" method="post" class="d-inline">
-                    <input type="hidden" name="teacherId" th:value="${teacher.userId}"/>
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this teacher?');"
-                            th:text="#{delete}">Delete</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
 </div>
+<!-- End of Page Wrapper -->
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.10/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Bootstrap core JavaScript-->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
+
+<script>
+    $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var subjectId = button.data('subject-id');
+        var modal = $(this);
+        modal.find('#subjectIdToDelete').val(subjectId);
+    });
+</script>
+
 </body>
+
 </html>
