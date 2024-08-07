@@ -81,6 +81,10 @@
                     <div class="p-5">
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">Login</h1>
+                            <!-- Error message -->
+                            <div th:if="${param.error}" class="alert alert-danger">
+                                Invalid username or password. Please try again.
+                            </div>
                         </div>
                         <form class="user"
                               th:action="@{/login}"
