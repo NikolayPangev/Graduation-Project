@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -33,4 +34,17 @@ public class Subject {
     @Transient
     private Double averageGrade;
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Subject subject = (Subject) o;
+        return subjectId != null && subjectId.equals(subject.subjectId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(subjectId);
+    }
 }

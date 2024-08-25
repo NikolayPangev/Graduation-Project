@@ -17,6 +17,7 @@ import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -60,7 +61,7 @@ class StudentControllerTest {
         teacher = new Teacher();
         teacher.setUserId(1L);
         teacher.setSubject(new Subject());
-        studentClass.setTeachers(Collections.singletonList(teacher));
+        studentClass.setTeachers(Set.of(teacher));
 
         subject = new Subject();
         subject.setSubjectId(1L);

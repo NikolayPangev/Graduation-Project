@@ -50,7 +50,7 @@ class StudentServiceTest {
         cls.setGrade(10);
         cls.setSection('A');
         cls.setStudents(Set.of(student));
-        cls.setTeachers(List.of(teacher));
+        cls.setTeachers(Set.of(teacher));
     }
 
     @Test

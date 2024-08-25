@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -107,7 +108,7 @@ public class ParentController {
                 .orElseThrow(() -> new RuntimeException("Child not found"));
 
         Class studentClass = child.getClasses();
-        List<Teacher> teachers = studentClass.getTeachers();
+        Set<Teacher> teachers = studentClass.getTeachers();
 
         model.addAttribute("teachers", teachers);
         model.addAttribute("child", child);

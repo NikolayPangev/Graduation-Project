@@ -21,7 +21,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -95,9 +99,7 @@ public class AdminController {
             return "admin/register_student";
         }
         try {
-            userService.createStudent(studentForm);
-            sendNotification("Student " + studentForm.getFirstName() + " " + studentForm.getLastName() + " registered successfully");
-            redirectAttributes.addFlashAttribute("successMessage", "Student " + studentForm.getFirstName() + " " + studentForm.getLastName() + " was successfully registered!");
+            userService.createStudent(studentForm); redirectAttributes.addFlashAttribute("successMessage", "Student " + studentForm.getFirstName() + " " + studentForm.getLastName() + " was successfully registered!");
             return "redirect:/admin/createStudent";
         } catch (Exception e) {
             result.reject("error.global", "An unexpected error occurred while creating the student.");
@@ -117,30 +119,30 @@ public class AdminController {
         }
     }
 
-    private void sendNotification(String message) {
-        Notification notification = new Notification();
-        notification.setRecipient("admin@example.com");
-        notification.setMessage(message);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer 1c76a6dc321827982699bc58ac9f0af6");
-
-        HttpEntity<Notification> request = new HttpEntity<>(notification, headers);
-
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(notificationServiceUrl, HttpMethod.POST, request, String.class);
-            if (response.getStatusCode() == HttpStatus.OK) {
-                System.out.println("Notification sent successfully.");
-            } else {
-                System.out.println("Failed to send notification. Status code: " + response.getStatusCode());
-            }
-        } catch (HttpClientErrorException e) {
-            System.err.println("HTTP Error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
-        } catch (Exception e) {
-            System.err.println("Error sending notification: " + e.getMessage());
-        }
-    }
+//    private void sendNotification(String message) {
+//        Notification notification = new Notification();
+//        notification.setRecipient("admin@example.com");
+//        notification.setMessage(message);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.set("Authorization", "Bearer 1c76a6dc321827982699bc58ac9f0af6");
+//
+//        HttpEntity<Notification> request = new HttpEntity<>(notification, headers);
+//
+//        try {
+//            ResponseEntity<String> response = restTemplate.exchange(notificationServiceUrl, HttpMethod.POST, request, String.class);
+//            if (response.getStatusCode() == HttpStatus.OK) {
+//                System.out.println("Notification sent successfully.");
+//            } else {
+//                System.out.println("Failed to send notification. Status code: " + response.getStatusCode());
+//            }
+//        } catch (HttpClientErrorException e) {
+//            System.err.println("HTTP Error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
+//        } catch (Exception e) {
+//            System.err.println("Error sending notification: " + e.getMessage());
+//        }
+//    }
 
     @PostMapping("/assignClassToStudent")
     public String assignClassToStudent(@RequestParam Long studentId, @RequestParam Long classId) {
@@ -225,36 +227,46 @@ public class AdminController {
                                        @RequestParam List<Long> classIds,
                                        RedirectAttributes redirectAttributes) {
         try {
-            Teacher teacher = teacherService.findById(teacherId)
+            Teacher newTeacher = teacherService.findById(teacherId)
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
 
-            Subject subject = teacher.getSubject();
-            if (subject == null) {
+            Subject newSubject = newTeacher.getSubject();
+            if (newSubject == null) {
                 throw new RuntimeException("Teacher is not assigned to any subject");
             }
 
-            List<Class> classList = classService.findByIds(classIds);
-            for (Class clazz : classList) {
-                boolean isCurrentTeacherAssigned = clazz.getTeachers().stream()
-                        .anyMatch(t -> t.getSubject().equals(subject));
-                if (isCurrentTeacherAssigned) {
-                    throw new RuntimeException("Another teacher is already assigned to this class for the subject " + subject.getSubjectName());
+            for (Long classId : classIds) {
+                Class clazz = classService.findById(classId)
+                        .orElseThrow(() -> new RuntimeException("Class not found"));
+
+                Iterator<Teacher> iterator = clazz.getTeachers().iterator();
+                while (iterator.hasNext()) {
+                    Teacher existingTeacher = iterator.next();
+                    if (existingTeacher.getSubject() != null && existingTeacher.getSubject().equals(newSubject)) {
+                        iterator.remove();
+                        existingTeacher.getClasses().remove(clazz);
+                        teacherService.save(existingTeacher);
+                    }
                 }
-            }
 
-            for (Class clazz : classList) {
-                clazz.getTeachers().add(teacher);
-                teacher.getClasses().add(clazz);
+                if (!clazz.getTeachers().contains(newTeacher)) {
+                    clazz.getTeachers().add(newTeacher);
+                    newTeacher.getClasses().add(clazz);
+                }
+
                 classService.save(clazz);
+                teacherService.save(newTeacher);
             }
-            teacherService.save(teacher);
 
-            redirectAttributes.addFlashAttribute("successMessage", "Successfully assigned classes to teacher " + teacher.getFirstName() + " " + teacher.getLastName());
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Successfully assigned classes to teacher " + newTeacher.getFirstName() + " " + newTeacher.getLastName());
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Couldn't assign classes to teacher: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Couldn't assign classes to teacher: " + e.getMessage());
         }
         return "redirect:/admin/viewTeachers";
     }
+
 
     @PostMapping("/deleteTeacher")
     public String deleteTeacher(@RequestParam Long teacherId, RedirectAttributes redirectAttributes) {

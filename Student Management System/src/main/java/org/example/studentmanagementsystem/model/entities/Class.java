@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,7 +28,7 @@ public class Class {
     private Set<Student> students;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Teacher> teachers;
+    private Set<Teacher> teachers;
 
     @ManyToOne
     @JoinColumn(name = "subject_id")

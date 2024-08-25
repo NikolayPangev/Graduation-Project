@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -17,7 +19,7 @@ public class Teacher extends User {
     private Subject subject;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Class> classes;
+    private Set<Class> classes;
 
     @ManyToMany
     @JoinTable(
@@ -25,6 +27,19 @@ public class Teacher extends User {
             joinColumns = @JoinColumn(name = "teacher_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
-    private List<Student> students;
+    private Set<Student> students;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Teacher teacher = (Teacher) o;
+        return getUserId() != null && getUserId().equals(teacher.getUserId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUserId());
+    }
 
 }
