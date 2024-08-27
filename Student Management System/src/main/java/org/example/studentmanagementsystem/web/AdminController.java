@@ -9,6 +9,7 @@ import org.example.studentmanagementsystem.model.entities.Class;
 import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.repository.ClassRepository;
 import org.example.studentmanagementsystem.service.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -267,22 +268,57 @@ public class AdminController {
         return "redirect:/admin/viewTeachers";
     }
 
+    @PostMapping("/removeClassFromTeacher")
+    public String removeClassFromTeacher(@RequestParam Long teacherId,
+                                         @RequestParam Long classId,
+                                         RedirectAttributes redirectAttributes) {
+        try {
+            Teacher teacher = teacherService.findById(teacherId)
+                    .orElseThrow(() -> new RuntimeException("Teacher not found"));
+            Class clazz = classService.findById(classId)
+                    .orElseThrow(() -> new RuntimeException("Class not found"));
+
+            // Remove the class from the teacher's list
+            teacher.getClasses().remove(clazz);
+            teacherService.save(teacher);
+
+            // Optionally, remove the teacher from the class
+            clazz.getTeachers().remove(teacher);
+            classService.save(clazz);
+
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Class " + clazz.getGrade() + "-" + clazz.getSection() + " successfully removed from teacher " + teacher.getFirstName() + " " + teacher.getLastName());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Error removing class from teacher: " + e.getMessage());
+        }
+        return "redirect:/admin/viewTeachers";
+    }
+
 
     @PostMapping("/deleteTeacher")
     public String deleteTeacher(@RequestParam Long teacherId, RedirectAttributes redirectAttributes) {
         try {
             Teacher teacher = teacherService.findById(teacherId)
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
+
+            // Attempt to delete the teacher
             teacherService.deleteTeacher(teacherId);
 
             String successMessage = "Teacher " + teacher.getFirstName() + " " + teacher.getLastName() + " successfully deleted";
             redirectAttributes.addFlashAttribute("successMessage", successMessage);
+        } catch (DataIntegrityViolationException e) {
+            // Handle specific case where teacher has assigned classes
+            String errorMessage = "Teacher cannot be deleted because they have classes assigned to them.";
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         } catch (Exception e) {
+            // Handle other exceptions
             String errorMessage = "Error deleting teacher: " + e.getMessage();
             redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
         return "redirect:/admin/viewTeachers";
     }
+
 
     @GetMapping("/createParent")
     public String createParentForm(Model model) {
@@ -407,15 +443,20 @@ public class AdminController {
     }
 
     @PostMapping("/deleteClass")
-    public String deleteClass(@RequestParam Long classId, Model model) {
+    public String deleteClass(@RequestParam Long classId, RedirectAttributes redirectAttributes) {
         try {
             classService.deleteClass(classId);
-            model.addAttribute("successMessage", "The class has been successfully deleted");
+            redirectAttributes.addFlashAttribute("successMessage", "The class has been successfully deleted");
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error deleting class: " + e.getMessage());
+            if (e.getMessage().contains("a foreign key constraint fails")) {
+                redirectAttributes.addFlashAttribute("errorMessage", "The class cannot be deleted because it has students or a teachers assigned to it.");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "Error deleting class: " + e.getMessage());
+            }
         }
         return "redirect:/admin/viewClasses";
     }
+
 
     @GetMapping("/createSubject")
     public String showCreateSubjectForm(Model model) {
