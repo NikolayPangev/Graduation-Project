@@ -40,12 +40,14 @@
                             <tr>
                                 <th th:text="#{user_subject}">Subject</th>
                                 <th th:text="#{user_teacher}">Teacher</th>
+                                <th th:text="#{user_email}">Email</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="teacher : ${teachers}">
                                 <td th:text="${teacher.subject.subjectName}"></td>
                                 <td th:text="${teacher.firstName + ' ' + teacher.lastName}"></td>
+                                <td th:text="${teacher.email}"></td>
                             </tr>
                             </tbody>
                         </table>
