@@ -56,7 +56,10 @@
                                 <td th:text="${student.lastName}"></td>
                                 <td>
                                     <ul>
-                                        <li th:each="grade : ${student.grades}" th:text="${grade.grade}"></li>
+                                        <li th:each="grade : ${student.grades}">
+                                            <span th:text="${grade.grade}"></span>
+                                            <span th:text="|(${#temporals.format(grade.dateGiven, 'dd/MMMM/yyyy')})|"></span>
+                                        </li>
                                     </ul>
                                 </td>
                                 <td th:text="${#numbers.formatDecimal(student.averageGrade, 1, 2)}"></td>

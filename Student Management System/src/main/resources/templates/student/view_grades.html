@@ -51,9 +51,13 @@
                                 <td th:text="${subjectWithGrades.teacher != null ? subjectWithGrades.teacher.firstName + ' ' + subjectWithGrades.teacher.lastName : 'N/A'}"></td>
                                 <td>
                                     <ul class="list-unstyled">
-                                        <li th:each="grade : ${subjectWithGrades.grades}" th:text="${grade.grade}"></li>
+                                        <li th:each="grade : ${subjectWithGrades.grades}">
+                                            <span th:text="${grade.grade}"></span>
+                                            <span th:text="|(${#temporals.format(grade.dateGiven, 'dd/MMMM/yyyy')})|"></span>
+                                        </li>
                                     </ul>
                                 </td>
+
                                 <td th:text="${#numbers.formatDecimal(subjectWithGrades.averageGrade, 1, 2)}"></td>
                             </tr>
                             </tbody>

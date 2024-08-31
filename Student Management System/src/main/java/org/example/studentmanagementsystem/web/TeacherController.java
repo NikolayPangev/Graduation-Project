@@ -132,26 +132,39 @@ public class TeacherController {
 
     @GetMapping("/add-grade/{studentId}")
     public String showAddGradeForm(@PathVariable Long studentId, Model model) {
-        Optional<Student> optionalStudent = studentService.findById(studentId);
-        if (optionalStudent.isEmpty()) {
-            model.addAttribute("errorMessage", "Student not found");
-            return "error";
-        }
-        Student student = optionalStudent.get();
-        GradeForm gradeForm = new GradeForm();
-        gradeForm.setStudentId(studentId);
+        try {
+            // Fetch the student by ID
+            Student student = studentService.findById(studentId)
+                    .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + studentId));
 
-        Long currentTeacherId = getCurrentTeacherId();
-        Subject subject = subjectService.findByTeacherId(currentTeacherId);
-        if (subject != null) {
+            // Create a new GradeForm object and populate it with student information
+            GradeForm gradeForm = new GradeForm();
+            gradeForm.setStudentId(studentId);
+
+            // Get the currently logged-in teacher's ID
+            Long teacherId = getCurrentTeacherId();
+
+            // Fetch the subject taught by the current teacher
+            Subject subject = subjectService.findByTeacherId(teacherId);
+            if (subject == null) {
+                model.addAttribute("errorMessage", "No subject assigned to the teacher.");
+                return "error"; // Return an error page if no subject is found
+            }
+
+            // Add the necessary attributes to the model
+            model.addAttribute("student", student);
             model.addAttribute("subject", subject);
-        } else {
-            model.addAttribute("errorMessage", "Subject not found for the teacher");
+            model.addAttribute("gradeForm", gradeForm);
+
+            // Return the view for adding a grade
+            return "teacher/add_grade";
+        } catch (IllegalArgumentException e) {
+            // If any exception occurs, show an error page
+            model.addAttribute("errorMessage", e.getMessage());
             return "error";
         }
-        model.addAttribute("gradeForm", gradeForm);
-        return "teacher/add_grade";
     }
+
 
     @PostMapping("/add-grade")
     public String addGrade(@ModelAttribute GradeForm gradeForm, Model model) {
