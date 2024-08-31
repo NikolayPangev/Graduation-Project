@@ -1,7 +1,6 @@
 package org.example.studentmanagementsystem.web;
 
 import jakarta.validation.Valid;
-import org.example.notificationservice.model.Notification;
 import org.example.studentmanagementsystem.model.dtos.ParentForm;
 import org.example.studentmanagementsystem.model.dtos.StudentForm;
 import org.example.studentmanagementsystem.model.dtos.TeacherForm;
@@ -10,23 +9,18 @@ import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.repository.ClassRepository;
 import org.example.studentmanagementsystem.service.*;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -146,15 +140,24 @@ public class AdminController {
 //    }
 
     @PostMapping("/assignClassToStudent")
-    public String assignClassToStudent(@RequestParam Long studentId, @RequestParam Long classId) {
-        Student student = studentService.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        Class classes = classRepository.findById(classId)
-                .orElseThrow(() -> new RuntimeException("Class not found"));
-        student.setClasses(classes);
-        studentService.save(student);
+    public String assignClassToStudent(@RequestParam Long studentId, @RequestParam Long classId, RedirectAttributes redirectAttributes) {
+        try {
+            Student student = studentService.findById(studentId)
+                    .orElseThrow(() -> new RuntimeException("Student not found"));
+            Class classes = classRepository.findById(classId)
+                    .orElseThrow(() -> new RuntimeException("Class not found"));
+
+            student.setClasses(classes);
+            studentService.save(student);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Class successfully assigned to student.");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error assigning class: " + e.getMessage());
+        }
+
         return "redirect:/admin/viewStudents";
     }
+
 
     @PostMapping("/deleteStudent")
     public String deleteStudent(@RequestParam Long studentId, RedirectAttributes redirectAttributes) {

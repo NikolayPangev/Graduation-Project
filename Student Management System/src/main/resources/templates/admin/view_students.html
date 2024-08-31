@@ -17,79 +17,83 @@
 
 <body id="page-top">
 
-    <!-- Top Navbar -->
-    <div th:replace="~{fragments/admin_navbar :: navbar}"></div>
-    <!-- End of Top Navbar -->
+<!-- Top Navbar -->
+<div th:replace="~{fragments/admin_navbar :: navbar}"></div>
+<!-- End of Top Navbar -->
 
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Main Content -->
-        <div id="content">
+    <!-- Main Content -->
+    <div id="content">
 
-            <!-- Begin Page Content -->
-            <div class="container-fluid">
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
 
-                <!-- Page Heading -->
-                <h1 class="h3 mb-4 text-gray-800" th:text="#{user_all_students}">All Students</h1>
+            <!-- Page Heading -->
+            <h1 class="h3 mb-4 text-gray-800" th:text="#{user_all_students}">All Students</h1>
 
-                <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary" th:text="#{user_all_students}">All Students</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                <tr>
-                                    <th th:text="#{user_username}">Username</th>
-                                    <th th:text="#{user_firstName}">First Name</th>
-                                    <th th:text="#{user_middleName}">Middle Name</th>
-                                    <th th:text="#{user_lastName}">Surname</th>
-                                    <th th:text="#{user_email}">Email</th>
-                                    <th th:text="#{user_class}">Class</th>
-                                    <th th:text="#{user_parent}">Parent</th>
-                                    <th th:text="#{admin_view_students_assign_class}">Assign Class</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="student : ${students}">
-                                    <td th:text="${student.username}"></td>
-                                    <td th:text="${student.firstName}"></td>
-                                    <td th:text="${student.middleName}"></td>
-                                    <td th:text="${student.lastName}"></td>
-                                    <td th:text="${student.email}"></td>
-                                    <td th:text="${student.classes != null ? student.classes.grade + '-' + student.classes.section : 'Unassigned'}"></td>
-                                    <td th:text="${student.parent != null ? student.parent.firstName + ' ' + student.parent.lastName : 'Unassigned'}"></td>
-                                    <td>
-                                        <form th:action="@{/admin/assignClassToStudent}" method="post" class="d-inline">
-                                            <input type="hidden" name="studentId" th:value="${student.userId}"/>
-                                            <div class="form-group">
-                                                <label for="classId" th:text="#{admin_view_students_select_class}">Select Class</label>
-                                                <select name="classId" id="classId" class="form-control" required>
-                                                    <option value="" disabled selected th:text="#{admin_view_students_select_class}">Select Class</option>
-                                                    <option th:each="class : ${classes}" th:value="${class.classId}" th:text="${class.grade + '-' + class.section}"></option>
-                                                </select>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary btn-sm" th:text="#{admin_view_students_assign_class}">Assign Class</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
+            <!-- Success and Error Messages -->
+            <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" th:text="#{user_all_students}">All Students</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th th:text="#{user_username}">Username</th>
+                                <th th:text="#{user_firstName}">First Name</th>
+                                <th th:text="#{user_middleName}">Middle Name</th>
+                                <th th:text="#{user_lastName}">Surname</th>
+                                <th th:text="#{user_email}">Email</th>
+                                <th th:text="#{user_class}">Class</th>
+                                <th th:text="#{user_parent}">Parent</th>
+                                <th th:text="#{admin_view_students_assign_class}">Assign Class</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="student : ${students}">
+                                <td th:text="${student.username}"></td>
+                                <td th:text="${student.firstName}"></td>
+                                <td th:text="${student.middleName}"></td>
+                                <td th:text="${student.lastName}"></td>
+                                <td th:text="${student.email}"></td>
+                                <td th:text="${student.classes != null ? student.classes.grade + '-' + student.classes.section : 'Unassigned'}"></td>
+                                <td th:text="${student.parent != null ? student.parent.firstName + ' ' + student.parent.lastName : 'Unassigned'}"></td>
+                                <td>
+                                    <form th:action="@{/admin/assignClassToStudent}" method="post" class="d-inline">
+                                        <input type="hidden" name="studentId" th:value="${student.userId}"/>
+                                        <div class="form-group">
+                                            <label for="classId" th:text="#{admin_view_students_select_class}">Select Class</label>
+                                            <select name="classId" id="classId" class="form-control" required>
+                                                <option value="" disabled selected th:text="#{admin_view_students_select_class}">Select Class</option>
+                                                <option th:each="class : ${classes}" th:value="${class.classId}" th:text="${class.grade + '-' + class.section}"></option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm" th:text="#{admin_view_students_assign_class}">Assign Class</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
             </div>
-            <!-- /.container-fluid -->
 
         </div>
-        <!-- End of Main Content -->
+        <!-- /.container-fluid -->
 
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- End of Main Content -->
+
+</div>
+<!-- End of Content Wrapper -->
 
 </div>
 <!-- End of Page Wrapper -->
