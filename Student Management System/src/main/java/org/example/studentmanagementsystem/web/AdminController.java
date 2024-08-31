@@ -442,6 +442,14 @@ public class AdminController {
         return "admin/view_classes";
     }
 
+    @GetMapping("/viewClass/{id}")
+    public String viewClass(@PathVariable Long id, Model model) {
+        List<Student> students = studentService.findStudentsByClassId(id);
+        model.addAttribute("students", students);
+        model.addAttribute("classId", id); // Add class ID to the model if needed in the view
+        return "admin/view_class"; // Make sure this matches your view template name
+    }
+
     @PostMapping("/deleteClass")
     public String deleteClass(@RequestParam Long classId, RedirectAttributes redirectAttributes) {
         try {

@@ -61,6 +61,7 @@
                             <tr>
                                 <th th:text="#{create_class_grade}">Grade</th>
                                 <th th:text="#{create_class_section}">Section</th>
+                                <th th:text="#{user_class}">Class</th>
                                 <th th:text="#{delete}">Delete</th>
                             </tr>
                             </thead>
@@ -68,6 +69,9 @@
                             <tr th:each="cls : ${classes}">
                                 <td th:text="${cls.grade}"></td>
                                 <td th:text="${cls.section}"></td>
+                                <td>
+                                    <a th:href="@{/admin/viewClass/{id}(id=${cls.getClassId()})}" class="btn btn-primary">View Class</a>
+                                </td>
                                 <td>
                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal"
                                             th:text="#{delete}" th:data-class-id="${cls.classId}">

@@ -56,4 +56,7 @@ public class StudentService {
         return studentRepository.findByClasses(cls);
     }
 
+    public List<Student> findStudentsByClassId(Long classId) {
+        return studentRepository.findAllByClassesClassId(classId);
+    }
 }
