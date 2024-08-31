@@ -115,6 +115,19 @@ public class ParentController {
         return "parent/view_teachers";
     }
 
+    @GetMapping("/classmates/{childId}")
+    public String viewClassmates(@PathVariable Long childId, Model model) {
+        Student child = studentService.findById(childId)
+                .orElseThrow(() -> new RuntimeException("Child not found"));
+
+        Class studentClass = child.getClasses();
+        List<Student> classmates = studentService.findByClass(studentClass);
+
+        model.addAttribute("classmates", classmates);
+        return "parent/view_classmates";
+    }
+
+
     @GetMapping("/view-profile")
     public String viewParentProfile(Model model, Principal principal) {
         String username = principal.getName();
