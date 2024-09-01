@@ -26,8 +26,9 @@ public class TeacherController {
     private final GradeService gradeService;
     private final SubjectService subjectService;
     private final UserService userService;
+    private final AbsenceService absenceService;
 
-    public TeacherController(TeacherService teacherService, ClassService classService, StudentService studentService, ParentService parentService, GradeService gradeService, SubjectService subjectService, UserService userService) {
+    public TeacherController(TeacherService teacherService, ClassService classService, StudentService studentService, ParentService parentService, GradeService gradeService, SubjectService subjectService, UserService userService, AbsenceService absenceService) {
         this.teacherService = teacherService;
         this.classService = classService;
         this.studentService = studentService;
@@ -35,6 +36,7 @@ public class TeacherController {
         this.gradeService = gradeService;
         this.subjectService = subjectService;
         this.userService = userService;
+        this.absenceService = absenceService;
     }
 
     @GetMapping("/dashboard")
@@ -190,6 +192,43 @@ public class TeacherController {
         grade.setDescription(gradeForm.getDescription());
         grade.setDateGiven(LocalDate.now());
         gradeService.save(grade);
+
+        Long classId = student.getClasses().getClassId();
+        return "redirect:/teacher/view-class/" + classId;
+    }
+
+    @PostMapping("/add-absence/{studentId}")
+    public String addAbsence(@PathVariable Long studentId, Model model, RedirectAttributes redirectAttributes) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        Teacher currentTeacher = teacherService.findByUsername(currentUsername);
+
+        if (currentTeacher == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Teacher not found.");
+            return "redirect:/teacher/view-class";
+        }
+
+        Optional<Student> optionalStudent = studentService.findById(studentId);
+        if (optionalStudent.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Student not found.");
+            return "redirect:/teacher/view-class";
+        }
+
+        Student student = optionalStudent.get();
+        Subject subject = subjectService.findByTeacherId(currentTeacher.getUserId());
+
+        if (subject == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Subject not found for the teacher.");
+            return "redirect:/teacher/view-class";
+        }
+
+        Absence absence = new Absence();
+        absence.setStudent(student);
+        absence.setTeacher(currentTeacher);
+        absence.setSubject(subject);
+        absence.setDate(LocalDate.now());
+        absenceService.save(absence);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Absence successfully added for " + student.getFirstName() + " " + student.getLastName() + ".");
 
         Long classId = student.getClasses().getClassId();
         return "redirect:/teacher/view-class/" + classId;

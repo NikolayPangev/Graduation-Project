@@ -61,6 +61,13 @@
                     <a class="btn btn-primary btn-user btn-block" th:href="@{'/parent/classmates/' + ${child.userId}}"
                        th:text="#{parent_view_class}">View Class</a>
                 </div>
+
+                <!-- Absences Section -->
+                <div class="col-md-6">
+                    <h2 class="h4 text-gray-900 mb-4" th:text="#{student_absences}">Absences</h2>
+                    <a class="btn btn-primary btn-user btn-block" th:href="@{'/parent/child-absences/' + ${child.userId}}"
+                       th:text="#{student_view_absences}">View Absences</a>
+                </div>
             </div>
 
         </div>

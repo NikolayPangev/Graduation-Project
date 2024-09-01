@@ -1,14 +1,9 @@
 package org.example.studentmanagementsystem.web;
 
+import org.example.studentmanagementsystem.model.dtos.SubjectAbsencesDTO;
 import org.example.studentmanagementsystem.model.dtos.SubjectWithGrades;
-import org.example.studentmanagementsystem.model.entities.Grade;
-import org.example.studentmanagementsystem.model.entities.Student;
-import org.example.studentmanagementsystem.model.entities.Subject;
-import org.example.studentmanagementsystem.model.entities.Teacher;
-import org.example.studentmanagementsystem.service.GradeService;
-import org.example.studentmanagementsystem.service.StudentService;
-import org.example.studentmanagementsystem.service.TeacherService;
-import org.example.studentmanagementsystem.service.UserService;
+import org.example.studentmanagementsystem.model.entities.*;
+import org.example.studentmanagementsystem.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +23,14 @@ public class StudentController {
     private final TeacherService teacherService;
     private final GradeService gradeService;
     private final UserService userService;
+    private final AbsenceService absenceService;
 
-    public StudentController(StudentService studentService, TeacherService teacherService, GradeService gradeService, UserService userService) {
+    public StudentController(StudentService studentService, TeacherService teacherService, GradeService gradeService, UserService userService, AbsenceService absenceService) {
         this.studentService = studentService;
         this.teacherService = teacherService;
         this.gradeService = gradeService;
         this.userService = userService;
+        this.absenceService = absenceService;
     }
 
     @GetMapping("/dashboard")
@@ -93,6 +90,26 @@ public class StudentController {
 
         model.addAttribute("subjectWithGradesList", subjectWithGradesList);
         return "student/view_grades";
+    }
+
+    @GetMapping("/view-absences")
+    public String viewAbsences(Model model, Principal principal) {
+        String username = principal.getName();
+        Student student = studentService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        List<Subject> subjects = student.getClasses().getTeachers().stream()
+                .map(Teacher::getSubject)
+                .distinct()
+                .collect(Collectors.toList());
+
+        List<SubjectAbsencesDTO> subjectAbsences = subjects.stream().map(subject -> {
+            List<Absence> absences = absenceService.findByStudentAndSubject(student, subject);
+            return new SubjectAbsencesDTO(subject, absences, absences.size());
+        }).collect(Collectors.toList());
+
+        model.addAttribute("subjectAbsences", subjectAbsences);
+        return "student/view_absences";
     }
 
     @GetMapping("/view-profile")

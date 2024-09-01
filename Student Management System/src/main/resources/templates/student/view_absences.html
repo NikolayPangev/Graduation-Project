@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="#{student_view_my_teachers}">View My Teachers</title>
+    <title th:text="#{student_view_my_absences}">View Absences</title>
 
     <!-- Custom fonts for this template -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
@@ -13,7 +12,6 @@
     <!-- Custom styles for this template -->
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 </head>
-
 <body id="page-top" class="bg-gradient-primary">
 
 <!-- Top Navbar -->
@@ -30,9 +28,9 @@
         <div class="container mt-4">
 
             <!-- Page Heading -->
-            <h1 class="h3 mb-4 text-white" th:text="#{student_view_my_teachers}">Teachers for My Class</h1>
+            <h1 class="h3 mb-4 text-white" th:text="#{student_view_my_absences}">My Absences</h1>
 
-            <!-- Display Success and Error Messages -->
+            <!-- Display success or error messages -->
             <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
             <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
 
@@ -44,13 +42,21 @@
                             <thead>
                             <tr>
                                 <th th:text="#{user_subject}">Subject</th>
-                                <th th:text="#{admin_nav_bar_teachers}">Teacher</th>
+                                <th th:text="#{student_all_absences}">Total Absences</th>
+                                <th th:text="#{student_absences}">Absences</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="teacher : ${teachers}">
-                                <td th:text="${teacher.subject.subjectName}">Subject</td>
-                                <td th:text="${teacher.firstName + ' ' + teacher.lastName}">Teacher Name</td>
+                            <tr th:each="entry : ${subjectAbsences}">
+                                <td th:text="${entry.subject.subjectName}"></td>
+                                <td th:text="${entry.totalAbsences}"></td>
+                                <td>
+                                    <ul class="list-unstyled mb-0">
+                                        <li th:each="absence : ${entry.absences}" class="d-flex align-items-center">
+                                            <span th:text="${#temporals.format(absence.date, 'dd/MM/yyyy')}"></span>
+                                        </li>
+                                    </ul>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -59,7 +65,7 @@
             </div>
 
         </div>
-        <!-- /.container -->
+        <!-- /.container-fluid -->
 
     </div>
     <!-- End of Main Content -->
@@ -67,14 +73,14 @@
 </div>
 <!-- End of Content Wrapper -->
 
-<!-- Bootstrap core JavaScript -->
+<!-- Bootstrap core JavaScript-->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-<!-- Core plugin JavaScript -->
+<!-- Core plugin JavaScript-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 
-<!-- Custom scripts for all pages -->
+<!-- Custom scripts for all pages-->
 <script src="/js/sb-admin-2.min.js"></script>
 
 </body>

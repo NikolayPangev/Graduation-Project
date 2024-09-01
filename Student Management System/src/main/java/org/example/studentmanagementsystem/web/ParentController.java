@@ -1,14 +1,12 @@
 package org.example.studentmanagementsystem.web;
 
 import org.example.studentmanagementsystem.mapper.StudentMapper;
+import org.example.studentmanagementsystem.model.dtos.SubjectAbsencesDTO;
 import org.example.studentmanagementsystem.model.dtos.SubjectWithGrades;
 import org.example.studentmanagementsystem.model.dtos.StudentDTO;
 import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.model.entities.Class;
-import org.example.studentmanagementsystem.service.GradeService;
-import org.example.studentmanagementsystem.service.ParentService;
-import org.example.studentmanagementsystem.service.StudentService;
-import org.example.studentmanagementsystem.service.TeacherService;
+import org.example.studentmanagementsystem.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,12 +27,14 @@ public class ParentController {
     private final StudentService studentService;
     private final TeacherService teacherService;
     private final GradeService gradeService;
+    private final AbsenceService absenceService;
 
-    public ParentController(ParentService parentService, StudentService studentService, TeacherService teacherService, GradeService gradeService) {
+    public ParentController(ParentService parentService, StudentService studentService, TeacherService teacherService, GradeService gradeService, AbsenceService absenceService) {
         this.parentService = parentService;
         this.studentService = studentService;
         this.teacherService = teacherService;
         this.gradeService = gradeService;
+        this.absenceService = absenceService;
     }
 
     @GetMapping("/dashboard")
@@ -125,6 +125,18 @@ public class ParentController {
 
         model.addAttribute("classmates", classmates);
         return "parent/view_classmates";
+    }
+
+    @GetMapping("/child-absences/{childId}")
+    public String childAbsences(@PathVariable Long childId, Model model) {
+        Student child = studentService.findById(childId)
+                .orElseThrow(() -> new RuntimeException("Child not found"));
+
+        List<SubjectAbsencesDTO> subjectAbsencesList = absenceService.findAbsencesByStudent(child);
+
+        model.addAttribute("subjectAbsences", subjectAbsencesList);
+        model.addAttribute("child", child);
+        return "parent/view_absences";
     }
 
 

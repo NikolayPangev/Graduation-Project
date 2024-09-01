@@ -25,7 +25,7 @@ public class Student extends User {
     @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
     private List<Grade> grades;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
     private Set<Absence> absences;
 
     @ManyToMany(mappedBy = "students", fetch = FetchType.EAGER)
