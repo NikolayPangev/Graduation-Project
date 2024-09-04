@@ -276,22 +276,42 @@ public class AdminController {
                                          @RequestParam Long classId,
                                          RedirectAttributes redirectAttributes) {
         try {
+            // Fetch the teacher and class from the database
             Teacher teacher = teacherService.findById(teacherId)
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
             Class clazz = classService.findById(classId)
                     .orElseThrow(() -> new RuntimeException("Class not found"));
 
-            // Remove the class from the teacher's list
-            teacher.getClasses().remove(clazz);
-            teacherService.save(teacher);
+            // Find the exact class object in the teacher's class set
+            Class classToRemove = null;
+            for (Class assignedClass : teacher.getClasses()) {
+                if (assignedClass.getClassId().equals(clazz.getClassId())) {
+                    classToRemove = assignedClass;
+                    break;
+                }
+            }
 
-            // Optionally, remove the teacher from the class
-            clazz.getTeachers().remove(teacher);
-            classService.save(clazz);
+            if (classToRemove != null) {
+                // Remove the class from the teacher's list of classes
+                teacher.getClasses().remove(classToRemove);
 
-            redirectAttributes.addFlashAttribute("successMessage",
-                    "Class " + clazz.getGrade() + "-" + clazz.getSection() + " successfully removed from teacher " + teacher.getFirstName() + " " + teacher.getLastName());
+                // Remove the teacher from the class's list of teachers
+                clazz.getTeachers().remove(teacher);
+
+                // Save the updated entities to persist the changes
+                teacherService.save(teacher);
+                classService.save(clazz);
+
+                // Add a success message
+                redirectAttributes.addFlashAttribute("successMessage",
+                        "Class " + clazz.getGrade() + "-" + clazz.getSection() + " successfully removed from teacher " + teacher.getFirstName() + " " + teacher.getLastName());
+            } else {
+                // If the class was not found, add a warning message
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "Teacher " + teacher.getFirstName() + " " + teacher.getLastName() + " is not assigned to class " + clazz.getGrade() + "-" + clazz.getSection());
+            }
         } catch (Exception e) {
+            // Handle any other exceptions and add an error message
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Error removing class from teacher: " + e.getMessage());
         }
