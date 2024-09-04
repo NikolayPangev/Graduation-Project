@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,13 +25,15 @@ public class StudentController {
     private final GradeService gradeService;
     private final UserService userService;
     private final AbsenceService absenceService;
+    private final FeedbackService feedbackService;
 
-    public StudentController(StudentService studentService, TeacherService teacherService, GradeService gradeService, UserService userService, AbsenceService absenceService) {
+    public StudentController(StudentService studentService, TeacherService teacherService, GradeService gradeService, UserService userService, AbsenceService absenceService, FeedbackService feedbackService) {
         this.studentService = studentService;
         this.teacherService = teacherService;
         this.gradeService = gradeService;
         this.userService = userService;
         this.absenceService = absenceService;
+        this.feedbackService = feedbackService;
     }
 
     @GetMapping("/dashboard")
@@ -110,6 +113,20 @@ public class StudentController {
 
         model.addAttribute("subjectAbsences", subjectAbsences);
         return "student/view_absences";
+    }
+
+    @GetMapping("/view-feedback")
+    public String viewFeedback(Model model, Principal principal) {
+        String username = principal.getName();
+        Student student = studentService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        List<Feedback> feedbacks = feedbackService.findFeedbackByStudent(student);
+        Map<Subject, List<Feedback>> feedbackBySubject = feedbacks.stream()
+                .collect(Collectors.groupingBy(Feedback::getSubject));
+
+        model.addAttribute("feedbackBySubject", feedbackBySubject);
+        return "student/view_feedback";
     }
 
     @GetMapping("/view-profile")
