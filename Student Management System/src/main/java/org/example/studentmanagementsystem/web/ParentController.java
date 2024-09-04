@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,13 +29,15 @@ public class ParentController {
     private final TeacherService teacherService;
     private final GradeService gradeService;
     private final AbsenceService absenceService;
+    private final FeedbackService feedbackService;
 
-    public ParentController(ParentService parentService, StudentService studentService, TeacherService teacherService, GradeService gradeService, AbsenceService absenceService) {
+    public ParentController(ParentService parentService, StudentService studentService, TeacherService teacherService, GradeService gradeService, AbsenceService absenceService, FeedbackService feedbackService) {
         this.parentService = parentService;
         this.studentService = studentService;
         this.teacherService = teacherService;
         this.gradeService = gradeService;
         this.absenceService = absenceService;
+        this.feedbackService = feedbackService;
     }
 
     @GetMapping("/dashboard")
@@ -137,6 +140,20 @@ public class ParentController {
         model.addAttribute("subjectAbsences", subjectAbsencesList);
         model.addAttribute("child", child);
         return "parent/view_absences";
+    }
+
+    @GetMapping("/child-feedback/{childId}")
+    public String childFeedback(@PathVariable Long childId, Model model) {
+        Student child = studentService.findById(childId)
+                .orElseThrow(() -> new RuntimeException("Child not found"));
+
+        List<Feedback> feedbacks = feedbackService.findFeedbackByStudent(child);
+        Map<Subject, List<Feedback>> feedbackBySubject = feedbacks.stream()
+                .collect(Collectors.groupingBy(Feedback::getSubject));
+
+        model.addAttribute("feedbackBySubject", feedbackBySubject);
+        model.addAttribute("child", child);
+        return "parent/view_feedback";
     }
 
 
