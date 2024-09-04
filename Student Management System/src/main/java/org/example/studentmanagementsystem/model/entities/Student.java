@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +31,9 @@ public class Student extends User {
 
     @ManyToMany(mappedBy = "students", fetch = FetchType.EAGER)
     private List<Teacher> teachers;
+
+    @OneToMany
+    private List<Feedback> feedbacks = new ArrayList<>();
 
     public Double getAverageGrade() {
         if (grades == null || grades.isEmpty()) {

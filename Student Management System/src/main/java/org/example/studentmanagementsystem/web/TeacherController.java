@@ -1,8 +1,10 @@
 package org.example.studentmanagementsystem.web;
 
+import org.example.studentmanagementsystem.model.dtos.FeedbackForm;
 import org.example.studentmanagementsystem.model.dtos.GradeForm;
 import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.model.entities.Class;
+import org.example.studentmanagementsystem.model.enums.FeedbackType;
 import org.example.studentmanagementsystem.service.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,8 +29,9 @@ public class TeacherController {
     private final SubjectService subjectService;
     private final UserService userService;
     private final AbsenceService absenceService;
+    private final FeedbackService feedbackService;
 
-    public TeacherController(TeacherService teacherService, ClassService classService, StudentService studentService, ParentService parentService, GradeService gradeService, SubjectService subjectService, UserService userService, AbsenceService absenceService) {
+    public TeacherController(TeacherService teacherService, ClassService classService, StudentService studentService, ParentService parentService, GradeService gradeService, SubjectService subjectService, UserService userService, AbsenceService absenceService, FeedbackService feedbackService) {
         this.teacherService = teacherService;
         this.classService = classService;
         this.studentService = studentService;
@@ -37,6 +40,7 @@ public class TeacherController {
         this.subjectService = subjectService;
         this.userService = userService;
         this.absenceService = absenceService;
+        this.feedbackService = feedbackService;
     }
 
     @GetMapping("/dashboard")
@@ -84,6 +88,13 @@ public class TeacherController {
         currentUserOptional.ifPresent(currentUser -> {
             if (currentUser instanceof Teacher teacher) {
                 List<Student> students = studentService.findStudentsByTeacherOrdered(teacher);
+
+                // Fetch feedback for each student
+                for (Student student : students) {
+                    List<Feedback> feedbacks = feedbackService.findFeedbackByStudent(student);
+                    student.setFeedbacks(feedbacks);
+                }
+
                 model.addAttribute("students", students);
             }
         });
@@ -234,6 +245,25 @@ public class TeacherController {
         return "redirect:/teacher/view-class/" + classId;
     }
 
+    // In TeacherController.java
+
+    @PostMapping("/confirm-add-absence")
+    public String confirmAddAbsence(@RequestParam("studentId") Long studentId, Model model) {
+        // Fetch the student by ID
+        Optional<Student> optionalStudent = studentService.findById(studentId);
+        if (optionalStudent.isEmpty()) {
+            model.addAttribute("errorMessage", "Student not found.");
+            return "redirect:/teacher/view-class";
+        }
+
+        Student student = optionalStudent.get();
+        model.addAttribute("student", student);
+
+        // Show the confirmation page
+        return "teacher/confirm_add_absence";
+    }
+
+
     @PostMapping("/delete-grade/{gradeId}")
     public String deleteGrade(@PathVariable Long gradeId, Model model, RedirectAttributes redirectAttributes) {
         Optional<Grade> gradeOptional = gradeService.findById(gradeId);
@@ -257,6 +287,106 @@ public class TeacherController {
         } else {
             throw new RuntimeException("Teacher not found");
         }
+    }
+
+    @GetMapping("/add-feedback/{studentId}")
+    public String showAddFeedbackForm(@PathVariable Long studentId, Model model) {
+        try {
+            // Fetch the student by ID
+            Student student = studentService.findById(studentId)
+                    .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + studentId));
+
+            // Create a new FeedbackForm object and populate it with student information
+            FeedbackForm feedbackForm = new FeedbackForm();
+            feedbackForm.setStudentId(studentId);
+
+            // Get the currently logged-in teacher's ID
+            Long teacherId = getCurrentTeacherId();
+
+            // Fetch the subject taught by the current teacher
+            Subject subject = subjectService.findByTeacherId(teacherId);
+            if (subject == null) {
+                model.addAttribute("errorMessage", "No subject assigned to the teacher.");
+                return "error"; // Return an error page if no subject is found
+            }
+
+            // Add the necessary attributes to the model
+            model.addAttribute("student", student);
+            model.addAttribute("subject", subject);
+            model.addAttribute("feedbackForm", feedbackForm);
+
+            // Return the view for adding feedback
+            return "teacher/add_feedback";
+        } catch (IllegalArgumentException e) {
+            // If any exception occurs, show an error page
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error";
+        }
+    }
+
+
+    @PostMapping("/add-feedback")
+    public String addFeedback(@ModelAttribute FeedbackForm feedbackForm, Model model) {
+        // Fetch the student
+        Optional<Student> optionalStudent = studentService.findById(feedbackForm.getStudentId());
+        if (optionalStudent.isEmpty()) {
+            model.addAttribute("errorMessage", "Student not found");
+        }
+        Student student = optionalStudent.get();
+
+        // Fetch the teacher
+        Long teacherId = getCurrentTeacherId();
+        Optional<Teacher> optionalTeacher = teacherService.findById(teacherId);
+        if (optionalTeacher.isEmpty()) {
+            model.addAttribute("errorMessage", "Teacher not found");
+        }
+        Teacher teacher = optionalTeacher.get();
+
+        // Fetch the subject taught by the teacher
+        Subject subject = subjectService.findByTeacherId(teacherId);
+        if (subject == null) {
+            model.addAttribute("errorMessage", "Subject not found for the teacher");
+        }
+
+        // Fetch the student's class
+        Class studentClass = student.getClasses();
+
+        // Create and save the feedback
+        Feedback feedback = new Feedback();
+        feedback.setStudent(student);
+        feedback.setTeacher(teacher);
+        feedback.setSubject(subject);
+        feedback.setClasses(studentClass);
+        feedback.setDescription(feedbackForm.getDescription());
+        feedback.setFeedbackType(FeedbackType.valueOf(feedbackForm.getFeedbackType()));
+        feedback.setDateGiven(LocalDate.now());
+        feedbackService.save(feedback);
+
+        return "redirect:/teacher/view-class/" + studentClass.getClassId();
+    }
+
+    @GetMapping("/view-feedback/{id}")
+    public String viewFeedback(@PathVariable("id") Long studentId, Model model) {
+        // Fetch the student by ID from Optional
+        Optional<Student> studentOptional = studentService.findById(studentId);
+
+        if (studentOptional.isEmpty()) {
+            model.addAttribute("errorMessage", "Student not found");
+            return "redirect:/teacher/view-students"; // Redirect to the view students page
+        }
+
+        Student student = studentOptional.get(); // Extract the Student object from Optional
+
+        // Fetch feedback for the student
+        List<Feedback> feedbacks = feedbackService.findFeedbackByStudent(student);
+        student.setFeedbacks(feedbacks); // Ensure feedbacks are set on the student object
+
+        // Add attributes to the model
+        model.addAttribute("student", student);
+        model.addAttribute("feedbacks", feedbacks);
+
+        // Return the name of the view for feedback
+        return "teacher/view_feedback"; // Ensure this matches the name of your feedback view HTML file
     }
 
     @GetMapping("/profile")

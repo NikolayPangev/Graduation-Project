@@ -85,12 +85,15 @@
                                     </ul>
                                 </td>
                                 <td>
-                                    <a th:href="@{/teacher/add-grade/{id}(id=${student.userId})}" class="btn btn-primary mb-2"
-                                       th:text="#{student_add_grade}">Add Grade</a>
-                                    <form th:action="@{/teacher/add-absence/{studentId}(studentId=${student.userId})}" method="post">
-                                        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                                        <button type="submit" class="btn btn-warning mb-2" th:text="#{student_add_absence}">Add Absence</button>
-                                    </form>
+                                    <div class="btn-group">
+                                        <form th:action="@{/teacher/confirm-add-absence}" method="post">
+                                            <input type="hidden" name="studentId" th:value="${student.userId}" />
+                                            <button type="submit" class="btn btn-danger" th:text="#{student_add_absence}">Add Absence</button>
+                                        </form>
+                                        <a th:href="@{/teacher/add-grade/{id}(id=${student.userId})}" class="btn btn-primary mb-2" th:text="#{student_add_grade}">Add Grade</a>
+                                        <a th:href="@{/teacher/add-feedback/{id}(id=${student.userId})}" class="btn btn-warning mb-2" th:text="#{student_add_feedback}">Add Feedback</a>
+                                        <a th:href="@{/teacher/view-feedback/{id}(id=${student.userId})}" class="btn btn-info mb-2" th:text="#{student_view_feedback}">View Feedback</a>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>

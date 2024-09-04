@@ -500,7 +500,11 @@ public class AdminController {
             subjectService.deleteSubject(subjectId);
             redirectAttributes.addFlashAttribute("successMessage", "Subject deleted successfully");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting subject: " + e.getMessage());
+            if (e.getMessage().contains("a foreign key constraint fails")) {
+                redirectAttributes.addFlashAttribute("errorMessage", "The subject cannot be deleted because it has students or a teachers assigned to it.");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "Error deleting class: " + e.getMessage());
+            }
         }
         return "redirect:/admin/viewSubjects";
     }
