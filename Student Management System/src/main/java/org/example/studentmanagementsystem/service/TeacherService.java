@@ -46,4 +46,7 @@ public class TeacherService {
         teacherRepository.deleteById(id);
     }
 
+    public long countTeachers() {
+        return teacherRepository.count();
+    }
 }

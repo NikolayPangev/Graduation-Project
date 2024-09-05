@@ -43,7 +43,7 @@ public class Student extends User {
         for (Grade grade : grades) {
             sum += grade.getGrade();
         }
-        return (Double) (sum / grades.size());
+        return sum / grades.size();
     }
 
 }

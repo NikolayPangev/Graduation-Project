@@ -9,13 +9,11 @@ import org.example.studentmanagementsystem.model.entities.*;
 import org.example.studentmanagementsystem.repository.ClassRepository;
 import org.example.studentmanagementsystem.service.*;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
@@ -33,10 +31,6 @@ public class AdminController {
     private final ClassService classService;
     private final ClassRepository classRepository;
     private final SubjectService subjectService;
-    private final PasswordEncoder passwordEncoder;
-    private final RestTemplate restTemplate;
-
-    private final String notificationServiceUrl = "http://localhost:8080/notifications";
 
     public AdminController(UserService userService,
                            ParentService parentService,
@@ -44,9 +38,7 @@ public class AdminController {
                            TeacherService teacherService,
                            ClassService classService,
                            ClassRepository classRepository,
-                           SubjectService subjectService,
-                           PasswordEncoder passwordEncoder,
-                           RestTemplate restTemplate) {
+                           SubjectService subjectService) {
         this.userService = userService;
         this.parentService = parentService;
         this.studentService = studentService;
@@ -54,12 +46,20 @@ public class AdminController {
         this.classService = classService;
         this.classRepository = classRepository;
         this.subjectService = subjectService;
-        this.passwordEncoder = passwordEncoder;
-        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/dashboard")
-    public String getDashboard() {
+    public String getDashboard(Model model) {
+        long totalStudents = studentService.countStudents();
+        long totalTeachers = teacherService.countTeachers();
+        long totalParents = parentService.countParents();
+        long totalClasses = classService.countClasses();
+
+        model.addAttribute("totalStudents", totalStudents);
+        model.addAttribute("totalTeachers", totalTeachers);
+        model.addAttribute("totalParents", totalParents);
+        model.addAttribute("totalClasses", totalClasses);
+
         return "admin/admin_dashboard";
     }
 
@@ -114,31 +114,6 @@ public class AdminController {
         }
     }
 
-//    private void sendNotification(String message) {
-//        Notification notification = new Notification();
-//        notification.setRecipient("admin@example.com");
-//        notification.setMessage(message);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.set("Authorization", "Bearer 1c76a6dc321827982699bc58ac9f0af6");
-//
-//        HttpEntity<Notification> request = new HttpEntity<>(notification, headers);
-//
-//        try {
-//            ResponseEntity<String> response = restTemplate.exchange(notificationServiceUrl, HttpMethod.POST, request, String.class);
-//            if (response.getStatusCode() == HttpStatus.OK) {
-//                System.out.println("Notification sent successfully.");
-//            } else {
-//                System.out.println("Failed to send notification. Status code: " + response.getStatusCode());
-//            }
-//        } catch (HttpClientErrorException e) {
-//            System.err.println("HTTP Error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
-//        } catch (Exception e) {
-//            System.err.println("Error sending notification: " + e.getMessage());
-//        }
-//    }
-
     @PostMapping("/assignClassToStudent")
     public String assignClassToStudent(@RequestParam Long studentId, @RequestParam Long classId, RedirectAttributes redirectAttributes) {
         try {
@@ -157,7 +132,6 @@ public class AdminController {
 
         return "redirect:/admin/viewStudents";
     }
-
 
     @PostMapping("/deleteStudent")
     public String deleteStudent(@RequestParam Long studentId, RedirectAttributes redirectAttributes) {
@@ -276,13 +250,11 @@ public class AdminController {
                                          @RequestParam Long classId,
                                          RedirectAttributes redirectAttributes) {
         try {
-            // Fetch the teacher and class from the database
             Teacher teacher = teacherService.findById(teacherId)
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
             Class clazz = classService.findById(classId)
                     .orElseThrow(() -> new RuntimeException("Class not found"));
 
-            // Find the exact class object in the teacher's class set
             Class classToRemove = null;
             for (Class assignedClass : teacher.getClasses()) {
                 if (assignedClass.getClassId().equals(clazz.getClassId())) {
@@ -292,32 +264,25 @@ public class AdminController {
             }
 
             if (classToRemove != null) {
-                // Remove the class from the teacher's list of classes
                 teacher.getClasses().remove(classToRemove);
 
-                // Remove the teacher from the class's list of teachers
                 clazz.getTeachers().remove(teacher);
 
-                // Save the updated entities to persist the changes
                 teacherService.save(teacher);
                 classService.save(clazz);
 
-                // Add a success message
                 redirectAttributes.addFlashAttribute("successMessage",
                         "Class " + clazz.getGrade() + "-" + clazz.getSection() + " successfully removed from teacher " + teacher.getFirstName() + " " + teacher.getLastName());
             } else {
-                // If the class was not found, add a warning message
                 redirectAttributes.addFlashAttribute("errorMessage",
                         "Teacher " + teacher.getFirstName() + " " + teacher.getLastName() + " is not assigned to class " + clazz.getGrade() + "-" + clazz.getSection());
             }
         } catch (Exception e) {
-            // Handle any other exceptions and add an error message
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Error removing class from teacher: " + e.getMessage());
         }
         return "redirect:/admin/viewTeachers";
     }
-
 
     @PostMapping("/deleteTeacher")
     public String deleteTeacher(@RequestParam Long teacherId, RedirectAttributes redirectAttributes) {
@@ -325,23 +290,19 @@ public class AdminController {
             Teacher teacher = teacherService.findById(teacherId)
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
 
-            // Attempt to delete the teacher
             teacherService.deleteTeacher(teacherId);
 
             String successMessage = "Teacher " + teacher.getFirstName() + " " + teacher.getLastName() + " successfully deleted";
             redirectAttributes.addFlashAttribute("successMessage", successMessage);
         } catch (DataIntegrityViolationException e) {
-            // Handle specific case where teacher has assigned classes
             String errorMessage = "Teacher cannot be deleted because they have classes assigned to them.";
             redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         } catch (Exception e) {
-            // Handle other exceptions
             String errorMessage = "Error deleting teacher: " + e.getMessage();
             redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
         return "redirect:/admin/viewTeachers";
     }
-
 
     @GetMapping("/createParent")
     public String createParentForm(Model model) {
@@ -469,8 +430,8 @@ public class AdminController {
     public String viewClass(@PathVariable Long id, Model model) {
         List<Student> students = studentService.findStudentsByClassId(id);
         model.addAttribute("students", students);
-        model.addAttribute("classId", id); // Add class ID to the model if needed in the view
-        return "admin/view_class"; // Make sure this matches your view template name
+        model.addAttribute("classId", id);
+        return "admin/view_class";
     }
 
     @PostMapping("/deleteClass")
@@ -487,7 +448,6 @@ public class AdminController {
         }
         return "redirect:/admin/viewClasses";
     }
-
 
     @GetMapping("/createSubject")
     public String showCreateSubjectForm(Model model) {

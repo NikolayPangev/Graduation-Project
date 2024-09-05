@@ -23,15 +23,13 @@ public class StudentController {
     private final StudentService studentService;
     private final TeacherService teacherService;
     private final GradeService gradeService;
-    private final UserService userService;
     private final AbsenceService absenceService;
     private final FeedbackService feedbackService;
 
-    public StudentController(StudentService studentService, TeacherService teacherService, GradeService gradeService, UserService userService, AbsenceService absenceService, FeedbackService feedbackService) {
+    public StudentController(StudentService studentService, TeacherService teacherService, GradeService gradeService, AbsenceService absenceService, FeedbackService feedbackService) {
         this.studentService = studentService;
         this.teacherService = teacherService;
         this.gradeService = gradeService;
-        this.userService = userService;
         this.absenceService = absenceService;
         this.feedbackService = feedbackService;
     }

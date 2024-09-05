@@ -3,7 +3,6 @@ package org.example.studentmanagementsystem.service;
 import org.example.studentmanagementsystem.model.entities.Parent;
 import org.example.studentmanagementsystem.model.entities.Student;
 import org.example.studentmanagementsystem.repository.ParentRepository;
-import org.example.studentmanagementsystem.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +42,10 @@ public class ParentService {
 
     public Optional<Parent> findByUsername(String username) {
         return parentRepository.findByUsername(username);
+    }
+
+    public long countParents() {
+        return parentRepository.count();
     }
 }
 

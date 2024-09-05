@@ -29,14 +29,11 @@ public class AbsenceService {
     }
 
     public List<SubjectAbsencesDTO> findAbsencesByStudent(Student child) {
-        // Fetch absences by student
         List<Absence> absences = absenceRepository.findByStudent(child);
 
-        // Group absences by subject and calculate total absences
         Map<Subject, List<Absence>> absencesBySubject = absences.stream()
                 .collect(Collectors.groupingBy(Absence::getSubject));
 
-        // Convert the grouped data to DTOs
         return absencesBySubject.entrySet().stream()
                 .map(entry -> new SubjectAbsencesDTO(
                         entry.getKey(),

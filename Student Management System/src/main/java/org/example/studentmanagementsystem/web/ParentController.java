@@ -26,15 +26,13 @@ public class ParentController {
 
     private final ParentService parentService;
     private final StudentService studentService;
-    private final TeacherService teacherService;
     private final GradeService gradeService;
     private final AbsenceService absenceService;
     private final FeedbackService feedbackService;
 
-    public ParentController(ParentService parentService, StudentService studentService, TeacherService teacherService, GradeService gradeService, AbsenceService absenceService, FeedbackService feedbackService) {
+    public ParentController(ParentService parentService, StudentService studentService, GradeService gradeService, AbsenceService absenceService, FeedbackService feedbackService) {
         this.parentService = parentService;
         this.studentService = studentService;
-        this.teacherService = teacherService;
         this.gradeService = gradeService;
         this.absenceService = absenceService;
         this.feedbackService = feedbackService;
@@ -155,7 +153,6 @@ public class ParentController {
         model.addAttribute("child", child);
         return "parent/view_feedback";
     }
-
 
     @GetMapping("/view-profile")
     public String viewParentProfile(Model model, Principal principal) {

@@ -92,12 +92,13 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>1.5.5.Final</version>
         </dependency>
+
         <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>notification-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.5.3</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.mockito</groupId>

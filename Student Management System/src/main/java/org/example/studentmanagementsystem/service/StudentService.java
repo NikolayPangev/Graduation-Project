@@ -63,4 +63,8 @@ public class StudentService {
     public List<Student> findByClass(Class classes) {
         return studentRepository.findByClasses(classes);
     }
+
+    public long countStudents() {
+        return studentRepository.count();
+    }
 }

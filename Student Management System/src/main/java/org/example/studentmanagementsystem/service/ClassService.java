@@ -1,7 +1,6 @@
 package org.example.studentmanagementsystem.service;
 
 import org.example.studentmanagementsystem.model.entities.Class;
-import org.example.studentmanagementsystem.model.entities.Student;
 import org.example.studentmanagementsystem.model.entities.Teacher;
 import org.example.studentmanagementsystem.repository.ClassRepository;
 import org.springframework.stereotype.Service;
@@ -59,4 +58,7 @@ public class ClassService {
         return classRepository.findByTeachersContaining(teacher);
     }
 
+    public long countClasses() {
+        return classRepository.count();
+    }
 }
