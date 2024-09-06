@@ -121,7 +121,7 @@
                                 <div class="text-danger" th:if="${#fields.hasErrors('password')}"
                                      th:errors="*{password}">Password is incorrect.</div>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
+                            <button type="submit" class="btn btn-primary btn-user btn-block" th:text="#{user_login}">Login</button>
                         </form>
                     </div>
                 </div>
