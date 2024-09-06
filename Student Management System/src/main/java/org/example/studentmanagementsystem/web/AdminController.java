@@ -385,6 +385,12 @@ public class AdminController {
         try {
             Parent parent = parentService.findById(parentId)
                     .orElseThrow(() -> new RuntimeException("Parent not found"));
+
+            if (!parent.getChildren().isEmpty()) {
+                redirectAttributes.addFlashAttribute("errorMessage", "A parent cannot be deleted because they have a child assigned to them.");
+                return "redirect:/admin/viewParents";
+            }
+
             parentService.deleteParent(parentId);
 
             String successMessage = "Parent " + parent.getFirstName() + " " + parent.getLastName() + " successfully deleted";
