@@ -1,41 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
+    <title th:text="#{student_dashboard}">Student Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/sb-admin-2.min.css">
     <link rel="stylesheet" href="/css/student-dashboard-style.css">
+    <style>
+        .card-bg {
+            background: #f8f9fc;
+            border: none;
+            border-radius: 0.35rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .icon-container i {
+            font-size: 3rem;
+            color: #4e73df;
+        }
+        .card-title {
+            font-size: 1.5rem;
+        }
+        .card-text {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        .container {
+            margin-top: 3rem;
+        }
+        .row {
+            justify-content: center;
+        }
+        .card-equal-height {
+            min-height: 200px;
+        }
+        .col-lg-2 {
+            flex: 0 0 19%;
+            max-width: 19%;
+        }
+        .col-lg-2 a {
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
 <!-- Include the navbar -->
 <div th:replace="~{fragments/student_navbar :: navbar}"></div>
 
-<div class="container mt-4">
-    <div class="card o-hidden border-0 shadow-lg my-5">
-        <div class="card-body p-0">
-            <!-- Nested Row within Card Body -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="p-5">
-                        <div class="text-center">
-                            <h2 class="h4 text-gray-900 mb-4">Student Dashboard</h2>
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <!-- View My Class -->
+        <div class="col-lg-2 mb-4">
+            <a href="/student/view-class">
+                <div class="card card-bg shadow-sm card-equal-height">
+                    <div class="card-body">
+                        <div class="icon-container mb-3">
+                            <i class="fas fa-users"></i>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <a href="/student/view-class" class="btn btn-primary btn-block">View My Class</a>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <a href="/student/view-teachers" class="btn btn-primary btn-block">View My Teachers</a>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <a href="/student/view-grades" class="btn btn-primary btn-block">View My Grades</a>
-                            </div>
-                        </div>
+                        <h4 class="card-title" th:text="#{student_view_my_class}">My Class</h4>
+                        <p class="card-text" th:text="#{student_view}">View</p>
                     </div>
                 </div>
-            </div>
+            </a>
+        </div>
+        <!-- View My Teachers -->
+        <div class="col-lg-2 mb-4">
+            <a href="/student/view-teachers">
+                <div class="card card-bg shadow-sm card-equal-height">
+                    <div class="card-body">
+                        <div class="icon-container mb-3">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <h4 class="card-title" th:text="#{student_view_my_teachers}">My Teachers</h4>
+                        <p class="card-text" th:text="#{student_view}">View</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- View My Grades -->
+        <div class="col-lg-2 mb-4">
+            <a href="/student/view-grades">
+                <div class="card card-bg shadow-sm card-equal-height">
+                    <div class="card-body">
+                        <div class="icon-container mb-3">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h4 class="card-title" th:text="#{student_view_my_grades}">My Grades</h4>
+                        <p class="card-text" th:text="#{student_view}">View</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- View My Absences -->
+        <div class="col-lg-2 mb-4">
+            <a href="/student/view-absences">
+                <div class="card card-bg shadow-sm card-equal-height">
+                    <div class="card-body">
+                        <div class="icon-container mb-3">
+                            <i class="fas fa-calendar-times"></i>
+                        </div>
+                        <h4 class="card-title" th:text="#{student_view_my_absences}">My Absences</h4>
+                        <p class="card-text" th:text="#{student_view}">View</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- View My Feedback -->
+        <div class="col-lg-2 mb-4">
+            <a href="/student/view-feedback">
+                <div class="card card-bg shadow-sm card-equal-height">
+                    <div class="card-body">
+                        <div class="icon-container mb-3">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h4 class="card-title" th:text="#{student_view_my_feedback}">My Feedback</h4>
+                        <p class="card-text" th:text="#{student_view}">View</p>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </div>
@@ -43,11 +133,11 @@
 <!-- Bootstrap core JavaScript-->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
+<!-- Core plugin JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-
-<!-- Custom scripts for all pages-->
+<!-- Custom scripts for all pages -->
 <script src="/js/sb-admin-2.min.js"></script>
+<!-- Font Awesome for Icons -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 </body>
 </html>

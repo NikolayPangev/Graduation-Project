@@ -3,42 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Dashboard</title>
+    <title th:text="#{teacher_dashboard}">Teacher Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/sb-admin-2.min.css"> <!-- Include the admin styles -->
+    <link rel="stylesheet" href="/css/sb-admin-2.min.css">
     <link rel="stylesheet" href="/css/teacher-dashboard-style.css">
+    <style>
+        .card-bg {
+            background: #f8f9fc;
+            border: none;
+            border-radius: 0.35rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+        .card-body {
+            padding: 3rem;
+        }
+        .icon-container i {
+            font-size: 3rem;
+            color: #4e73df;
+        }
+        .card-title {
+            font-size: 1.5rem;
+        }
+        .card-text {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        .container {
+            margin-top: 3rem;
+        }
+        .row {
+            justify-content: center;
+        }
+        .card-equal-height {
+            min-height: 200px;
+        }
+        .col-lg-2 {
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+        .col-lg-2 a {
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
 <!-- Include the navbar -->
 <div th:replace="~{fragments/teacher_navbar :: navbar}"></div>
 
 <div class="container mt-4">
-    <div class="card o-hidden border-0 shadow-lg my-5">
-        <div class="card-body p-0">
-            <!-- Nested Row within Card Body -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="p-5">
-                        <div class="text-center">
-                            <h2 class="h4 text-gray-900 mb-4">Teacher Dashboard</h2>
+    <div class="row">
+        <!-- View Classes -->
+        <div class="col-lg-2 mb-4">
+            <a href="#" th:href="@{/teacher/view-classes}">
+                <div class="card card-bg shadow-sm card-equal-height">
+                    <div class="card-body">
+                        <div class="icon-container mb-3">
+                            <i class="fas fa-chalkboard"></i>
                         </div>
-                        <div class="row">
-                            <div class="col-md-3 mb-3">
-                                <a href="/teacher/view-classes" class="btn btn-primary btn-block">View Classes</a>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <a href="/teacher/view-students" class="btn btn-primary btn-block">View Students</a>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <a href="/teacher/view-parents" class="btn btn-primary btn-block">View Parents</a>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <a href="/teacher/view-teachers" class="btn btn-primary btn-block">View Teachers</a>
-                            </div>
-                        </div>
+                        <h4 class="card-title" th:text="#{user_classes}">View Classes</h4>
+                        <p class="card-text" th:text="#{student_view}">View</p>
                     </div>
                 </div>
-            </div>
+            </a>
+        </div>
+        <!-- View Students -->
+        <div class="col-lg-2 mb-4">
+            <a href="#" th:href="@{/teacher/view-students}">
+                <div class="card card-bg shadow-sm card-equal-height">
+                    <div class="card-body">
+                        <div class="icon-container mb-3">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h4 class="card-title" th:text="#{user_students}">View Students</h4>
+                        <p class="card-text" th:text="#{student_view}">View</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- View Parents -->
+        <div class="col-lg-2 mb-4">
+            <a href="#" th:href="@{/teacher/view-parents}">
+                <div class="card card-bg shadow-sm card-equal-height">
+                    <div class="card-body">
+                        <div class="icon-container mb-3">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4 class="card-title" th:text="#{user_parents}">View Parents</h4>
+                        <p class="card-text" th:text="#{student_view}">View</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- View Teachers -->
+        <div class="col-lg-2 mb-4">
+            <a href="#" th:href="@{/teacher/view-teachers}">
+                <div class="card card-bg shadow-sm card-equal-height">
+                    <div class="card-body">
+                        <div class="icon-container mb-3">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <h4 class="card-title" th:text="#{user_teachers}">View Teachers</h4>
+                        <p class="card-text" th:text="#{student_view}">View</p>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </div>
@@ -46,11 +118,11 @@
 <!-- Bootstrap core JavaScript-->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
+<!-- Core plugin JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-
-<!-- Custom scripts for all pages-->
+<!-- Custom scripts for all pages -->
 <script src="/js/sb-admin-2.min.js"></script>
+<!-- Font Awesome for Icons -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 </body>
 </html>

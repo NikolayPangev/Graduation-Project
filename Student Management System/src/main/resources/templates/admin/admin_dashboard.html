@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title th:text="#{admin_dashboard}">Admin Dashboard</title>
     <link rel="stylesheet" href="/css/sb-admin-2.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/admin-dashboard-style.css">
@@ -13,6 +13,9 @@
             border: none;
             border-radius: 0.35rem;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .card-body {
             padding: 2rem;
@@ -31,6 +34,9 @@
         .container {
             margin-top: 3rem;
         }
+        .card-equal-height {
+            min-height: 200px;
+        }
     </style>
 </head>
 <body>
@@ -42,49 +48,49 @@
     <div class="row">
         <!-- Total Students -->
         <div class="col-lg-3 mb-4">
-            <div class="card card-bg shadow-sm">
+            <div class="card card-bg shadow-sm card-equal-height">
                 <div class="card-body">
                     <div class="icon-container mb-3">
                         <i class="fas fa-user-graduate"></i>
                     </div>
-                    <h4 class="card-title">Total Students</h4>
-                    <p class="card-text" th:text="${totalStudents}">1,234</p>
+                    <h4 class="card-title" th:text="#{admin_total_students}">Total Students</h4>
+                    <p class="card-text" th:text="${totalStudents}"></p>
                 </div>
             </div>
         </div>
         <!-- Total Teachers -->
         <div class="col-lg-3 mb-4">
-            <div class="card card-bg shadow-sm">
+            <div class="card card-bg shadow-sm card-equal-height">
                 <div class="card-body">
                     <div class="icon-container mb-3">
                         <i class="fas fa-chalkboard-teacher"></i>
                     </div>
-                    <h4 class="card-title">Total Teachers</h4>
-                    <p class="card-text" th:text="${totalTeachers}">56</p>
+                    <h4 class="card-title" th:text="#{admin_total_teachers}">Total Teachers</h4>
+                    <p class="card-text" th:text="${totalTeachers}"></p>
                 </div>
             </div>
         </div>
         <!-- Total Parents -->
         <div class="col-lg-3 mb-4">
-            <div class="card card-bg shadow-sm">
+            <div class="card card-bg shadow-sm card-equal-height">
                 <div class="card-body">
                     <div class="icon-container mb-3">
                         <i class="fas fa-user-friends"></i>
                     </div>
-                    <h4 class="card-title">Total Parents</h4>
-                    <p class="card-text" th:text="${totalParents}">789</p>
+                    <h4 class="card-title" th:text="#{admin_total_parents}">Total Parents</h4>
+                    <p class="card-text" th:text="${totalParents}"></p>
                 </div>
             </div>
         </div>
         <!-- Total Classes -->
         <div class="col-lg-3 mb-4">
-            <div class="card card-bg shadow-sm">
+            <div class="card card-bg shadow-sm card-equal-height">
                 <div class="card-body">
                     <div class="icon-container mb-3">
                         <i class="fas fa-chalkboard"></i>
                     </div>
-                    <h4 class="card-title">Total Classes</h4>
-                    <p class="card-text" th:text="${totalClasses}">30</p>
+                    <h4 class="card-title" th:text="#{admin_total_classes}">Total Classes</h4>
+                    <p class="card-text" th:text="${totalClasses}"></p>
                 </div>
             </div>
         </div>
