@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Management System</title>
+    <title>TréSchool</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -15,7 +15,6 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/index-styles.css">
 
-    <!-- Inline styles for background and layout -->
     <style>
         html, body {
             height: 100%;
@@ -23,24 +22,30 @@
             font-family: 'Roboto', sans-serif;
         }
         body {
-            background: linear-gradient(to right, #4e73df, #224abe); /* Gradient background */
+            background: linear-gradient(to right, #4e73df, #224abe);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
         .navbar {
-            background-color: #f8f9fc; /* Light background for navbar */
-            margin-bottom: 1rem; /* Space below navbar */
+            background-color: #f8f9fc;
+            margin-bottom: 1rem;
             display: flex;
-            justify-content: center; /* Center the content horizontally */
+            justify-content: center;
         }
         .navbar-brand {
-            color: #4e73df; /* Primary color */
-            font-size: 1.5rem; /* Adjust font size as needed */
+            color: #4e73df;
+            font-size: 1.5rem;
         }
-
+        .form-inline {
+            display: flex;
+            align-items: center;
+        }
+        .form-inline label {
+            margin-right: 0.5rem;
+        }
         .container {
-            flex: 1; /* Allows the container to expand and push the footer down */
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -50,11 +55,15 @@
             border: 0;
             border-radius: 0.35rem;
             max-width: 500px;
-            width: 100%; /* Ensure card width is responsive */
+            width: 100%;
             text-align: center;
         }
         .card-body {
             padding: 2rem;
+        }
+        .card-img-top {
+            max-width: 200px;
+            margin-bottom: 2rem;
         }
         .btn-primary {
             background-color: #4e73df;
@@ -65,7 +74,7 @@
             border-color: #2653d4;
         }
         .text-center {
-            color: #4e73df; /* Primary color for text */
+            color: #4e73df;
         }
         .footer {
             background-color: #f8f9fc;
@@ -78,7 +87,16 @@
 
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Student Management System</a>
+    <a class="navbar-brand" th:href="@{/}">TréSchool</a>
+    <div class="collapse navbar-collapse">
+        <form th:method="get" class="form-inline ml-auto" th:action="@{/}" th:href="@{/}" method="get">
+            <label class="text-white mr-2" for="lang" th:text="#{nav_bar_language}">Language</label>
+            <select id="lang" name="lang" class="form-control" onchange="this.form.submit()">
+                <option value="en_US" th:selected="${#locale.toString()} == 'en_US'">English</option>
+                <option value="bg_BG" th:selected="${#locale.toString()} == 'bg_BG'">Български</option>
+            </select>
+        </form>
+    </div>
 </nav>
 
 <!-- Main Content -->
@@ -87,7 +105,8 @@
         <div class="card-body p-0">
             <div class="p-5">
                 <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Welcome to Student Management System</h1>
+                    <img src="/static/img/TreSchool.png" alt="TréSchool Logo" class="card-img-top">
+                    <h1 class="h4 text-gray-900 mb-4">Welcome to TréSchool</h1>
                     <a href="/login" class="btn btn-primary btn-login">
                         Login <i class="fas fa-sign-in-alt"></i>
                     </a>
@@ -99,7 +118,7 @@
 
 <!-- Footer -->
 <footer class="footer">
-    <p>&copy; 2024 Student Management System. All Rights Reserved.</p>
+    <p>&copy; 2024 TréSchool. All Rights Reserved.</p>
 </footer>
 
 <!-- Bootstrap JS, Popper.js, and jQuery -->
