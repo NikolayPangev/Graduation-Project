@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Student Management System</title>
+    <title th:text="#{user_login}"></title>
 
     <!-- Custom fonts for this template-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" type="text/css">
@@ -67,7 +67,16 @@
 
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#" th:href="@{/}">Student Management System</a>
+    <a class="navbar-brand" th:href="@{/}">TréSchool</a>
+    <div class="collapse navbar-collapse">
+        <form th:method="get" class="form-inline ml-auto" th:action="@{/}" th:href="@{/}" method="get">
+            <label class="text-white mr-2" for="lang" th:text="#{nav_bar_language}">Language</label>
+            <select id="lang" name="lang" class="form-control" onchange="this.form.submit()">
+                <option value="en_US" th:selected="${#locale.toString()} == 'en_US'">English</option>
+                <option value="bg_BG" th:selected="${#locale.toString()} == 'bg_BG'">Български</option>
+            </select>
+        </form>
+    </div>
 </nav>
 
 <!-- Main Content -->
@@ -80,7 +89,7 @@
                 <div class="col-lg-8">
                     <div class="p-5">
                         <div class="text-center">
-                            <h1 class="h4 text-gray-900 mb-4">Login</h1>
+                            <h1 class="h4 text-gray-900 mb-4" th:text="#{user_login}">Login</h1>
                             <!-- Error message -->
                             <div th:if="${param.error}" class="alert alert-danger">
                                 Invalid username or password. Please try again.
@@ -91,24 +100,24 @@
                               th:method="POST"
                               th:object="${loginForm}">
                             <div class="form-group">
-                                <label for="username">Username</label>
+                                <label for="username" th:text="#{user_username}">Username</label>
                                 <input id="username"
                                        name="username"
                                        type="text"
                                        class="form-control form-control-user"
                                        th:field="*{username}"
-                                       placeholder="Enter your username" required>
+                                       th:placeholder="#{user_username}" required>
                                 <div class="text-danger" th:if="${#fields.hasErrors('username')}"
                                      th:errors="*{username}">Username is incorrect.</div>
                             </div>
                             <div class="form-group">
-                                <label for="password">Password</label>
+                                <label for="password" th:text="#{user_password}">Password</label>
                                 <input type="password"
                                        id="password"
                                        name="password"
                                        class="form-control form-control-user"
                                        th:field="*{password}"
-                                       placeholder="Enter your password" required>
+                                       th:placeholder="#{user_password}" required>
                                 <div class="text-danger" th:if="${#fields.hasErrors('password')}"
                                      th:errors="*{password}">Password is incorrect.</div>
                             </div>

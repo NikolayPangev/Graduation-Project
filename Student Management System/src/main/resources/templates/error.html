@@ -11,10 +11,10 @@
 <body class="bg-gradient-primary">
 <div class="container mt-5">
     <div class="alert alert-danger">
-        <h4 class="alert-heading">An Error Occurred</h4>
+        <h4 class="alert-heading" th:text="#{error_message}">An Error Occurred</h4>
         <p th:text="${errorMessage}">Something went wrong.</p>
     </div>
-    <a href="/" class="btn btn-primary">Go to Homepage</a>
+    <a href="/" class="btn btn-primary" th:text="#{error_go_to_homepage}">Go to Homepage</a>
 </div>
 </body>
 

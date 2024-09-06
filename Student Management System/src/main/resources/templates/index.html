@@ -106,8 +106,8 @@
             <div class="p-5">
                 <div class="text-center">
                     <img src="/static/img/TreSchool.png" alt="TréSchool Logo" class="card-img-top">
-                    <h1 class="h4 text-gray-900 mb-4">Welcome to TréSchool</h1>
-                    <a href="/login" class="btn btn-primary btn-login">
+                    <h1 class="h4 text-gray-900 mb-4" th:text="#{welcome_school}">Welcome to TréSchool</h1>
+                    <a href="/login" class="btn btn-primary btn-login" th:text="#{user_login}">
                         Login <i class="fas fa-sign-in-alt"></i>
                     </a>
                 </div>
@@ -118,7 +118,7 @@
 
 <!-- Footer -->
 <footer class="footer">
-    <p>&copy; 2024 TréSchool. All Rights Reserved.</p>
+    <p th:text="#{user_footer}">&copy; 2024 TréSchool. All Rights Reserved.</p>
 </footer>
 
 <!-- Bootstrap JS, Popper.js, and jQuery -->
