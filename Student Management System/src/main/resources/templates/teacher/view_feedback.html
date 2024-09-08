@@ -13,6 +13,14 @@
     <!-- Custom styles for this template -->
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <style>
+        .positive-feedback {
+            color: green;
+        }
+        .negative-feedback {
+            color: red;
+        }
+    </style>
 </head>
 
 <body id="page-top" class="bg-gradient-primary">
@@ -40,16 +48,31 @@
                         <table class="table table-striped table-bordered" id="feedbackTable" width="100%" cellspacing="0">
                             <thead>
                             <tr>
-                                <th th:text="#{feedback_type}">Feedback Type</th>
-                                <th th:text="#{feedback_description}">Description</th>
-                                <th th:text="#{feedback_date}">Date</th>
+                                <th class="positive-feedback" th:text="#{feedback_positive}">Positive Feedback</th>
+                                <th class="negative-feedback" th:text="#{feedback_negative}">Negative Feedback</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="feedback : ${feedbacks}">
-                                <td th:text="${feedback.feedbackType}"></td>
-                                <td th:text="${feedback.description}"></td>
-                                <td th:text="${#temporals.format(feedback.dateGiven, 'dd/MM/yyyy')}"></td>
+                            <tr>
+                                <!-- POSITIVE feedback -->
+                                <td>
+                                    <ul>
+                                        <li th:each="feedback : ${feedbacks}" th:if="${feedback.feedbackType.name() == 'POSITIVE'}"
+                                            th:text="${feedback.description + ' (' + #temporals.format(feedback.dateGiven, 'dd/MM/yyyy') + ')'}"
+                                        >
+                                        </li>
+                                    </ul>
+                                </td>
+
+                                <!-- NEGATIVE feedback -->
+                                <td>
+                                    <ul>
+                                        <li th:each="feedback : ${feedbacks}" th:if="${feedback.feedbackType.name() == 'NEGATIVE'}"
+                                            th:text="${feedback.description + ' (' + #temporals.format(feedback.dateGiven, 'dd/MM/yyyy') + ')'}"
+                                        >
+                                        </li>
+                                    </ul>
+                                </td>
                             </tr>
                             </tbody>
                         </table>

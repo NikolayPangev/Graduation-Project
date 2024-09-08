@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title th:text="#{student_view_my_feedback}">Student Feedback</title>
   <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+  <style>
+    .positive-feedback {
+      color: green;
+    }
+    .negative-feedback {
+      color: red;
+    }
+  </style>
 </head>
 <body id="page-top" class="bg-gradient-primary">
 <!-- Top Navbar -->
@@ -28,8 +37,8 @@
             <tr>
               <th th:text="#{user_subject}">Subject</th>
               <th th:text="#{user_teacher}">Teacher</th>
-              <th th:text="#{feedback_positive}">Positive Feedback</th>
-              <th th:text="#{feedback_negative}">Negative Feedback</th>
+              <th class="positive-feedback" th:text="#{feedback_positive}">Positive Feedback</th>
+              <th class="negative-feedback" th:text="#{feedback_negative}">Negative Feedback</th>
             </tr>
             </thead>
             <tbody>

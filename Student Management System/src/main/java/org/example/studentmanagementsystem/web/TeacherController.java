@@ -71,8 +71,35 @@ public class TeacherController {
             students.sort(Comparator.comparing(Student::getFirstName)
                     .thenComparing(Student::getMiddleName)
                     .thenComparing(Student::getLastName));
+
+            Long teacherId = getCurrentTeacherId();
+            Subject subject = subjectService.findByTeacherId(teacherId);
+            if (subject == null) {
+                model.addAttribute("errorMessage", "No subject assigned to the teacher.");
+                return "error";
+            }
+
+            for (Student student : students) {
+                List<Grade> subjectGrades = student.getGrades().stream()
+                        .filter(grade -> grade.getSubject().getSubjectId().equals(subject.getSubjectId()))
+                        .collect(Collectors.toList());
+
+                List<Feedback> subjectFeedbacks = student.getFeedbacks().stream()
+                        .filter(feedback -> feedback.getSubject().getSubjectId().equals(subject.getSubjectId()))
+                        .collect(Collectors.toList());
+
+                List<Absence> subjectAbsences = student.getAbsences().stream()
+                        .filter(absence -> absence.getSubject().getSubjectId().equals(subject.getSubjectId()))
+                        .collect(Collectors.toList());
+
+                student.setGrades(subjectGrades);
+                student.setFeedbacks(subjectFeedbacks);
+                student.setAbsences(subjectAbsences);
+            }
+
             model.addAttribute("students", students);
             model.addAttribute("class", classes);
+            model.addAttribute("subject", subject);
         } else {
             model.addAttribute("errorMessage", "Class not found");
             return "error";
@@ -87,19 +114,44 @@ public class TeacherController {
 
         currentUserOptional.ifPresent(currentUser -> {
             if (currentUser instanceof Teacher teacher) {
+                Long teacherId = teacher.getUserId();
+                Subject subject = subjectService.findByTeacherId(teacherId);
+
+                if (subject == null) {
+                    model.addAttribute("errorMessage", "No subject assigned to the teacher.");
+                    return;
+                }
+
                 List<Student> students = studentService.findStudentsByTeacherOrdered(teacher);
 
-                // Fetch feedback for each student
                 for (Student student : students) {
                     List<Feedback> feedbacks = feedbackService.findFeedbackByStudent(student);
                     student.setFeedbacks(feedbacks);
+
+                    List<Grade> subjectGrades = student.getGrades().stream()
+                            .filter(grade -> grade.getSubject().getSubjectId().equals(subject.getSubjectId()))
+                            .collect(Collectors.toList());
+
+                    List<Feedback> subjectFeedbacks = student.getFeedbacks().stream()
+                            .filter(feedback -> feedback.getSubject().getSubjectId().equals(subject.getSubjectId()))
+                            .collect(Collectors.toList());
+
+                    List<Absence> subjectAbsences = student.getAbsences().stream()
+                            .filter(absence -> absence.getSubject().getSubjectId().equals(subject.getSubjectId()))
+                            .collect(Collectors.toList());
+
+                    student.setGrades(subjectGrades);
+                    student.setFeedbacks(subjectFeedbacks);
+                    student.setAbsences(subjectAbsences);
                 }
 
                 model.addAttribute("students", students);
+                model.addAttribute("subject", subject);
             }
         });
         return "teacher/view_students";
     }
+
 
     @GetMapping("/view-parents")
     public String viewParents(Model model) {
@@ -350,11 +402,24 @@ public class TeacherController {
 
         Student student = studentOptional.get();
 
+        Long teacherId = getCurrentTeacherId();
+        Subject subject = subjectService.findByTeacherId(teacherId);
+
+        if (subject == null) {
+            model.addAttribute("errorMessage", "No subject assigned to the teacher.");
+            return "error";
+        }
+
         List<Feedback> feedbacks = feedbackService.findFeedbackByStudent(student);
-        student.setFeedbacks(feedbacks);
+
+        List<Feedback> filteredFeedbacks = feedbacks.stream()
+                .filter(feedback -> feedback.getSubject().getSubjectId().equals(subject.getSubjectId()))
+                .collect(Collectors.toList());
+
+        student.setFeedbacks(filteredFeedbacks);
 
         model.addAttribute("student", student);
-        model.addAttribute("feedbacks", feedbacks);
+        model.addAttribute("feedbacks", filteredFeedbacks);
 
         return "teacher/view_feedback";
     }

@@ -27,12 +27,12 @@ public class Student extends User {
     private List<Grade> grades;
 
     @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
-    private Set<Absence> absences;
+    private List<Absence> absences;
 
     @ManyToMany(mappedBy = "students", fetch = FetchType.EAGER)
     private List<Teacher> teachers;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Feedback> feedbacks = new ArrayList<>();
 
     public Double getAverageGrade() {
