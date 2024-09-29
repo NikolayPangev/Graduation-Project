@@ -30,7 +30,7 @@
         <div class="container mt-4">
 
             <!-- Page Heading -->
-            <h1 class="h3 mb-4 text-white">Students in Class</h1>
+            <h1 class="h3 mb-4 text-white" th:text="#{students_in_class}">Students in Class</h1>
 
             <!-- DataTales Example -->
             <div class="card shadow mb-4">
@@ -39,9 +39,9 @@
                         <table class="table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                             <tr>
-                                <th>First Name</th>
-                                <th>Middle Name</th>
-                                <th>Last Name</th>
+                                <th th:text="#{user_firstName}">First Name</th>
+                                <th th:text="#{user_middleName}">Middle Name</th>
+                                <th th:text="#{user_lastName}">Last Name</th>
                             </tr>
                             </thead>
                             <tbody>

@@ -27,11 +27,11 @@
                 <div class="card shadow mb-4">
                     <div class="card-body">
                         <p th:text="#{add_absence_confirm} + ' ' + ${student.firstName} + ' ' + ${student.lastName} + '?'">
-                            Are you sure you want to add an absence for Student Student?
+                            Are you sure you want to add an absence for Student?
                         </p>
                         <form th:action="@{/teacher/add-absence/{studentId}(studentId=${student.userId})}" method="post">
                             <button type="submit" class="btn btn-danger" th:text="#{yes}">Yes, Add Absence</button>
-                            <a href="/teacher/view-class" class="btn btn-secondary" th:text="#{no}">No, Cancel</a>
+                            <button type="button" class="btn btn-secondary" th:text="#{no}" onclick="window.history.back()">No, Cancel</button>
                         </form>
                     </div>
                 </div>

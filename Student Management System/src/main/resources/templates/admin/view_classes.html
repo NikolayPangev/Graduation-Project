@@ -70,7 +70,7 @@
                                 <td th:text="${cls.grade}"></td>
                                 <td th:text="${cls.section}"></td>
                                 <td>
-                                    <a th:href="@{/admin/viewClass/{id}(id=${cls.getClassId()})}" class="btn btn-primary">View Class</a>
+                                    <a th:text="#{admin_nav_bar_view_classes}" th:href="@{/admin/viewClass/{id}(id=${cls.getClassId()})}" class="btn btn-primary">View Class</a>
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal"
