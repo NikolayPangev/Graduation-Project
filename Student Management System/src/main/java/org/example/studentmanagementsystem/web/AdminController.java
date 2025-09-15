@@ -599,41 +599,56 @@ public class AdminController {
 
     /* -------------------- Teacher timetable admin pages -------------------- */
 
-    @GetMapping("/schedule/teachers")
-    public String adminListTeachersForSchedule(Model model) {
-        model.addAttribute("teachers", teacherService.findAllTeachers());
-        return "admin/schedule/teachers_list";
-    }
-
-    @GetMapping("/schedule/teacher/{teacherId}")
+    @GetMapping("/teacher_schedule/{teacherId}")
     public String adminEditTeacherSchedule(@PathVariable Long teacherId, Model model) {
         Teacher teacher = teacherService.findById(teacherId).orElseThrow();
 
         List<String> slots = List.of("08:00-09:30", "09:50-11:20", "12:20-13:50", "14:10-15:40");
-        List<DayOfWeek> days = List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
-                DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
+        List<DayOfWeek> days = List.of(
+                DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
+                DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
+                DayOfWeek.FRIDAY
+        );
 
+        // Build timetable map (day -> slot -> ClassSchedule or null)
         Map<DayOfWeek, Map<String, ClassSchedule>> timetable = new LinkedHashMap<>();
         for (DayOfWeek day : days) {
             Map<String, ClassSchedule> row = new LinkedHashMap<>();
             for (String slot : slots) {
                 LocalTime start = LocalTime.parse(slot.split("-")[0]);
-                Optional<ClassSchedule> existing =
-                        scheduleService.findByTeacherAndSlot(teacher, day, start);
+                Optional<ClassSchedule> existing = scheduleService.findByTeacherAndSlot(teacher, day, start);
                 row.put(slot, existing.orElse(null));
             }
             timetable.put(day, row);
         }
 
+        // Build simple map of selected class IDs for each cell to use in Thymeleaf
+        Map<String, Long> selectedClasses = new HashMap<>();
+        for (DayOfWeek day : days) {
+            for (String slot : slots) {
+                ClassSchedule cs = timetable.get(day).get(slot);
+                Long assignedId = (cs != null && cs.getAssignedClass() != null) ? cs.getAssignedClass().getClassId() : 0L;
+                String key = day.name() + "_" + slot.replace(":", "").replace("-", "_");
+                selectedClasses.put(key, assignedId);
+            }
+        }
+
+        model.addAttribute("timetable", timetable);
+        model.addAttribute("selectedClasses", selectedClasses);
         model.addAttribute("teacher", teacher);
         model.addAttribute("slots", slots);
         model.addAttribute("days", days);
-        model.addAttribute("timetable", timetable);
         model.addAttribute("classes", classService.getAllClassesOrderedByGradeAndSection());
-        return "admin/schedule/teacher_schedule_edit";
+
+        // keep successMessage available if present as flash attribute
+        if (!model.containsAttribute("successMessage")) {
+            model.addAttribute("successMessage", null);
+        }
+
+        return "admin/teacher_schedule_edit";
     }
 
-    @PostMapping("/schedule/teacher/{teacherId}/save")
+    @PostMapping("/teacher_schedule/{teacherId}/save")
     public String adminSaveTeacherSchedule(@PathVariable Long teacherId,
                                            @RequestParam Map<String, String> params,
                                            RedirectAttributes redirectAttributes) {
@@ -663,7 +678,7 @@ public class AdminController {
                         return s;
                     });
                     schedule.setAssignedClass(assigned);
-                    // optionally also set subject here:
+                    // keep subject if teacher has one
                     if (teacher.getSubject() != null) {
                         schedule.setSubject(teacher.getSubject());
                     }
@@ -673,7 +688,7 @@ public class AdminController {
         }
 
         redirectAttributes.addFlashAttribute("successMessage", "Teacher timetable saved.");
-        return "redirect:/admin/schedule/teacher/" + teacherId;
+        return "redirect:/admin/teacher_schedule/" + teacherId;
     }
 
 }

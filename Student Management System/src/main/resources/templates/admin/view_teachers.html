@@ -51,8 +51,10 @@
                                 <th th:text="#{user_email}">Email</th>
                                 <th th:text="#{user_subject}">Subject</th>
                                 <th th:text="#{user_classes}">Classes</th>
+                                <th th:text="#{teacher_schedule}">Schedule</th>
                                 <th th:text="#{actions}">Actions</th>
                             </tr>
+
                             </thead>
                             <tbody>
                             <tr th:each="teacher : ${teachers}">
@@ -77,6 +79,14 @@
                                         </li>
                                     </ul>
                                 </td>
+
+                                <td>
+                                    <!-- Schedule Button -->
+                                    <a th:href="@{/admin/teacher_schedule/{id}(id=${teacher.userId})}" class="btn btn-info btn-sm mb-1">
+                                        Schedule
+                                    </a>
+                                </td>
+
                                 <td>
                                     <!-- Assign Subject Button -->
                                     <form th:action="@{/admin/assignSubjectToTeacher}" method="post" class="mb-2">

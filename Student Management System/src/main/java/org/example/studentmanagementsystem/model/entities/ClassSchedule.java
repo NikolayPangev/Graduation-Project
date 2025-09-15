@@ -35,7 +35,7 @@ public class ClassSchedule {
     private Subject subject;
 
     // If this is a teacher timetable: which class is scheduled in the slot (nullable)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_class_id")
     private Class assignedClass;
 
@@ -49,6 +49,11 @@ public class ClassSchedule {
 
     @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
+
+    @Transient
+    public Long getAssignedClassId() {
+        return assignedClass != null ? assignedClass.getClassId() : null;
+    }
 
     // optional room
     private String room;
