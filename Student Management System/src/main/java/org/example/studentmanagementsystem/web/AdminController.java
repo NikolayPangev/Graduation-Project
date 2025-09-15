@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.util.Iterator;
-import java.util.List;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -31,6 +32,7 @@ public class AdminController {
     private final ClassService classService;
     private final ClassRepository classRepository;
     private final SubjectService subjectService;
+    private final ClassScheduleServiceImpl scheduleService;
 
     public AdminController(UserService userService,
                            ParentService parentService,
@@ -38,7 +40,7 @@ public class AdminController {
                            TeacherService teacherService,
                            ClassService classService,
                            ClassRepository classRepository,
-                           SubjectService subjectService) {
+                           SubjectService subjectService, ClassScheduleServiceImpl scheduleService) {
         this.userService = userService;
         this.parentService = parentService;
         this.studentService = studentService;
@@ -46,6 +48,7 @@ public class AdminController {
         this.classService = classService;
         this.classRepository = classRepository;
         this.subjectService = subjectService;
+        this.scheduleService = scheduleService;
     }
 
     @GetMapping("/dashboard")
@@ -499,4 +502,178 @@ public class AdminController {
     public String logoutConfirmation() {
         return "admin/logout_confirmation";
     }
+
+    //NEW CODE
+
+    /* -------------------- Class timetable admin pages -------------------- */
+
+    @GetMapping("/class_schedule/{classId}")
+    public String adminEditClassSchedule(@PathVariable Long classId, Model model) {
+        Class cls = classService.findById(classId).orElseThrow();
+
+        List<String> slots = List.of("08:00-09:30", "09:50-11:20", "12:20-13:50", "14:10-15:40");
+        List<DayOfWeek> days = List.of(
+                DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
+                DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
+                DayOfWeek.FRIDAY
+        );
+
+        Map<DayOfWeek, Map<String, ClassSchedule>> timetable = new LinkedHashMap<>();
+        for (DayOfWeek day : days) {
+            Map<String, ClassSchedule> row = new LinkedHashMap<>();
+            for (String slot : slots) {
+                LocalTime start = LocalTime.parse(slot.split("-")[0]);
+                Optional<ClassSchedule> existing =
+                        scheduleService.findByClassAndSlot(cls, day, start);
+                row.put(slot, existing.orElse(null));
+            }
+            timetable.put(day, row);
+        }
+
+        Map<String, Long> selectedSubjects = new HashMap<>();
+        for (DayOfWeek day : days) {
+            for (String slot : slots) {
+                ClassSchedule cs = timetable.get(day).get(slot);
+                selectedSubjects.put(
+                        day.name() + "_" + slot.replace(":", "").replace("-", "_"),
+                        cs != null && cs.getSubject() != null ? cs.getSubject().getSubjectId() : 0L
+                );
+            }
+        }
+
+        model.addAttribute("selectedSubjects", selectedSubjects);
+        model.addAttribute("classObj", cls);
+        model.addAttribute("slots", slots);
+        model.addAttribute("days", days);
+        model.addAttribute("timetable", timetable);
+        model.addAttribute("subjects", subjectService.findAllSubjects());
+
+        // ⚠️ Don't overwrite successMessage if it's already there (from flash attributes)
+        if (!model.containsAttribute("successMessage")) {
+            model.addAttribute("successMessage", null);
+        }
+
+        return "admin/class_schedule_edit";
+    }
+
+
+    @PostMapping("/class_schedule/{classId}/save")
+    public String adminSaveClassSchedule(@PathVariable Long classId,
+                                         @RequestParam Map<String, String> params,
+                                         RedirectAttributes redirectAttributes) {
+        Class cls = classService.findById(classId).orElseThrow();
+        List<String> slots = List.of("08:00-09:30", "09:50-11:20", "12:20-13:50", "14:10-15:40");
+        List<DayOfWeek> days = List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
+                DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
+
+        for (DayOfWeek day : days) {
+            for (String slot : slots) {
+                String paramName = "cell_" + day.name() + "_" + slot.replace(":", "").replace("-", "_");
+                String subjectIdStr = params.get(paramName);
+                LocalTime start = LocalTime.parse(slot.split("-")[0]);
+                Optional<ClassSchedule> optional = scheduleService.findByClassAndSlot(cls, day, start);
+
+                if (subjectIdStr == null || subjectIdStr.equals("0") || subjectIdStr.isBlank()) {
+                    optional.ifPresent(scheduleService::delete);
+                } else {
+                    Long subjectId = Long.parseLong(subjectIdStr);
+                    Subject subject = subjectService.findById(subjectId).orElse(null);
+                    ClassSchedule schedule = optional.orElseGet(() -> {
+                        ClassSchedule s = new ClassSchedule();
+                        s.setSchoolClass(cls);
+                        s.setDayOfWeek(day);
+                        s.setStartTime(start);
+                        s.setEndTime(LocalTime.parse(slot.split("-")[1]));
+                        return s;
+                    });
+                    schedule.setSubject(subject);
+                    scheduleService.save(schedule);
+                }
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("successMessage", "Class timetable saved.");
+        return "redirect:/admin/class_schedule/" + classId;
+    }
+
+
+    /* -------------------- Teacher timetable admin pages -------------------- */
+
+    @GetMapping("/schedule/teachers")
+    public String adminListTeachersForSchedule(Model model) {
+        model.addAttribute("teachers", teacherService.findAllTeachers());
+        return "admin/schedule/teachers_list";
+    }
+
+    @GetMapping("/schedule/teacher/{teacherId}")
+    public String adminEditTeacherSchedule(@PathVariable Long teacherId, Model model) {
+        Teacher teacher = teacherService.findById(teacherId).orElseThrow();
+
+        List<String> slots = List.of("08:00-09:30", "09:50-11:20", "12:20-13:50", "14:10-15:40");
+        List<DayOfWeek> days = List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
+                DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
+
+        Map<DayOfWeek, Map<String, ClassSchedule>> timetable = new LinkedHashMap<>();
+        for (DayOfWeek day : days) {
+            Map<String, ClassSchedule> row = new LinkedHashMap<>();
+            for (String slot : slots) {
+                LocalTime start = LocalTime.parse(slot.split("-")[0]);
+                Optional<ClassSchedule> existing =
+                        scheduleService.findByTeacherAndSlot(teacher, day, start);
+                row.put(slot, existing.orElse(null));
+            }
+            timetable.put(day, row);
+        }
+
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("slots", slots);
+        model.addAttribute("days", days);
+        model.addAttribute("timetable", timetable);
+        model.addAttribute("classes", classService.getAllClassesOrderedByGradeAndSection());
+        return "admin/schedule/teacher_schedule_edit";
+    }
+
+    @PostMapping("/schedule/teacher/{teacherId}/save")
+    public String adminSaveTeacherSchedule(@PathVariable Long teacherId,
+                                           @RequestParam Map<String, String> params,
+                                           RedirectAttributes redirectAttributes) {
+        Teacher teacher = teacherService.findById(teacherId).orElseThrow();
+        List<String> slots = List.of("08:00-09:30", "09:50-11:20", "12:20-13:50", "14:10-15:40");
+        List<DayOfWeek> days = List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
+                DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
+
+        for (DayOfWeek day : days) {
+            for (String slot : slots) {
+                String paramName = "cell_" + day.name() + "_" + slot.replace(":", "").replace("-", "_");
+                String classIdStr = params.get(paramName);
+                LocalTime start = LocalTime.parse(slot.split("-")[0]);
+                Optional<ClassSchedule> optional = scheduleService.findByTeacherAndSlot(teacher, day, start);
+
+                if (classIdStr == null || classIdStr.equals("0") || classIdStr.isBlank()) {
+                    optional.ifPresent(scheduleService::delete);
+                } else {
+                    Long classId = Long.parseLong(classIdStr);
+                    Class assigned = classService.findById(classId).orElse(null);
+                    ClassSchedule schedule = optional.orElseGet(() -> {
+                        ClassSchedule s = new ClassSchedule();
+                        s.setTeacher(teacher);
+                        s.setDayOfWeek(day);
+                        s.setStartTime(start);
+                        s.setEndTime(LocalTime.parse(slot.split("-")[1]));
+                        return s;
+                    });
+                    schedule.setAssignedClass(assigned);
+                    // optionally also set subject here:
+                    if (teacher.getSubject() != null) {
+                        schedule.setSubject(teacher.getSubject());
+                    }
+                    scheduleService.save(schedule);
+                }
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("successMessage", "Teacher timetable saved.");
+        return "redirect:/admin/schedule/teacher/" + teacherId;
+    }
+
 }

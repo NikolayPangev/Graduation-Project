@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5433844c-a3e2-4cce-a11d-0a0c1facce39" name="Changes" comment="Fixed some bugs">
+      <change beforePath="$PROJECT_DIR$/Student Management System/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Student Management System/src/main/resources/templates/index.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="HTML File" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;NikolayPangev&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/NikolayPangev/Graduation-Project.git&quot;,
+    &quot;accountId&quot;: &quot;1531fae0-f293-4fef-a2dd-dd170141a020&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2igw8MirNOXWmQYOnaLTpkJK0x2" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "JUnit.AdminControllerTest.executor": "Run",
+    "JUnit.DataInitializerTest.executor": "Run",
+    "JUnit.GradeServiceTest.executor": "Run",
+    "JUnit.I18NConfigTest.executor": "Run",
+    "JUnit.LoginControllerTest.executor": "Run",
+    "JUnit.ParentControllerTest.executor": "Run",
+    "JUnit.ParentServiceTest.executor": "Run",
+    "JUnit.StudentControllerTest.executor": "Run",
+    "JUnit.StudentServiceTest.executor": "Run",
+    "JUnit.SubjectServiceTest.executor": "Run",
+    "JUnit.TeacherControllerTest.executor": "Run",
+    "JUnit.TeacherServiceTest.executor": "Run",
+    "JUnit.UserServiceTest.emailExists_EmailExists.executor": "Run",
+    "JUnit.UserServiceTest.executor": "Run",
+    "JUnit.WebConfigTest.executor": "Run",
+    "JUnit.service in StudentManagementSystem.executor": "Coverage",
+    "JUnit.studentmanagementsystem in StudentManagementSystem.executor": "Run",
+    "JUnit.web in StudentManagementSystem.executor": "Coverage",
+    "Notification.DisplayName-DoNotAsk-Lombok plugin": "Lombok integration problem",
+    "Notification.DoNotAsk-Lombok plugin": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.StudentManagementSystemApplication.executor": "Run",
+    "extract.method.default.visibility": "private",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/nikol/OneDrive/Documents/GitHub/Graduation-Project/Student Management System/src/main/resources/static/img",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "File.Encoding",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="org.example.studentmanagementsystem.model.user" />
+      <recent name="org.example.studentmanagementsystem.model.enums" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\nikol\OneDrive\Documents\GitHub\Graduation-Project\Student Management System\src\main\resources\static\img" />
+      <recent name="C:\Users\nikol\OneDrive\Documents\GitHub\Graduation-Project\Student Management System\src\main\resources\templates\parent" />
+      <recent name="C:\Users\nikol\OneDrive\Documents\GitHub\Graduation-Project\Student Management System\src\main\resources\templates\teacher" />
+      <recent name="C:\Users\nikol\OneDrive\Documents\GitHub\Graduation-Project\Student Management System\src\main\resources\templates\student" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\nikol\OneDrive\Documents\GitHub\Graduation-Project\Student Management System\src\main\resources\static\img" />
+      <recent name="C:\Users\nikol\OneDrive\Documents\GitHub\Graduation-Project\Student Management System\src\main\resources\templates\fragments" />
+      <recent name="C:\Users\nikol\OneDrive\Documents\GitHub\Graduation-Project\Student Management System\src\main\java\org\example\studentmanagementsystem\web" />
+      <recent name="C:\Users\nikol\OneDrive\Documents\GitHub\Graduation-Project\Student Management System\src\main\resources\templates\admin" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.StudentManagementSystemApplication">
+    <configuration name="DataInitializerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudentManagementSystem" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.studentmanagementsystem.config.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.studentmanagementsystem.config" />
+      <option name="MAIN_CLASS_NAME" value="org.example.studentmanagementsystem.config.DataInitializerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="I18NConfigTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudentManagementSystem" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.studentmanagementsystem.config.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.studentmanagementsystem.config" />
+      <option name="MAIN_CLASS_NAME" value="org.example.studentmanagementsystem.config.I18NConfigTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WebConfigTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudentManagementSystem" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.studentmanagementsystem.config.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.studentmanagementsystem.config" />
+      <option name="MAIN_CLASS_NAME" value="org.example.studentmanagementsystem.config.WebConfigTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="studentmanagementsystem in StudentManagementSystem" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudentManagementSystem" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/Student Management System/src/test/java/org/example/studentmanagementsystem" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="web in StudentManagementSystem" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudentManagementSystem" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/Student Management System/src/test/java/org/example/studentmanagementsystem/web" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NotificationServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="notification-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.notificationservice.NotificationServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StudentManagementSystemApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="StudentManagementSystem" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.studentmanagementsystem.StudentManagementSystemApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.web in StudentManagementSystem" />
+        <item itemvalue="JUnit.studentmanagementsystem in StudentManagementSystem" />
+        <item itemvalue="JUnit.WebConfigTest" />
+        <item itemvalue="JUnit.I18NConfigTest" />
+        <item itemvalue="JUnit.DataInitializerTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5433844c-a3e2-4cce-a11d-0a0c1facce39" name="Changes" comment="" />
+      <created>1719925367843</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1719925367843</updated>
+      <workItem from="1719925369003" duration="2567000" />
+      <workItem from="1719933900711" duration="2175000" />
+      <workItem from="1720012609571" duration="295000" />
+      <workItem from="1720443082859" duration="22000" />
+      <workItem from="1721138465783" duration="18000" />
+      <workItem from="1721728834921" duration="1216000" />
+      <workItem from="1721738579014" duration="487000" />
+      <workItem from="1721818935760" duration="3186000" />
+      <workItem from="1722251532367" duration="7021000" />
+      <workItem from="1722410785937" duration="12981000" />
+      <workItem from="1722506601572" duration="13050000" />
+      <workItem from="1722592920882" duration="12443000" />
+      <workItem from="1722674317394" duration="14509000" />
+      <workItem from="1722713615142" duration="1248000" />
+      <workItem from="1722771105411" duration="17147000" />
+      <workItem from="1722845339465" duration="17055000" />
+      <workItem from="1722863822931" duration="9973000" />
+      <workItem from="1722928485507" duration="15495000" />
+      <workItem from="1722947070934" duration="259000" />
+      <workItem from="1722947344872" duration="21539000" />
+      <workItem from="1723014092392" duration="57000" />
+      <workItem from="1723014236709" duration="33597000" />
+      <workItem from="1723058273584" duration="6000" />
+      <workItem from="1723059589993" duration="36000" />
+      <workItem from="1723059636699" duration="77000" />
+      <workItem from="1723310200737" duration="37000" />
+      <workItem from="1723310298474" duration="1729000" />
+      <workItem from="1723317085477" duration="138000" />
+      <workItem from="1723317343671" duration="2144000" />
+      <workItem from="1723356148195" duration="1938000" />
+      <workItem from="1723639023305" duration="51000" />
+      <workItem from="1723639171667" duration="60000" />
+      <workItem from="1724246249719" duration="41000" />
+      <workItem from="1724246360010" duration="703000" />
+      <workItem from="1724314523370" duration="2541000" />
+      <workItem from="1724579391912" duration="10172000" />
+      <workItem from="1724661336037" duration="3654000" />
+      <workItem from="1724694716982" duration="16000" />
+      <workItem from="1724751247082" duration="2886000" />
+      <workItem from="1724934691413" duration="3297000" />
+      <workItem from="1725116866910" duration="72000" />
+      <workItem from="1725117044223" duration="641000" />
+      <workItem from="1725117700763" duration="5113000" />
+      <workItem from="1725186534560" duration="8306000" />
+      <workItem from="1725447174833" duration="29000" />
+      <workItem from="1725447213987" duration="17281000" />
+      <workItem from="1725469200668" duration="708000" />
+      <workItem from="1725544863672" duration="1905000" />
+      <workItem from="1725546798374" duration="2684000" />
+      <workItem from="1725559893374" duration="409000" />
+      <workItem from="1725611411082" duration="4075000" />
+      <workItem from="1725616382526" duration="5905000" />
+      <workItem from="1725636308896" duration="272000" />
+      <workItem from="1725636607785" duration="1103000" />
+    </task>
+    <task id="LOCAL-00038" summary="Implemented student view teachers">
+      <option name="closed" value="true" />
+      <created>1722866671814</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1722866671814</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Implemented assigning classes to teachers">
+      <option name="closed" value="true" />
+      <created>1722879188516</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1722879188516</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Modified SecurityConfig">
+      <option name="closed" value="true" />
+      <created>1722879214328</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1722879214328</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Changed methods">
+      <option name="closed" value="true" />
+      <created>1722883761637</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1722883761638</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Created teacher pages">
+      <option name="closed" value="true" />
+      <created>1722883780345</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1722883780345</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Implemented teacher view classes and logout">
+      <option name="closed" value="true" />
+      <created>1722883832626</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1722883832626</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Created teacher pages">
+      <option name="closed" value="true" />
+      <created>1722883847134</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1722883847134</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Changed package">
+      <option name="closed" value="true" />
+      <created>1722930565258</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1722930565258</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Implemented teacher view all students">
+      <option name="closed" value="true" />
+      <created>1722930593979</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1722930593979</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Changed relationship between subject and teacher and all methods">
+      <option name="closed" value="true" />
+      <created>1722933936309</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1722933936309</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Changed relationship between subject and teacher and all methods">
+      <option name="closed" value="true" />
+      <created>1722933991756</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1722933991756</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Implemented view teachers and parents">
+      <option name="closed" value="true" />
+      <created>1722939228057</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1722939228057</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Implemented view teacher profile">
+      <option name="closed" value="true" />
+      <created>1722939243865</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1722939243865</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Fixed redirect bug">
+      <option name="closed" value="true" />
+      <created>1722948457321</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1722948457321</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Implemented teacher adding grades and displaying students with grades">
+      <option name="closed" value="true" />
+      <created>1722948503571</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1722948503571</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Implemented teacher adding grades and displaying students with grades">
+      <option name="closed" value="true" />
+      <created>1722948511147</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1722948511147</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Implemented view grades">
+      <option name="closed" value="true" />
+      <created>1722962248030</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1722962248030</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Implemented parent choosing child and seeing their grades and teachers">
+      <option name="closed" value="true" />
+      <created>1722967666301</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1722967666301</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Implemented scheduling jobs">
+      <option name="closed" value="true" />
+      <created>1722969539160</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1722969539161</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Implemented teacher view profile and logout">
+      <option name="closed" value="true" />
+      <created>1722969563375</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1722969563375</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Tried to implement RestController">
+      <option name="closed" value="true" />
+      <created>1723014308898</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1723014308902</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Reformated code">
+      <option name="closed" value="true" />
+      <created>1723018095393</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1723018095393</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Implemented english and bulgarian for Admin">
+      <option name="closed" value="true" />
+      <created>1723030728259</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1723030728259</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Implemented english and bulgarian for Students">
+      <option name="closed" value="true" />
+      <created>1723032949526</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1723032949526</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Implemented english and bulgarian for Teachers">
+      <option name="closed" value="true" />
+      <created>1723035579668</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1723035579668</updated>
+    </task>
+    <task id="LOCAL-00063" summary="Implemented english and bulgarian for Parents">
+      <option name="closed" value="true" />
+      <created>1723036973838</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1723036973838</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Tests">
+      <option name="closed" value="true" />
+      <created>1723048694161</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1723048694161</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Final design implementation">
+      <option name="closed" value="true" />
+      <created>1723057507661</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1723057507662</updated>
+    </task>
+    <task id="LOCAL-00066" summary="Final design implementation">
+      <option name="closed" value="true" />
+      <created>1723057724112</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1723057724113</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Final design implementation">
+      <option name="closed" value="true" />
+      <created>1723057764027</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1723057764027</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Update README.md">
+      <option name="closed" value="true" />
+      <created>1723058067761</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1723058067761</updated>
+    </task>
+    <task id="LOCAL-00069" summary="Fixed bug in assigning classes to teachers">
+      <option name="closed" value="true" />
+      <created>1724601139593</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1724601139594</updated>
+    </task>
+    <task id="LOCAL-00070" summary="Added email display">
+      <option name="closed" value="true" />
+      <created>1724753428908</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1724753428911</updated>
+    </task>
+    <task id="LOCAL-00071" summary="Fixed success and error messages when deleting class">
+      <option name="closed" value="true" />
+      <created>1724753460639</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1724753460640</updated>
+    </task>
+    <task id="LOCAL-00072" summary="Show all students from a class through view classes page">
+      <option name="closed" value="true" />
+      <created>1725117653208</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1725117653208</updated>
+    </task>
+    <task id="LOCAL-00073" summary="Added error messages for assigning class">
+      <option name="closed" value="true" />
+      <created>1725118060134</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1725118060134</updated>
+    </task>
+    <task id="LOCAL-00074" summary="Implemented parent to see child classmates">
+      <option name="closed" value="true" />
+      <created>1725120396727</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1725120396727</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Fixed bug with grades and added date to each grade">
+      <option name="closed" value="true" />
+      <created>1725122837702</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1725122837702</updated>
+    </task>
+    <task id="LOCAL-00076" summary="Implemented absences">
+      <option name="closed" value="true" />
+      <created>1725195346503</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1725195346504</updated>
+    </task>
+    <task id="LOCAL-00077" summary="Implemented feedback">
+      <option name="closed" value="true" />
+      <created>1725462351724</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1725462351726</updated>
+    </task>
+    <task id="LOCAL-00078" summary="Implemented students to see feedback">
+      <option name="closed" value="true" />
+      <created>1725463856862</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1725463856862</updated>
+    </task>
+    <task id="LOCAL-00079" summary="Implemented parents to see feedback for their children">
+      <option name="closed" value="true" />
+      <created>1725466760559</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1725466760560</updated>
+    </task>
+    <task id="LOCAL-00080" summary="Fixed the select to be a select/dropdown">
+      <option name="closed" value="true" />
+      <created>1725469897215</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1725469897216</updated>
+    </task>
+    <task id="LOCAL-00081" summary="Added some fixes and removed comments">
+      <option name="closed" value="true" />
+      <created>1725560221665</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1725560221665</updated>
+    </task>
+    <task id="LOCAL-00082" summary="Changed the dashboard styles">
+      <option name="closed" value="true" />
+      <created>1725614040456</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1725614040456</updated>
+    </task>
+    <task id="LOCAL-00083" summary="Added logo">
+      <option name="closed" value="true" />
+      <created>1725616412314</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1725616412314</updated>
+    </task>
+    <task id="LOCAL-00084" summary="Fixed the language for the pages">
+      <option name="closed" value="true" />
+      <created>1725617593219</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1725617593219</updated>
+    </task>
+    <task id="LOCAL-00085" summary="Fixed the language for the pages">
+      <option name="closed" value="true" />
+      <created>1725617867969</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1725617867970</updated>
+    </task>
+    <task id="LOCAL-00086" summary="Fixed some bugs">
+      <option name="closed" value="true" />
+      <created>1725622167683</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1725622167684</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Reformated code" />
+    <MESSAGE value="Implemented english and bulgarian for Admin" />
+    <MESSAGE value="Implemented english and bulgarian for Students" />
+    <MESSAGE value="Implemented english and bulgarian for Teachers" />
+    <MESSAGE value="Implemented english and bulgarian for Parents" />
+    <MESSAGE value="Tests" />
+    <MESSAGE value="Final design implementation" />
+    <MESSAGE value="Update README.md" />
+    <MESSAGE value="Fixed bug in assigning classes to teachers" />
+    <MESSAGE value="Added email display" />
+    <MESSAGE value="Fixed success and error messages when deleting class" />
+    <MESSAGE value="Show all students from a class through view classes page" />
+    <MESSAGE value="Added error messages for assigning class" />
+    <MESSAGE value="Implemented parent to see child classmates" />
+    <MESSAGE value="Fixed bug with grades and added date to each grade" />
+    <MESSAGE value="Implemented absences" />
+    <MESSAGE value="Implemented feedback" />
+    <MESSAGE value="Implemented students to see feedback" />
+    <MESSAGE value="Implemented parents to see feedback for their children" />
+    <MESSAGE value="Fixed the select to be a select/dropdown" />
+    <MESSAGE value="Added some fixes and removed comments" />
+    <MESSAGE value="Changed the dashboard styles" />
+    <MESSAGE value="Added logo" />
+    <MESSAGE value="Fixed the language for the pages" />
+    <MESSAGE value="Fixed some bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed some bugs" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Student Management System/src/main/java/org/example/studentmanagementsystem/model/enums/FeedbackType.java</url>
+          <line>2</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Graduation_Project$service_in_StudentManagementSystem.ic" NAME="service in StudentManagementSystem Coverage Results" MODIFIED="1723041077290" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/Graduation_Project$web_in_StudentManagementSystem.ic" NAME="web in StudentManagementSystem Coverage Results" MODIFIED="1723042382831" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/Graduation_Project$studentmanagementsystem_in_StudentManagementSystem.ic" NAME="studentmanagementsystem in StudentManagementSystem Coverage Results" MODIFIED="1723043050328" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+  </component>
+</project>
