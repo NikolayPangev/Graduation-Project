@@ -13,7 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,8 +33,17 @@ public class TeacherController {
     private final UserService userService;
     private final AbsenceService absenceService;
     private final FeedbackService feedbackService;
+    private final ClassScheduleServiceImpl scheduleService;
 
-    public TeacherController(TeacherService teacherService, ClassService classService, StudentService studentService, ParentService parentService, GradeService gradeService, SubjectService subjectService, UserService userService, AbsenceService absenceService, FeedbackService feedbackService) {
+    public TeacherController(TeacherService teacherService,
+                             ClassService classService,
+                             StudentService studentService,
+                             ParentService parentService,
+                             GradeService gradeService,
+                             SubjectService subjectService,
+                             UserService userService,
+                             AbsenceService absenceService,
+                             FeedbackService feedbackService, ClassScheduleServiceImpl scheduleService) {
         this.teacherService = teacherService;
         this.classService = classService;
         this.studentService = studentService;
@@ -41,6 +53,7 @@ public class TeacherController {
         this.userService = userService;
         this.absenceService = absenceService;
         this.feedbackService = feedbackService;
+        this.scheduleService = scheduleService;
     }
 
     @GetMapping("/dashboard")
@@ -440,4 +453,56 @@ public class TeacherController {
     public String logoutConfirmation() {
         return "teacher/logout_confirmation";
     }
+
+    //NEW CODE
+
+    // TeacherController
+    @GetMapping("/view-schedule")
+    public String teacherViewSchedule(Model model, Principal principal) {
+        String username = principal.getName();
+        Teacher teacher = teacherService.findByUsername(username);
+        if (teacher == null) {
+            model.addAttribute("errorMessage", "Teacher not found");
+            return "error";
+        }
+
+        List<String> slots = List.of("08:00-09:30", "09:50-11:20", "12:20-13:50", "14:10-15:40");
+        List<DayOfWeek> days = List.of(
+                DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
+                DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
+                DayOfWeek.FRIDAY
+        );
+
+        Map<DayOfWeek, Map<String, ClassSchedule>> timetable = new LinkedHashMap<>();
+        Map<String, String> displayCells = new HashMap<>();
+
+        for (DayOfWeek day : days) {
+            Map<String, ClassSchedule> row = new LinkedHashMap<>();
+            for (String slot : slots) {
+                LocalTime start = LocalTime.parse(slot.split("-")[0]);
+                Optional<ClassSchedule> existing = scheduleService.findByTeacherAndSlot(teacher, day, start);
+                ClassSchedule cs = existing.orElse(null);
+                row.put(slot, cs);
+
+                // Build a display string for Thymeleaf
+                String key = day.name() + "_" + slot.replace(":", "").replace("-", "_");
+                if (cs != null && cs.getAssignedClass() != null) {
+                    String className = cs.getAssignedClass().getGrade() + "-" + cs.getAssignedClass().getSection();
+                    displayCells.put(key, className);  // ✅ only class, no subject
+                } else {
+                    displayCells.put(key, "-");
+                }
+            }
+            timetable.put(day, row);
+        }
+
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("timetable", timetable);
+        model.addAttribute("displayCells", displayCells);
+        model.addAttribute("slots", slots);
+        model.addAttribute("days", days);
+
+        return "teacher/view_schedule";
+    }
+
 }
