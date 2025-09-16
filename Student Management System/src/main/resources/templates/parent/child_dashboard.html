@@ -81,6 +81,13 @@
                     <a class="btn btn-primary btn-user btn-block" th:href="@{'/parent/child-feedback/' + ${child.userId}}"
                        th:text="#{view_feedback}">View Feedback</a>
                 </div>
+
+                <!-- Schedule Section -->
+                <div class="col-md-6" >
+                    <h2 class="h4 text-gray-900 mb-4" th:text="#{view_schedule}">Schedule</h2>
+                    <a class="btn btn-primary btn-user btn-block" th:href="@{'/parent/view-schedule/' + ${child.userId}}"
+                       th:text="#{view_schedule}">View Schedule</a>
+                </div>
             </div>
 
         </div>
